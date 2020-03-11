@@ -1,8 +1,12 @@
 package com.example.studyhotspot;
 
-import okhttp3.*;
+
 import java.io.IOException;
 import org.json.JSONObject;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class OkHttp {
     // one instance, reuse

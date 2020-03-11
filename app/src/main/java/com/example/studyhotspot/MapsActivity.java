@@ -71,27 +71,14 @@ import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final float DEFAULT_ZOOM = 15f;
-    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
-            new LatLng(-40, -168), new LatLng(71, 136));
-
 
     //widgets
-    /*private AutoCompleteTextView mSearchText;*/
     private Button mSearchText;
-    private ImageView mGps, mInfo;
-
-
-    //vars
-    private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-    private GoogleApiClient mGoogleApiClient;
 
     private Marker mMarker;
     private static final String TAG = "MapsActivity";
 
-    Button btn_pick;
     Chip chip1, chip2, chip3;
     static Map<String, Boolean> chipStatus = new HashMap<String, Boolean>();
     private ArrayList<String> selectedChips = new ArrayList<String>();
