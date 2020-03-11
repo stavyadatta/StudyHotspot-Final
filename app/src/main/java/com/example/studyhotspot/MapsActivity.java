@@ -44,8 +44,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     SearchView searchView;
     Button btn_pick;
+
     private List<Place.Field> fields;
-    private List<LatLng> locations = new ArrayList<LatLng>();
+    private List<LatLng> loc_gov = new ArrayList<LatLng>();
+    private List<LatLng> loc_fb = new ArrayList<LatLng>();
+    private List<LatLng> loc_comm = new ArrayList<LatLng>();
     final int place_picker_req_code = 1;
     String name;
     LatLng latLng;
@@ -114,6 +117,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+
+
     }
 
     @Override
@@ -149,15 +154,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng Sg = new LatLng(1.353791, 103.818145);
         //mMap.addMarker(new MarkerOptions().position(Sg).title("Singapore"));
 
-        locations.add(new LatLng(1.284261, 103.851051));
-        locations.add(new LatLng(1.283580, 103.850946));
-        locations.add(new LatLng(1.283843, 103.852684));
-        locations.add(new LatLng(1.282406, 103.852620));
+        loc_gov.add(new LatLng(1.284261, 103.851051));
+        loc_gov.add(new LatLng(1.283580, 103.850946));
+        loc_gov.add(new LatLng(1.283843, 103.852684));
+        loc_gov.add(new LatLng(1.282406, 103.852620));
 
 
+        /**
+        for (int i = 0; i < dataset.get(); i++){
+            LatLng cur = new LatLng(......);
+            if (cur.category...== ....)
+            loc_comm.add();
+            loc_fb.add();
+        }**/
 
-        for (int i=0; i<locations.size(); i++){
-            LatLng cur = locations.get(i);
+
+        for (int i=0; i<loc_gov.size(); i++){
+            LatLng cur = loc_gov.get(i);
             mMap.addMarker(new MarkerOptions().position(cur).icon(bitmapDescriptorFromVector(this, R.drawable.ic_studyspot)));
         }
 
