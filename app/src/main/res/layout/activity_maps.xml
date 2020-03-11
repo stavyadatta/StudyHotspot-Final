@@ -108,11 +108,11 @@
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        map:backgroundTint = "@color/colorPrimary"
+        map:backgroundTint="@color/colorPrimary"
         map:menu="@menu/app_bar_menu"
         map:navigationIcon="@drawable/ic_wifi" />
 
@@ -121,9 +121,9 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_home_black_24dp"
         map:backgroundTint="@color/quantum_bluegrey500"
-        map:layout_anchor = "@id/bottomAppBar"
+        map:layout_anchor="@id/bottomAppBar"
         map:maxImageSize="35dp"
-        map:tint = "@color/colorWhite"/>
+        map:tint="@color/colorWhite" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
