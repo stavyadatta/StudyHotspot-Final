@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
+
+<!--    <SearchView
+        android:id="@+id/sv_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_pick"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_round"
+        android:elevation="5dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search..." />-->
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Government"
+        android:elevation="5dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="40dp"
+        android:textColor="@color/colorWhite"
+        map:chipBackgroundColor="@color/bg_chip_state_list"
+        map:chipIconTint="@color/colorWhite"
+        android:checkable="true"
+        />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Cafes"
+        android:elevation="5dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="173dp"
+        android:textColor="@color/colorWhite"
+        map:chipBackgroundColor="@color/bg_chip_state_list"
+        map:chipIconTint="@color/colorWhite"
+        android:checkable="true"
+        />
+
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Community"
+        android:elevation="5dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="265dp"
+        android:textColor="@color/colorWhite"
+        map:chipBackgroundColor="@color/bg_chip_state_list"
+        map:chipIconTint="@color/colorWhite"
+        android:checkable="true"
+        />
+
+
+    <!-- <com.google.android.material.chip.Chip
+         android:id="@+id/chip1"
+         android:layout_width="110dp"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="20dp"
+         android:text="@string/search"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="80dp"
+         android:background="@drawable/bg_round"
+         android:elevation="5dp"
+         />-->
+
+
+    <Button
+        android:id="@+id/btn_pick"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/bg_round"
+        android:elevation="10dp"
+        android:outlineAmbientShadowColor="@color/cardview_dark_background"
+        android:outlineSpotShadowColor="@color/colorPrimary"
+        android:text="@string/search"
+        android:textColor="@color/quantum_white_100"
+        android:textFontWeight="600"
+        android:textSize="25dp" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="732dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        tools:context=".MapsActivity" />
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        map:backgroundTint = "@color/colorPrimary"
+        map:menu="@menu/app_bar_menu"
+        map:navigationIcon="@drawable/ic_wifi" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_black_24dp"
+        map:backgroundTint="@color/quantum_bluegrey500"
+        map:layout_anchor = "@id/bottomAppBar"
+        map:maxImageSize="35dp"
+        map:tint = "@color/colorWhite"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

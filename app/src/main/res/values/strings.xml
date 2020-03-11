@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">StudyHotspot</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="search">SEARCH</string>
+    <string name="Home">Home</string>
+    <string name="Activities">Activities</string>
+    <string name="Fav">Fav</string>
+    <string name="Settings">Settings</string>
+    <string name="Government">Government</string>
+    <string name="Cafes">Cafes</string>
+    <string name="Community">Community</string>
+</resources>
