@@ -7,20 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
 
-<!--    <SearchView
-        android:id="@+id/sv_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_pick"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_round"
-        android:elevation="5dp"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search..." />-->
-
     <com.google.android.material.chip.Chip
         android:id="@+id/chip1"
         android:layout_width="wrap_content"
@@ -64,36 +50,36 @@
         android:checkable="true"
         />
 
-
-    <!-- <com.google.android.material.chip.Chip
-         android:id="@+id/chip1"
-         android:layout_width="110dp"
-         android:layout_height="wrap_content"
-         android:layout_marginLeft="20dp"
-         android:text="@string/search"
-         android:layout_centerHorizontal="true"
-         android:layout_marginTop="80dp"
-         android:background="@drawable/bg_round"
-         android:elevation="5dp"
-         />-->
-
-
-    <Button
-        android:id="@+id/btn_pick"
+    <RelativeLayout
         android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp"
-        android:background="@drawable/bg_round"
         android:elevation="10dp"
-        android:outlineAmbientShadowColor="@color/cardview_dark_background"
-        android:outlineSpotShadowColor="@color/colorPrimary"
-        android:text="@string/search"
-        android:textColor="@color/quantum_white_100"
-        android:textFontWeight="600"
-        android:textSize="25dp" />
+        android:outlineSpotShadowColor="@color/quantum_bluegrey500"
+        android:background="@drawable/white_border"
+        android:id="@+id/relLayout1">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/ic_magnify"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_magnify"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/ic_magnify"
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:textColor="#000"
+            android:id="@+id/input_search"
+            android:background="@null"
+            android:text="Enter Address, City or Zip Code" />
+
+    </RelativeLayout>
 
     <fragment
         android:id="@+id/map"
@@ -114,7 +100,7 @@
         android:layout_gravity="bottom"
         map:backgroundTint = "@color/colorPrimary"
         map:menu="@menu/app_bar_menu"
-        map:navigationIcon="@drawable/ic_wifi" />
+        map:navigationIcon="@drawable/ic_wifilogo" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
