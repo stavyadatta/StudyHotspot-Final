@@ -1,12 +1,15 @@
 package com.example.studyhotspot;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,6 +65,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //widgets
     private Button mSearchText;
+    private FloatingActionButton directions;
     private GoogleMap mMap;
 
     private Marker mMarker;
@@ -88,8 +94,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<LatLng> loc_fb = new ArrayList<LatLng>();
     private List<LatLng> loc_comm = new ArrayList<LatLng>();/**/
     final int place_picker_req_code = 1;
+    final int directions_req_code = 2;
+
     String name;
     LatLng latLng;
+    LatLng latLngStart;
+    LatLng latLngEnd;
 
 
     @Override
@@ -109,6 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         mSearchText = findViewById(R.id.input_search);
+        directions = findViewById(R.id.directions);
 
         mSearchText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +128,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .build(MapsActivity.this);
 
                 startActivityForResult(intent,place_picker_req_code);
+            }
+        });
+
+        directions.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?saddr=1.353791,103.818145&daddr=1.353791,103.818145"));
+                startActivity(intent);
+
+                /*Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                        .build(MapsActivity.this);
+
+                startActivityForResult(intent,directions_req_code);
+                System.out.println("HELLO");*/
             }
         });
 
@@ -155,7 +181,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         };
-
+        chip1.setChecked(true);
+        chip2.setChecked(true);
+        chip3.setChecked(true);
 
         chip1.setOnCheckedChangeListener(checkedChangeListener);
         chip2.setOnCheckedChangeListener(checkedChangeListener);
@@ -170,6 +198,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 name = place.getName();
+
+                mSearchText.setText(name);
+
                 latLng = place.getLatLng();
                 mMap.addMarker(new MarkerOptions().position(latLng).title(name));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -183,6 +214,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 onMapReady(mMap);
             }
         }
+        /*if (requestCode == directions_req_code){
+            latLngStart = new LatLng(1.284261, 103.851051);
+
+            if (resultCode == RESULT_OK){
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                name = place.getName();
+
+                mSearchText.setText(name);
+
+                latLngEnd = place.getLatLng();
+                mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+                mMap.animateCamera(update);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+                onMapReady(mMap);
+            } else if (resultCode == RESULT_CANCELED) {
+                onMapReady(mMap);
+            }
+        }*/
     }
 
 
@@ -199,6 +252,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        ArrayList<LatLng> listPoints = new ArrayList<LatLng>();
+
+        /*ActivityCompat.requestPermissions(this, new String[](Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_REQUEST)*/;
+
 
         boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources()
                 .getString(R.string.style_json)));
@@ -210,6 +269,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Initialize the camera to Singapore
         LatLng Sg = new LatLng(1.353791, 103.818145);
 
+        OkHttp obj = new OkHttp();
+
+        System.out.println("CKAN Package Show");
+
+        // id of the wireless hotspots on data.gov.sg is 6b3f1e1b-257d-4d49-8142-1b2271d20143
+        String dataURL = null;
+        String data = "";
+        try {
+            dataURL = obj.getURL("6b3f1e1b-257d-4d49-8142-1b2271d20143");
+            data = obj.accessData(dataURL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("HELLO");
+
+        System.out.println(data.isEmpty());
+
+        System.out.println("HELLO");
         loc_gov.add(new LatLng(1.284261, 103.851051));
         loc_gov.add(new LatLng(1.283580, 103.850946));
         loc_gov.add(new LatLng(1.283843, 103.852684));
@@ -254,5 +332,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    public void requestDirections(){
+        StringBuilder sb = new StringBuilder();
+
+        Object[] dataTransfer = new Object[4];
+
+        sb.append("https://maps.googleapis.com/maps/api/directions/json?");
+        sb.append("origin="+latLngStart.latitude+","+latLngStart.longitude);
+        sb.append("&destination="+latLngEnd.latitude+","+latLngEnd.longitude);
+        sb.append("&key=AIzaSyDfUFca8a0bcE6Q4iog86Ud7lz6lig6WGc");
+
+        GetDirectionsData directions = new GetDirectionsData(getApplicationContext());
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = sb.toString();
+        dataTransfer[2] = new LatLng(latLngStart.latitude, latLngStart.longitude);
+        dataTransfer[3] = new LatLng(latLngEnd.latitude, latLngEnd.longitude);
+        directions.execute(dataTransfer);
+
     }
 }

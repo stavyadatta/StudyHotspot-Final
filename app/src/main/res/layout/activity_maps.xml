@@ -51,7 +51,7 @@
         />
 
     <RelativeLayout
-        android:layout_width="330dp"
+        android:layout_width="280dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp"
@@ -69,15 +69,16 @@
             android:src="@drawable/ic_magnify"/>
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/ic_magnify"
+            android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"
             android:textSize="15sp"
             android:textColor="#000"
             android:id="@+id/input_search"
             android:background="@null"
-            android:text="Enter Address, City or Zip Code" />
+            android:text="Enter Name or Address" />
 
     </RelativeLayout>
 
@@ -98,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        map:backgroundTint = "@color/colorPrimary"
+        map:backgroundTint = "@color/quantum_bluegrey700"
         map:menu="@menu/app_bar_menu"
         map:navigationIcon="@drawable/ic_wifilogo" />
 
@@ -106,10 +107,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_home_black_24dp"
-        map:backgroundTint="@color/quantum_bluegrey500"
+        map:backgroundTint="@color/quantum_bluegrey400"
         map:layout_anchor = "@id/bottomAppBar"
         map:maxImageSize="35dp"
         map:tint = "@color/colorWhite"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/directions"
+        style="@style/Widget.Design.FloatingActionButton"
+        android:outlineSpotShadowColor="@color/quantum_bluegrey500"
+        android:outlineAmbientShadowColor="@color/quantum_bluegrey500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="16dp"
+        map:backgroundTint="@color/colorWhite"
+        map:maxImageSize="35dp"
+        map:srcCompat="@drawable/ic_directions"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

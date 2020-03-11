@@ -23,7 +23,7 @@ public class OkHttp {
         String data = obj.accessData(dataURL);
     }
 
-    private String getURL(String id) throws Exception {
+    public String getURL(String id) throws Exception {
 
         Request request = new Request.Builder()
                 .url("https://data.gov.sg/api/action/package_show?id=" + id)
@@ -44,7 +44,7 @@ public class OkHttp {
         }
     }
 
-    private String accessData(String dataURL) throws Exception {
+    public String accessData(String dataURL) throws Exception {
         Request request = new Request.Builder()
                 .url(dataURL)
                 .build();
