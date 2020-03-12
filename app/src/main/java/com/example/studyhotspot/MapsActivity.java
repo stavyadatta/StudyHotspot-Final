@@ -1,46 +1,23 @@
 package com.example.studyhotspot;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,23 +26,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.Geometry;
+import com.google.maps.android.data.Layer;
+import com.google.maps.android.data.geojson.GeoJsonFeature;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPointStyle;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +53,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.studyhotspot.R.raw.wireless2;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 
@@ -81,6 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button mSearchText;
     private FloatingActionButton directions;
     private GoogleMap mMap;
+    private GeoJsonLayer layerShop = null;
+    private GeoJsonLayer layerFB = null;
+    private GeoJsonLayer layerComm = null;
+    static Map<String, GeoJsonLayer> layers = new HashMap<String, GeoJsonLayer>();
+
 
     private Marker mMarker;
     private static final String TAG = "MapsActivity";
@@ -117,6 +103,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        /*GeoJsonLayer layer = new GeoJsonLayer(mMap, jObjek);
+        layer.addLayerToMap();*/
 
         mSearchText = findViewById(R.id.input_search);
         directions = findViewById(R.id.directions);
@@ -146,13 +134,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        /*layer.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+            @Override
+            public void onFeatureClick(Feature feature) {
+                Geometry geometry = feature.getGeometry();
+
+                Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("LOCATION_NAME"));
+                System.out.println(geometry);
+            }
+        });*/
+
         chip1 = findViewById(R.id.chip1);
         chip2 = findViewById(R.id.chip2);
         chip3 = findViewById(R.id.chip3);
 
-        chipStatus.put("Government", false);
-        chipStatus.put("Cafes", false);
         chipStatus.put("Community", false);
+        chipStatus.put("Cafes", false);
+        chipStatus.put("Shopping", false);
 
         fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
 
@@ -162,33 +160,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    chipStatus.put(buttonView.getText().toString(),true);
+                    String index = buttonView.getText().toString();
+                    chipStatus.put(index,true);
+                    layers.get(index).addLayerToMap();
+                    layers.get(index).setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+                        @Override
+                        public void onFeatureClick(Feature feature) {
+                            Geometry geometry = feature.getGeometry();
 
-                    System.out.println(chipStatus);
+                            Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("Description"));
+                            String s = feature.getProperty("Description");
+                            int begin = s.indexOf("<th>LOCATION_NAME</th> <td>");
+                            int end = s.indexOf("</td>",begin);
+                            String name = s.substring(begin+27,end);
+
+                            begin = s.indexOf("<th>LOCATION_TYPE</th> <td>");
+                            end = s.indexOf("</td>",begin);
+                            String category = s.substring(begin+27,end);
+
+
+                            System.out.println(category+": "+name);
+                        }
+                    });
                 }
                 else{
+                    String index = buttonView.getText().toString();
                     chipStatus.put(buttonView.getText().toString(),false);
-
-                    System.out.println(chipStatus);
+                    layers.get(index).removeLayerFromMap();
                 }
             }
         };
-        GoogleMap.OnMarkerClickListener onMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                LatLng sel = marker.getPosition();
-                System.out.println("HELLO");
-                return false;
-            }
-        };
-        chip1.setChecked(true);
-        chip2.setChecked(true);
-        chip3.setChecked(true);
 
         chip1.setOnCheckedChangeListener(checkedChangeListener);
         chip2.setOnCheckedChangeListener(checkedChangeListener);
         chip3.setOnCheckedChangeListener(checkedChangeListener);
-
     }
 
     @Override
@@ -214,28 +219,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 onMapReady(mMap);
             }
         }
-        /*if (requestCode == directions_req_code){
-            latLngStart = new LatLng(1.284261, 103.851051);
-
-            if (resultCode == RESULT_OK){
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                name = place.getName();
-
-                mSearchText.setText(name);
-
-                latLngEnd = place.getLatLng();
-                mMap.addMarker(new MarkerOptions().position(latLng).title(name));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-                mMap.animateCamera(update);
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                Status status = Autocomplete.getStatusFromIntent(data);
-                Log.i(TAG, status.getStatusMessage());
-                onMapReady(mMap);
-            } else if (resultCode == RESULT_CANCELED) {
-                onMapReady(mMap);
-            }
-        }*/
     }
 
 
@@ -256,9 +239,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ArrayList<LatLng> listPoints = new ArrayList<LatLng>();
 
-        /*ActivityCompat.requestPermissions(this, new String[](Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_REQUEST)*/;
-
-
         boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources()
                 .getString(R.string.style_json)));
 
@@ -269,45 +249,135 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Initialize the camera to Singapore
         LatLng Sg = new LatLng(1.353791, 103.818145);
 
-        OkHttp obj = new OkHttp();
-
-        System.out.println("CKAN Package Show");
+        /*OkHttp obj = new OkHttp();
 
         // id of the wireless hotspots on data.gov.sg is 6b3f1e1b-257d-4d49-8142-1b2271d20143
-        String dataURL = null;
-        String data = "";
         try {
-            dataURL = obj.getURL("6b3f1e1b-257d-4d49-8142-1b2271d20143");
-            data = obj.accessData(dataURL);
+            System.out.println("CKAN Package Show");
+            String dataURL = obj.getURL("6b3f1e1b-257d-4d49-8142-1b2271d20143");
+
+            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.wireless.geojson, getApplicationContext());
+            layer.addLayerToMap();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
+
+
+
+
+        try {
+            layerShop = new GeoJsonLayer(mMap, R.raw.wireless2, getApplicationContext());
+            layerFB = new GeoJsonLayer(mMap, R.raw.wireless3, getApplicationContext());
+            layerComm = new GeoJsonLayer(mMap, R.raw.wireless4, getApplicationContext());
+            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.wireless, getApplicationContext());
+
+
+            Iterable<GeoJsonFeature> geoJsonFeature = layer.getFeatures();
+
+            for(GeoJsonFeature cur : geoJsonFeature) {
+                String s = cur.getProperty("Description");
+
+                int begin = s.indexOf("<th>LOCATION_TYPE</th> <td>");
+                int end = s.indexOf("</td>",begin);
+                String category = s.substring(begin+27,end);
+
+                if (category.contentEquals("F&B")){
+                    layerFB.addFeature(cur);
+                }
+                else if (category.contentEquals("Shopping Mall")){
+                    layerShop.addFeature(cur);
+                }
+                else if (category.contentEquals("Community")){
+                    layerComm.addFeature(cur);
+                }
+            }
+            layers.put("Community", layerComm);
+            layers.put("Cafes", layerFB);
+            layers.put("Shopping", layerShop);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("HELLO");
-
-        System.out.println(data.isEmpty());
-
-        System.out.println("HELLO");
-        loc_gov.add(new LatLng(1.284261, 103.851051));
-        loc_gov.add(new LatLng(1.283580, 103.850946));
-        loc_gov.add(new LatLng(1.283843, 103.852684));
-        loc_gov.add(new LatLng(1.282406, 103.852620));
 
 
-        /**
-        for (int i = 0; i < dataset.get(); i++){
-            LatLng cur = new LatLng(......);
-            if (cur.category...== ....)
-            loc_comm.add();
-            loc_fb.add();
-        }**/
+        GeoJsonPointStyle pointStyle = layerFB.getDefaultPointStyle();
+        pointStyle.setIcon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi));
+        pointStyle.setTitle("View Information");
+
+        pointStyle = layerShop.getDefaultPointStyle();
+        pointStyle.setIcon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi));
+        pointStyle.setTitle("View Information");
+
+        pointStyle = layerComm.getDefaultPointStyle();
+        pointStyle.setIcon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi));
+        pointStyle.setTitle("View Information");
+
+        /*layerShop.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+            @Override
+            public void onFeatureClick(Feature feature) {
+                Geometry geometry = feature.getGeometry();
+
+                Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("Description"));
+                String s = feature.getProperty("Description");
+                int begin = s.indexOf("<th>LOCATION_NAME</th> <td>");
+                int end = s.indexOf("</td>",begin);
+                String name = s.substring(begin+27,end);
+
+                begin = s.indexOf("<th>LOCATION_TYPE</th> <td>");
+                end = s.indexOf("</td>",begin);
+                String category = s.substring(begin+27,end);
+
+
+                System.out.println(category+": "+name);
+            }
+        });
+        layerFB.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+            @Override
+            public void onFeatureClick(Feature feature) {
+                Geometry geometry = feature.getGeometry();
+
+                Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("Description"));
+                String s = feature.getProperty("Description");
+                int begin = s.indexOf("<th>LOCATION_NAME</th> <td>");
+                int end = s.indexOf("</td>",begin);
+                String name = s.substring(begin+27,end);
+
+                begin = s.indexOf("<th>LOCATION_TYPE</th> <td>");
+                end = s.indexOf("</td>",begin);
+                String category = s.substring(begin+27,end);
+
+
+                System.out.println(category+": "+name);
+            }
+        });
+        layerComm.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+            @Override
+            public void onFeatureClick(Feature feature) {
+                Geometry geometry = feature.getGeometry();
+
+                Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("Description"));
+                String s = feature.getProperty("Description");
+                int begin = s.indexOf("<th>LOCATION_NAME</th> <td>");
+                int end = s.indexOf("</td>",begin);
+                String name = s.substring(begin+27,end);
+
+
+                begin = s.indexOf("<th>LOCATION_TYPE</th> <td>");
+                end = s.indexOf("</td>",begin);
+                String category = s.substring(begin+27,end);
+
+
+                System.out.println(category+": "+name);
+            }
+        });
 
 
         for (int i=0; i<loc_gov.size(); i++){
             LatLng cur = loc_gov.get(i);
             mMap.addMarker(new MarkerOptions().title("Mark: "+Integer.toString(i)).position(cur)
                     .icon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi)));
-        }
+        }*/
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -332,24 +402,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
-    public void requestDirections(){
-        StringBuilder sb = new StringBuilder();
-
-        Object[] dataTransfer = new Object[4];
-
-        sb.append("https://maps.googleapis.com/maps/api/directions/json?");
-        sb.append("origin="+latLngStart.latitude+","+latLngStart.longitude);
-        sb.append("&destination="+latLngEnd.latitude+","+latLngEnd.longitude);
-        sb.append("&key=AIzaSyDfUFca8a0bcE6Q4iog86Ud7lz6lig6WGc");
-
-        GetDirectionsData directions = new GetDirectionsData(getApplicationContext());
-        dataTransfer[0] = mMap;
-        dataTransfer[1] = sb.toString();
-        dataTransfer[2] = new LatLng(latLngStart.latitude, latLngStart.longitude);
-        dataTransfer[3] = new LatLng(latLngEnd.latitude, latLngEnd.longitude);
-        directions.execute(dataTransfer);
-
     }
 }
