@@ -60,6 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //widgets
     private Button mSearchText;
+    private FloatingActionButton homeButton;
     private FloatingActionButton directions;
     private GoogleMap mMap;
     private GeoJsonLayer layerShop = null;
@@ -80,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<LatLng> loc_fb = new ArrayList<LatLng>();
     private List<LatLng> loc_comm = new ArrayList<LatLng>();/**/
     final int place_picker_req_code = 1;
-    final int directions_req_code = 2;
+    final LatLng Sg = new LatLng(1.353791, 103.818145);
 
     String name;
     LatLng latLng;
@@ -107,6 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         layer.addLayerToMap();*/
 
         mSearchText = findViewById(R.id.input_search);
+        homeButton = findViewById(R.id.homeButton);
         directions = findViewById(R.id.directions);
 
         mSearchText.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +136,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        /*layer.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetView();
+            }
+        });
+
+        GeoJsonLayer.GeoJsonOnFeatureClickListener geoJsonOnFeatureClickListener = new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
             @Override
             public void onFeatureClick(Feature feature) {
                 Geometry geometry = feature.getGeometry();
@@ -142,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("LOCATION_NAME"));
                 System.out.println(geometry);
             }
-        });*/
+        };
 
         chip1 = findViewById(R.id.chip1);
         chip2 = findViewById(R.id.chip2);
@@ -163,25 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String index = buttonView.getText().toString();
                     chipStatus.put(index,true);
                     layers.get(index).addLayerToMap();
-                    layers.get(index).setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
-                        @Override
-                        public void onFeatureClick(Feature feature) {
-                            Geometry geometry = feature.getGeometry();
-
-                            Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("Description"));
-                            String s = feature.getProperty("Description");
-                            int begin = s.indexOf("<th>LOCATION_NAME</th> <td>");
-                            int end = s.indexOf("</td>",begin);
-                            String name = s.substring(begin+27,end);
-
-                            begin = s.indexOf("<th>LOCATION_TYPE</th> <td>");
-                            end = s.indexOf("</td>",begin);
-                            String category = s.substring(begin+27,end);
-
-
-                            System.out.println(category+": "+name);
-                        }
-                    });
+                    layers.get(index).setOnFeatureClickListener(geoJsonOnFeatureClickListener);
                 }
                 else{
                     String index = buttonView.getText().toString();
@@ -246,8 +237,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e(TAG, "Style parsing failed.");
         }
 
-        // Initialize the camera to Singapore
-        LatLng Sg = new LatLng(1.353791, 103.818145);
 
         /*OkHttp obj = new OkHttp();
 
@@ -393,6 +382,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Sg));
         mMap.setMinZoomPreference(11);
+    }
+
+    private void resetView(){
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(Sg));
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(Sg, 11);
+        mMap.animateCamera(update);
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
