@@ -45,6 +45,7 @@ import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -256,9 +257,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         try {
-            layerShop = new GeoJsonLayer(mMap, R.raw.wireless2, getApplicationContext());
-            layerFB = new GeoJsonLayer(mMap, R.raw.wireless3, getApplicationContext());
-            layerComm = new GeoJsonLayer(mMap, R.raw.wireless4, getApplicationContext());
+            JSONObject emptyGeoJson = new JSONObject();
+            layerShop = new GeoJsonLayer(mMap, emptyGeoJson);
+            layerFB = new GeoJsonLayer(mMap, emptyGeoJson);
+            layerComm = new GeoJsonLayer(mMap, emptyGeoJson);
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.wireless, getApplicationContext());
 
 
