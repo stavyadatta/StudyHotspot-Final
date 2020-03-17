@@ -63,8 +63,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.studyhotspot.R.raw.wireless2;
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 
@@ -252,21 +250,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (!success) {
             Log.e(TAG, "Style parsing failed.");
         }
-
-
-        /*OkHttp obj = new OkHttp();
-
-        // id of the wireless hotspots on data.gov.sg is 6b3f1e1b-257d-4d49-8142-1b2271d20143
-        try {
-            System.out.println("CKAN Package Show");
-            String dataURL = obj.getURL("6b3f1e1b-257d-4d49-8142-1b2271d20143");
-
-            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.wireless.geojson, getApplicationContext());
-            layer.addLayerToMap();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
 
 
 
