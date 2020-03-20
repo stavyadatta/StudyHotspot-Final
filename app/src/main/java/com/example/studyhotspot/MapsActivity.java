@@ -7,6 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +48,14 @@ import com.google.maps.android.geometry.Point;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,11 +96,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng latLng;
     JSONObject jsonObject = null;
 
+    JSONObject HotspotData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        // Get Hotspot Data
+        getData();
 
         // Initialize Places.
         Places.initialize(getApplicationContext(), "AIzaSyDfUFca8a0bcE6Q4iog86Ud7lz6lig6WGc");
@@ -241,10 +258,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         try {
-            layerShop = new GeoJsonLayer(mMap, R.raw.wireless2, getApplicationContext());
-            layerFB = new GeoJsonLayer(mMap, R.raw.wireless3, getApplicationContext());
-            layerComm = new GeoJsonLayer(mMap, R.raw.wireless4, getApplicationContext());
-            fullLayer = new GeoJsonLayer(mMap, R.raw.wireless, getApplicationContext());
+            getData();
+            JSONObject emptyGeoJson = new JSONObject();
+            layerShop = new GeoJsonLayer(mMap, emptyGeoJson);
+            layerFB = new GeoJsonLayer(mMap, emptyGeoJson);
+            layerComm = new GeoJsonLayer(mMap, emptyGeoJson);
+            GeoJsonLayer fullLayer = new GeoJsonLayer(mMap, HotspotData);
 
 
             Iterable<GeoJsonFeature> geoJsonFeature = fullLayer.getFeatures();
@@ -433,5 +452,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         startActivity(intent);
         marker.hideInfoWindow();
+    }
+
+    private void getData(){
+        try {
+
+            String dataGovURL = "https://data.gov.sg/api/action/package_show?id=6b3f1e1b-257d-4d49-8142-1b2271d20143";
+
+            String packageURLData = URLReader.readUrl(dataGovURL);
+
+
+            JSONObject Jobject = new JSONObject(packageURLData);
+            String dataURL = Jobject.getJSONObject("result").getJSONArray("resources").getJSONObject(1).get("url").toString();
+
+            String data = URLReader.readUrl(dataURL);
+            HotspotData = new JSONObject(data);
+
+        } catch (Exception e){}
     }
 }
