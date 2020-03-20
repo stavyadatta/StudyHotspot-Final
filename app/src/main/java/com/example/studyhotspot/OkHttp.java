@@ -14,6 +14,7 @@ import okhttp3.Response;
 
 public class OkHttp {
     // one instance, reuse
+    final JSONObject[] result = new JSONObject[1];
     private OkHttpClient httpClient = new OkHttpClient();
 
     public String getURL(String id) throws Exception {
@@ -67,7 +68,6 @@ public class OkHttp {
                 .url(dataURL)
                 .build();
 
-        final JSONObject[] result = new JSONObject[1];
         result[0]=null;
 
         httpClient.newCall(request).enqueue(new Callback() {
@@ -96,7 +96,12 @@ public class OkHttp {
                 }*/
             }
         });
-        while (result[0]==null);
-        return(result[0]);
+
+        if (result[0] == null){
+            return this.accessData(dataURL);
+        }
+        else{
+            return(result[0]);
+        }
     }
 }

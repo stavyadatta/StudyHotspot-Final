@@ -7,11 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -37,44 +37,42 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.maps.android.data.Feature;
-import com.google.maps.android.data.Geometry;
-import com.google.maps.android.data.Layer;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
+import com.google.maps.android.geometry.Point;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.studyhotspot.R.raw.wireless2;
-
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowLongClickListener {
 
 
     //widgets
     private Button mSearchText;
     private FloatingActionButton homeButton;
     private FloatingActionButton directions;
-    private GoogleMap mMap;
-    private GeoJsonLayer layerShop = null;
-    private GeoJsonLayer layerFB = null;
-    private GeoJsonLayer layerComm = null;
+    private static GoogleMap mMap;
+
+
+    private static GeoJsonLayer layerShop = null;
+    private static GeoJsonLayer layerFB = null;
+    private static GeoJsonLayer layerComm = null;
+    private static GeoJsonLayer fullLayer = null;
     static Map<String, GeoJsonLayer> layers = new HashMap<String, GeoJsonLayer>();
 
-
+    private OkHttp obj = new OkHttp();
     private Marker mMarker;
     private static final String TAG = "MapsActivity";
 
     Chip chip1, chip2, chip3;
     static Map<String, Boolean> chipStatus = new HashMap<String, Boolean>();
-    private ArrayList<String> selectedChips = new ArrayList<String>();
 
     private List<Place.Field> fields;
     private List<LatLng> loc_gov = new ArrayList<LatLng>();
@@ -85,8 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     String name;
     LatLng latLng;
-    LatLng latLngStart;
-    LatLng latLngEnd;
+    JSONObject jsonObject = null;
 
 
     @Override
@@ -104,6 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         /*GeoJsonLayer layer = new GeoJsonLayer(mMap, jObjek);
         layer.addLayerToMap();*/
 
@@ -125,7 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?saddr=1.353791,103.818145&daddr=1.353791,103.818145"));
+                        Uri.parse("https://www.google.com/maps/dir///@1.3553318,103.6941784,15z/data=!4m2!4m1!3e0"));
                 startActivity(intent);
 
                 /*Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
@@ -143,16 +141,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        GeoJsonLayer.GeoJsonOnFeatureClickListener geoJsonOnFeatureClickListener = new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
-            @Override
-            public void onFeatureClick(Feature feature) {
-                Geometry geometry = feature.getGeometry();
-
-                Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("LOCATION_NAME"));
-                System.out.println(geometry);
-            }
-        };
-
         chip1 = findViewById(R.id.chip1);
         chip2 = findViewById(R.id.chip2);
         chip3 = findViewById(R.id.chip3);
@@ -163,8 +151,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
 
-        boolean filter_gov = false;
-
         CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -172,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String index = buttonView.getText().toString();
                     chipStatus.put(index,true);
                     layers.get(index).addLayerToMap();
-                    layers.get(index).setOnFeatureClickListener(geoJsonOnFeatureClickListener);
+
                 }
                 else{
                     String index = buttonView.getText().toString();
@@ -181,7 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         };
-
         chip1.setOnCheckedChangeListener(checkedChangeListener);
         chip2.setOnCheckedChangeListener(checkedChangeListener);
         chip3.setOnCheckedChangeListener(checkedChangeListener);
@@ -259,10 +244,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             layerShop = new GeoJsonLayer(mMap, R.raw.wireless2, getApplicationContext());
             layerFB = new GeoJsonLayer(mMap, R.raw.wireless3, getApplicationContext());
             layerComm = new GeoJsonLayer(mMap, R.raw.wireless4, getApplicationContext());
-            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.wireless, getApplicationContext());
+            fullLayer = new GeoJsonLayer(mMap, R.raw.wireless, getApplicationContext());
 
 
-            Iterable<GeoJsonFeature> geoJsonFeature = layer.getFeatures();
+            Iterable<GeoJsonFeature> geoJsonFeature = fullLayer.getFeatures();
 
             for(GeoJsonFeature cur : geoJsonFeature) {
                 String s = cur.getProperty("Description");
@@ -292,15 +277,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         GeoJsonPointStyle pointStyle = layerFB.getDefaultPointStyle();
         pointStyle.setIcon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi));
-        pointStyle.setTitle("View Information");
+        pointStyle.setTitle("Information (Long Click)");
 
         pointStyle = layerShop.getDefaultPointStyle();
         pointStyle.setIcon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi));
-        pointStyle.setTitle("View Information");
+        pointStyle.setTitle("Information (Long Click)");
 
         pointStyle = layerComm.getDefaultPointStyle();
         pointStyle.setIcon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi));
-        pointStyle.setTitle("View Information");
+        pointStyle.setTitle("Information (Long Click)");
 
         /*layerShop.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
             @Override
@@ -368,18 +353,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(bitmapDescriptorFromVector(this, R.drawable.ic_wifi)));
         }*/
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                System.out.println("Click");
-                System.out.println(marker.getPosition());
-                System.out.println(marker.getTitle());
-                return true;
-            }
-        });
-
         mMap.setTrafficEnabled(true);
-
+        mMap.setOnInfoWindowLongClickListener(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Sg));
         mMap.setMinZoomPreference(11);
     }
@@ -397,5 +372,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @Override
+    public void onInfoWindowLongClick(Marker marker) {
+        Iterable<GeoJsonFeature> geoJsonFeature = fullLayer.getFeatures();
+
+        String target = marker.getPosition().toString();
+        int begin = target.indexOf("(");
+        int end = target.indexOf(")");
+        String targetCoord = target.substring(begin+1, end);
+
+        System.out.println(targetCoord);
+        System.out.println("^TARGET");
+
+        String name = null;
+        String s = null;
+        String match = null;
+
+        for(GeoJsonFeature cur : geoJsonFeature) {
+
+            match = cur.getGeometry().toString();
+
+            if (match.contains(target)){
+                System.out.println("MATCH");
+                s = cur.getProperty("Description");
+                begin = s.indexOf("<th>LOCATION_NAME</th> <td>");
+                end = s.indexOf("</td>",begin);
+                name = s.substring(begin+27,end);
+                break;
+            }
+        }
+
+        System.out.println(name);
+
+
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=");
+        sb.append(name);
+        sb.append("&inputtype=textquery&fields=place_id&key=AIzaSyDfUFca8a0bcE6Q4iog86Ud7lz6lig6WGc&locationbias=ipbias");
+        String url = sb.toString();
+
+        System.out.println(url);
+
+        try {
+            jsonObject = obj.accessData(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        Intent intent = new Intent(MapsActivity.this, LocationInformationActivity.class);
+        intent.putExtra("Name", name);
+        intent.putExtra("Coord", targetCoord);
+        try {
+            intent.putExtra("PlaceID", jsonObject.get("candidates").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        startActivity(intent);
+        marker.hideInfoWindow();
     }
 }

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menuFav"
-        android:icon="@drawable/ic_star"
+        android:icon="@drawable/ic_stars"
         android:title="@string/Fav"
         app:showAsAction="ifRoom"/>
 

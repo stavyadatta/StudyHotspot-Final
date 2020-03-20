@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LocationInformationActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:elevation="5dp"
+        android:background="@drawable/blue_border"
+        android:id="@+id/relLayout2">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="39dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_arrow_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/location_name"
+            android:layout_width="235dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/back_button"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:textSize="23sp"
+            android:textColor="#FFF"
+            android:background="@android:color/transparent"
+            />
+
+    </RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        map:backgroundTint = "@color/quantum_bluegrey700"
+        map:menu="@menu/app_bar_menu"
+        map:navigationIcon="@drawable/ic_wifilogo" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_black_24dp"
+        map:backgroundTint="@color/quantum_bluegrey400"
+        map:layout_anchor = "@id/bottomAppBar"
+        map:maxImageSize="35dp"
+        map:tint = "@color/colorWhite"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/directions"
+        style="@style/Widget.Design.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:elevation="10dp"
+        map:backgroundTint="@color/colorWhite"
+        map:maxImageSize="35dp"
+        map:srcCompat="@drawable/ic_directions"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="572dp"
+        android:layout_marginTop="100dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:id="@+id/ic_magnify"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_magnify"/>
+
+            <TextView
+                android:id="@+id/details_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:background="@android:color/transparent"
+                />
+            <TextView
+                android:id="@+id/details_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:background="@android:color/transparent"
+                />
+            <TextView
+                android:id="@+id/details_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:background="@android:color/transparent"
+                />
+            <TextView
+                android:id="@+id/details_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:background="@android:color/transparent"
+                />
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

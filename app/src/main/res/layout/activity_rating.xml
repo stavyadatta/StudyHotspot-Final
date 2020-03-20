@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RatingActivity">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="top"
+        app:backgroundTint="@color/quantum_bluegrey700"
+        app:navigationIcon="@drawable/ic_wifilogo"
+        android:contentDescription="@string/Rating" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="300dp"/>
+
+    <RelativeLayout
+        android:id="@+id/relLayout2"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="500dp"
+        android:background="@drawable/blue_border"
+        android:elevation="10dp"
+        android:outlineSpotShadowColor="@color/quantum_bluegrey50">
+
+        <ImageView
+            android:id="@+id/ic_rating"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/ic_stars" />
+
+        <Button
+            android:id="@+id/submit_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/ic_rating"
+            android:background="@null"
+            android:text="SUBMIT RATING"
+            android:textColor="#FFF"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:backgroundTint = "@color/quantum_bluegrey700"
+        app:menu="@menu/app_bar_menu"
+        app:navigationIcon="@drawable/ic_wifilogo" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_black_24dp"
+        app:backgroundTint="@color/quantum_bluegrey400"
+        app:layout_anchor = "@id/bottomAppBar"
+        app:maxImageSize="35dp"
+        app:tint = "@color/colorWhite"/>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="textMultiLine"
+        android:textColor="@color/quantum_black_text"
+        android:hint="@string/Review"
+        android:background="@drawable/grey_border"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
