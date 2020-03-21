@@ -90,9 +90,10 @@
                 android:textSize="18sp"
                 map:layout_constraintBottom_toBottomOf="parent"
                 map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintHorizontal_bias="0.0"
                 map:layout_constraintStart_toStartOf="parent"
                 map:layout_constraintTop_toTopOf="parent"
-                map:layout_constraintVertical_bias="1.0" />
+                map:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/titleT"
@@ -118,6 +119,7 @@
                 android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
                 android:hint="Enter Title Here"
+                android:inputType="textShortMessage"
                 android:textColor="#000"
                 android:textSize="18sp"
                 map:layout_constraintBottom_toBottomOf="parent"
@@ -125,7 +127,8 @@
                 map:layout_constraintHorizontal_bias="0.589"
                 map:layout_constraintStart_toStartOf="parent"
                 map:layout_constraintTop_toTopOf="parent"
-                map:layout_constraintVertical_bias="0.06" />
+                map:layout_constraintVertical_bias="0.06"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/descriptionT"
@@ -151,6 +154,7 @@
                 android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
                 android:hint="Enter Description Here"
+                android:inputType="text|textMultiLine"
                 android:scrollHorizontally="true"
                 android:textColor="#000"
                 android:textSize="18sp"
@@ -350,8 +354,8 @@
 
             <Button
                 android:id="@+id/submitBtn"
-                android:layout_width="120dp"
-                android:layout_height="65dp"
+                android:layout_width="101dp"
+                android:layout_height="69dp"
                 android:backgroundTint="@android:color/holo_green_light"
                 android:text="Submit"
                 android:textColor="@android:color/white"
@@ -365,8 +369,8 @@
 
             <Button
                 android:id="@+id/cancelBtn"
-                android:layout_width="100dp"
-                android:layout_height="65dp"
+                android:layout_width="101dp"
+                android:layout_height="69dp"
                 android:text="Cancel"
                 map:layout_constraintBottom_toBottomOf="parent"
                 map:layout_constraintEnd_toEndOf="parent"
@@ -388,6 +392,34 @@
                 map:layout_constraintTop_toBottomOf="@+id/endtimeT"
                 map:layout_constraintVertical_bias="0.826" />
 
+            <TextView
+                android:id="@+id/locationPlaceHolder"
+                android:layout_width="200dp"
+                android:layout_height="27dp"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:text="Chosen Location"
+                android:textColor="#000"
+                android:textSize="18sp"
+                map:layout_constraintBottom_toBottomOf="parent"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintHorizontal_bias="0.72"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent"
+                map:layout_constraintVertical_bias="0.589" />
+
+            <EditText
+                android:id="@+id/sessionparticipants"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:ems="1"
+                android:inputType="number"
+                map:layout_constraintBottom_toBottomOf="parent"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintHorizontal_bias="0.777"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent"
+                map:layout_constraintVertical_bias="0.67" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
