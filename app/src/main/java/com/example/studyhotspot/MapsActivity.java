@@ -67,7 +67,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static GeoJsonLayer fullLayer = null;
     static Map<String, GeoJsonLayer> layers = new HashMap<String, GeoJsonLayer>();
 
-    private OkHttp obj = new OkHttp();
     private Marker mMarker;
     private static final String TAG = "MapsActivity";
 
@@ -98,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getData();
 
         // Initialize Places.
-        Places.initialize(getApplicationContext(), "AIzaSyDfUFca8a0bcE6Q4iog86Ud7lz6lig6WGc");
+        Places.initialize(getApplicationContext(), "AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU");
 
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(this);
@@ -229,7 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        /*OkHttp obj = new OkHttp();
+        /*
 
         // id of the wireless hotspots on data.gov.sg is 6b3f1e1b-257d-4d49-8142-1b2271d20143
         try {
@@ -252,7 +251,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             layerShop = new GeoJsonLayer(mMap, emptyGeoJson);
             layerFB = new GeoJsonLayer(mMap, emptyGeoJson);
             layerComm = new GeoJsonLayer(mMap, emptyGeoJson);
-            GeoJsonLayer fullLayer = new GeoJsonLayer(mMap, HotspotData);
+            fullLayer = new GeoJsonLayer(mMap, HotspotData);
 
 
             Iterable<GeoJsonFeature> geoJsonFeature = fullLayer.getFeatures();
@@ -419,13 +418,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         StringBuilder sb = new StringBuilder();
         sb.append("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=");
         sb.append(name);
-        sb.append("&inputtype=textquery&fields=place_id&key=AIzaSyDfUFca8a0bcE6Q4iog86Ud7lz6lig6WGc&locationbias=ipbias");
+        sb.append("&inputtype=textquery&fields=place_id&key=AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU&locationbias=ipbias");
         String url = sb.toString();
 
         System.out.println(url);
 
         try {
-            jsonObject = obj.accessData(url);
+            String jsonstring = URLReader.readUrl(sb.toString());
+            jsonObject = new JSONObject(jsonstring);
         } catch (Exception e) {
             e.printStackTrace();
         }

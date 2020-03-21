@@ -1,42 +1,79 @@
 {
   "project_info": {
-    "project_number": "511469889978",
-    "firebase_url": "https://study-hotspot-c7f39.firebaseio.com",
-    "project_id": "study-hotspot-c7f39",
-    "storage_bucket": "study-hotspot-c7f39.appspot.com"
+    "project_number": "832759390220",
+    "firebase_url": "https://studyhotspot2.firebaseio.com",
+    "project_id": "studyhotspot2",
+    "storage_bucket": "studyhotspot2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:511469889978:android:9cc7030eebc243e9b11583",
+        "mobilesdk_app_id": "1:832759390220:android:a50dd67642e792e0f3ce29",
         "android_client_info": {
-          "package_name": "com.example.studyhotspot"
+          "package_name": "com.example.studyhotspot2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "511469889978-21v650kddgrs9qetqajv5u1kek8p74rs.apps.googleusercontent.com",
+          "client_id": "832759390220-v6i5endquue0j14us74o9c3bgvggvdfs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.studyhotspot",
+            "package_name": "com.example.studyhotspot2",
             "certificate_hash": "26c6db1389a68e47d0bc9cd3dbe2cc350e8413b6"
           }
         },
         {
-          "client_id": "511469889978-rpk86t7r84da3jsehh7cvpou363fls9f.apps.googleusercontent.com",
+          "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTROiQdT7SW6jl6fQOLsgKPIa1s62oAxw"
+          "current_key": "AIzaSyDEiMOD3q4UmlzsC1k41t13S91CNC7Wox8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "511469889978-rpk86t7r84da3jsehh7cvpou363fls9f.apps.googleusercontent.com",
+              "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832759390220:android:dda5b218a1aca136f3ce29",
+        "android_client_info": {
+          "package_name": "com.example.studyhotspotV2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832759390220-5ph325v5q7p8rpo1c233vqru15e5vjaa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.studyhotspotV2",
+            "certificate_hash": "26c6db1389a68e47d0bc9cd3dbe2cc350e8413b6"
+          }
+        },
+        {
+          "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEiMOD3q4UmlzsC1k41t13S91CNC7Wox8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
