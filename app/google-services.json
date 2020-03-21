@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "32344163136",
-    "firebase_url": "https://study-hotspot-5c88d.firebaseio.com",
-    "project_id": "study-hotspot-5c88d",
-    "storage_bucket": "study-hotspot-5c88d.appspot.com"
+    "project_number": "511469889978",
+    "firebase_url": "https://study-hotspot-c7f39.firebaseio.com",
+    "project_id": "study-hotspot-c7f39",
+    "storage_bucket": "study-hotspot-c7f39.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:32344163136:android:edb045e174022197cab0a5",
+        "mobilesdk_app_id": "1:511469889978:android:9cc7030eebc243e9b11583",
         "android_client_info": {
           "package_name": "com.example.studyhotspot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "32344163136-bkd2nkmuftkqc4io69obmnqfcurn7guh.apps.googleusercontent.com",
+          "client_id": "511469889978-21v650kddgrs9qetqajv5u1kek8p74rs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.studyhotspot",
@@ -23,20 +23,20 @@
           }
         },
         {
-          "client_id": "32344163136-agrj4069iv6cmfm7h70fo2ccb2n5bken.apps.googleusercontent.com",
+          "client_id": "511469889978-rpk86t7r84da3jsehh7cvpou363fls9f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBm4lILTI825VSJBDT-YitGLX0qm3Tl15g"
+          "current_key": "AIzaSyDTROiQdT7SW6jl6fQOLsgKPIa1s62oAxw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "32344163136-agrj4069iv6cmfm7h70fo2ccb2n5bken.apps.googleusercontent.com",
+              "client_id": "511469889978-rpk86t7r84da3jsehh7cvpou363fls9f.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
