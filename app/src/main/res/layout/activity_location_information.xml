@@ -73,220 +73,293 @@
         map:maxImageSize="35dp"
         map:srcCompat="@drawable/ic_directions"/>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView2"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="547dp"
-        android:layout_marginTop="100dp">
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="60dp">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintHorizontal_bias="0.0"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintVertical_bias="1.0">
 
-
-            <TextView
-                android:id="@+id/scroll"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:background="@android:color/transparent"
-                android:textColor="#000"
-                android:textSize="18sp"
-                map:layout_constraintBottom_toBottomOf="parent"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.0"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toTopOf="parent"
-                map:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/addressT"
-                android:layout_width="141dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="30dp"
-                android:background="@android:color/transparent"
-                android:text="ADDRESS"
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintBottom_toBottomOf="parent"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.107"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toTopOf="parent"
-                map:layout_constraintVertical_bias="0.061" />
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="324dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@android:color/transparent"
-                android:textColor="#000"
-                android:textSize="18sp"
-                map:layout_constraintBottom_toTopOf="@+id/phoneT"
-                map:layout_constraintEnd_toEndOf="@+id/scroll"
-                map:layout_constraintHorizontal_bias="0.349"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toBottomOf="@+id/addressT"
-                map:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/phoneT"
-                android:layout_width="141dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="85dp"
-                android:background="@android:color/transparent"
-                android:text="PHONE"
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.107"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toBottomOf="@+id/addressT"
-                map:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/phone"
-                android:layout_width="323dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="28dp"
-                android:background="@android:color/transparent"
-                android:textColor="#000"
-                android:textSize="18sp"
-                map:layout_constraintBottom_toTopOf="@+id/openT"
-                map:layout_constraintEnd_toEndOf="@+id/scroll"
-                map:layout_constraintHorizontal_bias="0.017"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toBottomOf="@+id/phoneT"
-                map:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/openT"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="40dp"
-                android:background="@android:color/transparent"
-                android:text="STATUS: "
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintEnd_toEndOf="@+id/scroll"
-                map:layout_constraintHorizontal_bias="0.083"
-                map:layout_constraintStart_toStartOf="@+id/scroll"
-                map:layout_constraintTop_toBottomOf="@+id/phoneT" />
-
-            <TextView
-                android:id="@+id/openStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/transparent"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.127"
-                map:layout_constraintStart_toEndOf="@+id/openT"
-                map:layout_constraintTop_toBottomOf="@+id/phone" />
-
-            <TextView
-                android:id="@+id/hours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/transparent"
-                android:textColor="#000"
-                android:textSize="18sp"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.277"
-                map:layout_constraintStart_toStartOf="@+id/scroll"
-                map:layout_constraintTop_toBottomOf="@+id/openStatus" />
-
-            <TextView
-                android:id="@+id/priceT"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/transparent"
-                android:text="PRICE LEVEL: "
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintEnd_toEndOf="@+id/scroll"
-                map:layout_constraintHorizontal_bias="0.099"
-                map:layout_constraintStart_toStartOf="@+id/scroll"
-                map:layout_constraintTop_toBottomOf="@+id/hours" />
-
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/transparent"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.049"
-                map:layout_constraintStart_toEndOf="@+id/priceT"
-                map:layout_constraintTop_toBottomOf="@+id/hours" />
-
-            <TextView
-                android:id="@+id/ratingT"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="80dp"
-                android:background="@android:color/transparent"
-                android:text="RATING: "
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                map:layout_constraintEnd_toEndOf="@+id/scroll"
-                map:layout_constraintHorizontal_bias="0.087"
-                map:layout_constraintStart_toStartOf="@+id/scroll"
-                map:layout_constraintTop_toBottomOf="@+id/priceT" />
-
-            <RatingBar
-                android:id="@+id/MyRating"
-                style="?android:attr/ratingBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="45dp"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:stepSize="0.1"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintHorizontal_bias="0.401"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toBottomOf="@+id/price"
-                map:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/seeReviews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:background="@drawable/blue_border"
-                android:text="View Past Ratings"
-                android:textSize="12sp"
-                map:layout_constraintEnd_toEndOf="@+id/scroll"
-                map:layout_constraintHorizontal_bias="0.646"
-                map:layout_constraintStart_toEndOf="@+id/MyRating"
-                map:layout_constraintTop_toBottomOf="@+id/price"
-                map:layout_constraintVertical_bias="0.0" />
+                android:elevation="0dp">
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.0"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toTopOf="parent"
+                    map:layout_constraintVertical_bias="0.051" />
+
+                <TextView
+                    android:id="@+id/addressT"
+                    android:layout_width="141dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="30dp"
+                    android:background="@android:color/transparent"
+                    android:text="ADDRESS"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.107"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toTopOf="parent"
+                    map:layout_constraintVertical_bias="0.061" />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="324dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    map:layout_constraintBottom_toTopOf="@+id/phoneT"
+                    map:layout_constraintEnd_toEndOf="@+id/scroll"
+                    map:layout_constraintHorizontal_bias="0.349"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toBottomOf="@+id/addressT"
+                    map:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/phoneT"
+                    android:layout_width="141dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="85dp"
+                    android:background="@android:color/transparent"
+                    android:text="PHONE"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.107"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toBottomOf="@+id/addressT"
+                    map:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="323dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="28dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    map:layout_constraintBottom_toTopOf="@+id/openT"
+                    map:layout_constraintEnd_toEndOf="@+id/scroll"
+                    map:layout_constraintHorizontal_bias="0.017"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toBottomOf="@+id/phoneT"
+                    map:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/openT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="50dp"
+                    android:background="@android:color/transparent"
+                    android:text="STATUS: "
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintEnd_toEndOf="@+id/scroll"
+                    map:layout_constraintHorizontal_bias="0.083"
+                    map:layout_constraintStart_toStartOf="@+id/scroll"
+                    map:layout_constraintTop_toBottomOf="@+id/phoneT" />
+
+                <TextView
+                    android:id="@+id/openStatus"
+                    android:layout_width="150dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@android:color/transparent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.07"
+                    map:layout_constraintStart_toEndOf="@+id/openT"
+                    map:layout_constraintTop_toBottomOf="@+id/phone" />
+
+                <TextView
+                    android:id="@+id/hours"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintStart_toStartOf="@+id/scroll"
+                    map:layout_constraintTop_toBottomOf="@+id/openStatus" />
+
+                <TextView
+                    android:id="@+id/priceT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent"
+                    android:text="PRICE LEVEL: "
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintEnd_toEndOf="@+id/scroll"
+                    map:layout_constraintHorizontal_bias="0.099"
+                    map:layout_constraintStart_toStartOf="@+id/scroll"
+                    map:layout_constraintTop_toBottomOf="@+id/hours" />
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.049"
+                    map:layout_constraintStart_toEndOf="@+id/priceT"
+                    map:layout_constraintTop_toBottomOf="@+id/hours" />
+
+                <TextView
+                    android:id="@+id/ratingT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="80dp"
+                    android:background="@android:color/transparent"
+                    android:text="RATING: "
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintEnd_toEndOf="@+id/scroll"
+                    map:layout_constraintHorizontal_bias="0.087"
+                    map:layout_constraintStart_toStartOf="@+id/scroll"
+                    map:layout_constraintTop_toBottomOf="@+id/priceT" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="45dp"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:progressTint="@color/quantum_yellow600"
+                    android:stepSize="0.1"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.365"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toBottomOf="@+id/price" />
+
+                <Button
+                    android:id="@+id/seeReviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:background="@drawable/blue_border"
+                    android:text="View Past Ratings"
+                    android:textSize="12sp"
+                    map:layout_constraintEnd_toEndOf="@+id/scroll"
+                    map:layout_constraintHorizontal_bias="0.483"
+                    map:layout_constraintStart_toEndOf="@+id/ratingBar"
+                    map:layout_constraintTop_toBottomOf="@+id/price" />
+
+                <TextView
+                    android:id="@+id/weatherT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="80dp"
+                    android:background="@android:color/transparent"
+                    android:text="WEATHER:"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toBottomOf="@+id/ratingT"
+                    map:layout_constraintVertical_bias="0.0" />
+
+                <ImageView
+                    android:id="@+id/condIcon"
+                    android:layout_width="74dp"
+                    android:layout_height="63dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="30dp"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.095"
+                    map:layout_constraintStart_toEndOf="@+id/weatherT"
+                    map:layout_constraintTop_toBottomOf="@+id/ratingBar"
+                    map:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/condDescr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:layout_below="@id/condIcon"
+                    android:layout_alignLeft="@id/condIcon"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.241"
+                    map:layout_constraintStart_toEndOf="@+id/condIcon"
+                    map:layout_constraintTop_toBottomOf="@+id/temp"
+                    map:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/temp"
+                    android:layout_width="66dp"
+                    android:layout_height="23dp"
+
+                    android:layout_toRightOf="@id/condDescr"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintHorizontal_bias="0.24"
+                    map:layout_constraintStart_toEndOf="@+id/condIcon"
+                    map:layout_constraintTop_toBottomOf="@+id/seeReviews"
+                    map:layout_constraintVertical_bias="0.2" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

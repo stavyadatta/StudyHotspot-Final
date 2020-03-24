@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +34,10 @@ public class LocationInformationActivity extends AppCompatActivity {
     private TextView price;
     private TextView website;
     private TextView rating;
+    private RatingBar ratingBar;
+    private TextView tempView;
+    private TextView condDesc;
+    private ImageView condIcon;
 
 
     String name = null;
@@ -56,6 +61,11 @@ public class LocationInformationActivity extends AppCompatActivity {
         openStatus = findViewById(R.id.openStatus);
         hours = findViewById(R.id.hours);
         price = findViewById(R.id.price);
+        ratingBar = findViewById(R.id.ratingBar);
+        condDesc = findViewById(R.id.condDescr);
+        tempView = findViewById(R.id.temp);
+        condIcon = findViewById(R.id.condIcon);
+
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
@@ -128,6 +138,7 @@ public class LocationInformationActivity extends AppCompatActivity {
             sb = new StringBuilder();
 
             for (int i = 0; i < weekdays.length(); i++){
+                sb.append("- ");
                 sb.append(weekdays.get(i));
                 sb.append("\n");
             }
@@ -139,6 +150,40 @@ public class LocationInformationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        ratingBar.setRating(4);
+
+        //WEATHER STARTS HERE
+
+        String jsonstring = null;
+        JSONObject weatherJSON = null;
+        int temp;
+        try {
+            jsonstring = URLReader.readUrl("https://api.openweathermap.org/data/2.5/weather?q=singapore&APPID=8b209724831a07af211a052c5e87e404");
+            jsonObject = new JSONObject(jsonstring);
+            weatherJSON = jsonObject.getJSONArray("weather").getJSONObject(0);
+            temp = (jsonObject.getJSONObject("main").getInt("temp") - 273);
+
+            tempView.setText(""+temp+" °C");
+
+            String cond = weatherJSON.get("description").toString();
+            condDesc.setText(cond);
+
+            if (cond.contains("thunder")){
+                condIcon.setImageResource(R.mipmap.thunderstorm);
+            }
+            else if (cond.contains("cloud")){
+                condIcon.setImageResource(R.mipmap.cloud);
+            }
+            else if (cond.contains("rain")){
+                condIcon.setImageResource(R.mipmap.rain);
+            }
+            else if (cond.contains("clear")){
+                condIcon.setImageResource(R.mipmap.clear);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         sb = new StringBuilder();
         sb.append("http://maps.google.com/maps?daddr=");
@@ -175,4 +220,19 @@ public class LocationInformationActivity extends AppCompatActivity {
         });
 
     }
+    /*protected Weather doInBackground(String... params) {
+        Weather weather = new Weather();
+        String data = ( (new WeatherHttpClient()).getWeatherData(params[0]));
+
+        try {
+            weather = JSONWeatherParser.getWeather(data);
+
+            // Let's retrieve the icon
+            weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return weather;
+    }*/
 }
