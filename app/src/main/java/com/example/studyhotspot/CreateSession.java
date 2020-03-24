@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -19,11 +20,17 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class CreateSession extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener{
 
@@ -36,6 +43,14 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
     private DatePickerDialog.OnDateSetListener mStartDateSetListener;
     private DatePickerDialog.OnDateSetListener mEndDateSetListener;
     private EditText mSessionParticipants;
+    private Switch mSwitchPublic;
+
+    String startDate;
+    String startTime;
+    String endDate;
+    String endTime;
+    int sessionParticipants;
+    boolean isPublic;
 
     boolean isStartTime = true;
 
@@ -58,13 +73,26 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         mStartTime = (TextView) findViewById(R.id.selectstarttimeT);
         mEndTime = (TextView) findViewById(R.id.selectendtimeT);
         mSessionParticipants = (EditText) findViewById(R.id.sessionparticipants);
+        mSwitchPublic = (Switch) findViewById(R.id.switchBtn);
+
 
         findViewById(R.id.submitBtn).setOnClickListener(this);
+
+        mSwitchPublic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSwitchPublic.isChecked()) {
+                    isPublic = true;
+                }
+                else
+                    isPublic = false;
+            }
+        });
 
         mSessionParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int sessionParticipants = Integer.valueOf(mSessionParticipants.getText().toString());
+                sessionParticipants = Integer.valueOf(mSessionParticipants.getText().toString());
                 Log.d("NUMBER","Successful number input");
                 mSessionParticipants.setText(String.valueOf(sessionParticipants));
             }
@@ -130,8 +158,8 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
                 month = month + 1;
                 Log.d(TAG, "onDateSet: dd/mm/yyy: " + day + "/" + month + "/" + year);
 
-                String date = day + "/" + month + "/" + year;
-                mStartDate.setText(date);
+                startDate = day + "/" + month + "/" + year;
+                mStartDate.setText(startDate);
             }
         };
 
@@ -141,8 +169,8 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
                 month = month + 1;
                 Log.d(TAG, "onDateSet: dd/mm/yyy: " + day + "/" + month + "/" + year);
 
-                String date = day + "/" + month + "/" + year;
-                mEndDate.setText(date);
+                endDate = day + "/" + month + "/" + year;
+                mEndDate.setText(endDate);
             }
         };
     }
@@ -151,9 +179,11 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         String h = String.format("%02d", hourOfDay);
         String m = String.format("%02d", minute);
         if(isStartTime==true){
-            mStartTime.setText(h +":"+ m);
+            startTime = h +":"+ m;
+            mStartTime.setText(startTime);
         } else {
-            mEndTime.setText(h +":"+ m);
+            endTime = h +":"+ m;
+            mEndTime.setText(endTime);
         }
     }
 
@@ -171,6 +201,31 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         String title = editTitle.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
 
+        //Date Time
+        SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+        String startDateTimeString = startDate + " " + startTime;
+        String endDateTimeString = endDate + " " + endTime;
+        Log.d("PrintStartDate","startDateTimeString: " + startDateTimeString);
+        Log.d("PrintEndDate","endDateTimeString: " + endDateTimeString);
+        Log.d("PrintTimezone","timezone: "+  System.getProperty("user.timezone"));
+        Log.d("PrintTimezone","timezone: "+ ZonedDateTime.now());
+
+        Date startDateFormatted = new Date();
+        Date endDateFormatted = new Date();
+        
+        try {
+            startDateFormatted = dateFormatter.parse(startDateTimeString);
+            endDateFormatted = dateFormatter.parse(endDateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        
+        Timestamp startDateTimeTimestamp = new Timestamp(startDateFormatted);
+        Timestamp endDateTimeTimestamp = new Timestamp(endDateFormatted);
+
 
         if (!hasValidationErrors(title)) {
 
@@ -178,7 +233,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             CollectionReference dbSessions = db.collection("sessions");
 
             Session session = new Session(
-                    title, description
+                    title, description, startDateTimeTimestamp, endDateTimeTimestamp, sessionParticipants, isPublic
             );
 
             dbSessions.add(session)

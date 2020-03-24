@@ -3,16 +3,13 @@ package com.example.studyhotspot;
 import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
-import java.sql.Time;
 
 public class Session implements Serializable{
 
     private String title;
     private String description;
-    private String startdate;
-    private String starttime;
-    private String enddate;
-    private String endtime;
+    private Timestamp startDateTime;
+    private Timestamp endDateTime;
     private int numOfParticipants;
     private boolean privateORpublic;
 
@@ -25,13 +22,11 @@ public class Session implements Serializable{
         this.description = description;
     }
 
-    public Session(String title, String description, String startdate, String starttime, String enddate, String endtime, int numOfParticipants, boolean privateORpublic) {
+    public Session(String title, String description, Timestamp startDateTime, Timestamp endDateTime , int numOfParticipants, boolean privateORpublic) {
         this.title = title;
         this.description = description;
-        this.startdate = startdate;
-        this.starttime = starttime;
-        this.enddate = enddate;
-        this.endtime = endtime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.numOfParticipants = numOfParticipants;
         this.privateORpublic = privateORpublic;
     }
@@ -44,13 +39,9 @@ public class Session implements Serializable{
         return description;
     }
 
-    public String getStartTime() {return startdate;}
+    public Timestamp getStartDateTime() {return startDateTime;}
 
-    public String getStarttime() {return starttime;}
-
-    public String getEnddate() {return enddate;}
-
-    public String getEndTime() {return endtime;}
+    public Timestamp getEndDateTime() {return endDateTime;}
 
     public int getNumOfParticipants() {return numOfParticipants;}
 
