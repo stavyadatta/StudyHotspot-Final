@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,6 +34,11 @@ public class LocationInformationActivity extends AppCompatActivity {
     private TextView website;
     private TextView rating;
 
+
+    String name = null;
+    String coord = null;
+    String rawPlaceID = null;
+
     JSONObject jsonObject = null;
 
     @Override
@@ -50,10 +56,6 @@ public class LocationInformationActivity extends AppCompatActivity {
         openStatus = findViewById(R.id.openStatus);
         hours = findViewById(R.id.hours);
         price = findViewById(R.id.price);
-
-        String name = null;
-        String coord = null;
-        String rawPlaceID = null;
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
@@ -164,6 +166,10 @@ public class LocationInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LocationInformationActivity.this, CreateSession.class);
+                intent.putExtra("Name", name);
+                intent.putExtra("Coord", coord);
+                Log.d("name:", name);
+                Log.d("Coord", coord);
                 startActivity(intent);
             }
         });

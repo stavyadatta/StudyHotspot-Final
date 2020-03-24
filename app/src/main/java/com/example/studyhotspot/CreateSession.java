@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -36,6 +37,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
     EditText editTitle;
     EditText editDescription;
+    private TextView locationName;
     private TextView mStartDate;
     private TextView mEndDate;
     private TextView mStartTime;
@@ -56,12 +58,25 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
     FirebaseFirestore db;
 
+    String name = null;
+    String coord = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_session);
 
+
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            name = extras.getString("Name");
+            coord = extras.getString("Coord");
+        }
+
         db = FirebaseFirestore.getInstance();
+
+        locationName = findViewById(R.id.locationPlaceHolder);
+        locationName.setText(name);
 
         editTitle = findViewById(R.id.title);
         editDescription = findViewById(R.id.description);
