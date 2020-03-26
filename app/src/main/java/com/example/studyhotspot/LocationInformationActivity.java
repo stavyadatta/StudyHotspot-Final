@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +39,9 @@ public class LocationInformationActivity extends AppCompatActivity {
     private TextView tempView;
     private TextView condDesc;
     private ImageView condIcon;
+    private TextView time;
+    private SeekBar timeBar;
+    private RatingBar favorite;
 
 
     String name = null;
@@ -65,6 +69,9 @@ public class LocationInformationActivity extends AppCompatActivity {
         condDesc = findViewById(R.id.condDescr);
         tempView = findViewById(R.id.temp);
         condIcon = findViewById(R.id.condIcon);
+        time = findViewById(R.id.time);
+        timeBar = findViewById(R.id.timeBar);
+        favorite = findViewById(R.id.favorite);
 
 
         Bundle extras = getIntent().getExtras();
@@ -155,19 +162,31 @@ public class LocationInformationActivity extends AppCompatActivity {
         //WEATHER STARTS HERE
 
         String jsonstring = null;
-        JSONObject weatherJSON = null;
-        int temp;
+        JSONArray weatherJSON = null;
+
         try {
-            jsonstring = URLReader.readUrl("https://api.openweathermap.org/data/2.5/weather?q=singapore&APPID=8b209724831a07af211a052c5e87e404");
-            jsonObject = new JSONObject(jsonstring);
-            weatherJSON = jsonObject.getJSONArray("weather").getJSONObject(0);
-            temp = (jsonObject.getJSONObject("main").getInt("temp") - 273);
+            jsonstring = URLReader.readUrl("https://api.openweathermap.org/data/2.5/forecast?id=1880251&APPID=8b209724831a07af211a052c5e87e404");
+            weatherJSON = new JSONObject(jsonstring).getJSONArray("list");
+            System.out.println(weatherJSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            tempView.setText(""+temp+" °C");
+        JSONArray finalWeatherJSON = weatherJSON;
 
-            String cond = weatherJSON.get("description").toString();
+        //Initialize timeBar
+        try {
+            JSONObject cur = finalWeatherJSON.getJSONObject(0);
+
+            //Find and Set Temperature
+            int temperature = (cur.getJSONObject("main").getInt("temp")-273);
+            tempView.setText(""+temperature+" °C");
+
+            //Find and Set Condition
+            String cond = cur.getJSONArray("weather").getJSONObject(0).getString("description");
             condDesc.setText(cond);
 
+            //Set Icon based on Condition
             if (cond.contains("thunder")){
                 condIcon.setImageResource(R.mipmap.thunderstorm);
             }
@@ -180,10 +199,65 @@ public class LocationInformationActivity extends AppCompatActivity {
             else if (cond.contains("clear")){
                 condIcon.setImageResource(R.mipmap.clear);
             }
-
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        //Set timeBar listener
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                //set Timing
+                if (progress == 0){
+                    time.setText("Now:");
+                }
+                else if (progress == 1){
+                    time.setText("In 1 hour:");
+                }
+                else{
+                    time.setText("In "+progress+" hours:");
+                }
+
+                try {
+                    JSONObject cur = finalWeatherJSON.getJSONObject(progress);
+
+                    //Find and Set Temperature
+                    int temperature = (cur.getJSONObject("main").getInt("temp")-273);
+                    tempView.setText(""+temperature+" °C");
+
+                    //Find and Set Condition
+                    String cond = cur.getJSONArray("weather").getJSONObject(0).getString("description");
+                    condDesc.setText(cond);
+
+                    //Set Icon based on Condition
+                    if (cond.contains("thunder")){
+                        condIcon.setImageResource(R.mipmap.thunderstorm);
+                    }
+                    else if (cond.contains("cloud")){
+                        condIcon.setImageResource(R.mipmap.cloud);
+                    }
+                    else if (cond.contains("rain")){
+                        condIcon.setImageResource(R.mipmap.rain);
+                    }
+                    else if (cond.contains("clear")){
+                        condIcon.setImageResource(R.mipmap.clear);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         sb = new StringBuilder();
         sb.append("http://maps.google.com/maps?daddr=");
@@ -219,20 +293,17 @@ public class LocationInformationActivity extends AppCompatActivity {
             }
         });
 
+        favorite.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (rating == 1){
+                    System.out.println("Add to Favorites");
+                }
+                else if (rating == 0){
+                    System.out.println("Remove from Favorites");
+                }
+            }
+        });
+
     }
-    /*protected Weather doInBackground(String... params) {
-        Weather weather = new Weather();
-        String data = ( (new WeatherHttpClient()).getWeatherData(params[0]));
-
-        try {
-            weather = JSONWeatherParser.getWeather(data);
-
-            // Let's retrieve the icon
-            weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return weather;
-    }*/
 }
