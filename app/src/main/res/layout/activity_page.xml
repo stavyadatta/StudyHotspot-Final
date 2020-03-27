@@ -35,7 +35,7 @@
             app:layout_constraintTop_toBottomOf="@+id/simpleTextView"
             />
         <View
-            android:layout_width="344dp"
+            android:layout_width="345dp"
             android:layout_height="3dp"
             android:layout_marginLeft="35dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -44,17 +44,17 @@
             android:layout_marginTop="22dp"
             />
         <View
-            android:layout_width="344dp"
+            android:layout_width="345dp"
             android:layout_height="3dp"
             android:layout_marginLeft="35dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:background="#000"
             app:layout_constraintTop_toBottomOf="@id/view"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="163dp"
             />
         <View
             android:layout_width="3dp"
-            android:layout_height="140dp"
+            android:layout_height="143dp"
             android:layout_marginLeft="32dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:background="#000"
@@ -63,7 +63,7 @@
             />
         <View
             android:layout_width="3dp"
-            android:layout_height="140dp"
+            android:layout_height="143dp"
             android:layout_marginRight="29dp"
             app:layout_constraintRight_toRightOf="parent"
             android:background="#000"
