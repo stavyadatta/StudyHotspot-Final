@@ -182,8 +182,9 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                if (title.contentEquals("Fav")){
-                    //
+                if (title.contentEquals("Friends")){
+                    Intent intent = new Intent(CreateSession.this, FindFriend.class);
+                    startActivity(intent);
                 }
                 else if (title.contentEquals("Activities")){
                     Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);

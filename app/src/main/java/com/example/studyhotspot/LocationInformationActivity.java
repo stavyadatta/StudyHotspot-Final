@@ -323,8 +323,9 @@ public class LocationInformationActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                if (title.contentEquals("Fav")) {
-                    //
+                if (title.contentEquals("Friends")) {
+                    Intent intent = new Intent(LocationInformationActivity.this, FindFriend.class);
+                    startActivity(intent);
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(LocationInformationActivity.this, ActivityPageMain.class);
                     startActivity(intent);

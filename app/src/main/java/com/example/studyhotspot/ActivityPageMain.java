@@ -161,8 +161,9 @@ public class ActivityPageMain extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                if (title.contentEquals("Fav")){
-                    //
+                if (title.contentEquals("Friends")){
+                    Intent intent = new Intent(ActivityPageMain.this, FindFriend.class);
+                    startActivity(intent);
                 }
                 else if (title.contentEquals("Activities")){
                     Toast.makeText(ActivityPageMain.this, "Activity Page", Toast.LENGTH_LONG).show();

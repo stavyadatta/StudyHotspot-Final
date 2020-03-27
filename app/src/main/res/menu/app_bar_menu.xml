@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/menuFav"
-        android:icon="@drawable/ic_stars"
-        android:title="@string/Fav"
+        android:icon="@drawable/ic_group"
+        android:title="@string/Friends"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menuActivities"
-        android:icon="@drawable/ic_group"
+        android:icon="@drawable/ic_event"
         android:title="@string/Activities"
         app:showAsAction="ifRoom"/>
 

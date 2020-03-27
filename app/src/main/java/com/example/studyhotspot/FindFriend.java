@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,8 @@ public class FindFriend extends AppCompatActivity {
     private BottomAppBar bottomAppBar;
     private FloatingActionButton homeButton;
 
+    private String previousActivity = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -52,6 +55,11 @@ public class FindFriend extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
         setUpBottomAppBar();
+
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            previousActivity = extras.getString("prevActivity");
+        }
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -146,8 +154,8 @@ public class FindFriend extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                if (title.contentEquals("Fav")) {
-                    //
+                if (title.contentEquals("Friends")) {
+                    Toast.makeText(FindFriend.this, "Social Page", Toast.LENGTH_LONG).show();
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(FindFriend.this, ActivityPageMain.class);
                     startActivity(intent);
@@ -162,7 +170,14 @@ public class FindFriend extends AppCompatActivity {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (previousActivity != null && previousActivity.contentEquals("HOME")){
+                    finish();
+                }
+                else {
+                    Intent intent = new Intent(FindFriend.this, MapsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
         });
     }
