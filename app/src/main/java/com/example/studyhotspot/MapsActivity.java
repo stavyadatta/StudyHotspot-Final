@@ -1,5 +1,6 @@
 package com.example.studyhotspot;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,12 +10,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -36,6 +39,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
@@ -59,6 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingActionButton homeButton;
     private FloatingActionButton directions;
     private static GoogleMap mMap;
+    private BottomAppBar bottomAppBar;
 
 
     private static GeoJsonLayer layerShop = null;
@@ -113,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mSearchText = findViewById(R.id.input_search);
         homeButton = findViewById(R.id.homeButton);
         directions = findViewById(R.id.directions);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
 
         mSearchText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +181,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         chip1.setOnCheckedChangeListener(checkedChangeListener);
         chip2.setOnCheckedChangeListener(checkedChangeListener);
         chip3.setOnCheckedChangeListener(checkedChangeListener);
+
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getTitle().equals("Activities")){
+                    Intent intent = new Intent(MapsActivity.this, ActivityPageMain.class);
+                }
+                return false;
+            }
+        });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -429,7 +446,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         Intent intent = new Intent(MapsActivity.this, LocationInformationActivity.class);
         intent.putExtra("Name", name);
