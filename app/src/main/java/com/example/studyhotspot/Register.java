@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -34,6 +35,7 @@ public class Register extends AppCompatActivity {
     FirebaseAuth fAuth;
     ProgressBar progressBar;
     FirebaseFirestore fStore;
+    FirebaseFirestore db;
     String userID;
 
     @Override
@@ -96,6 +98,11 @@ public class Register extends AppCompatActivity {
                             user.put("fName",fullName);
                             user.put("email",email);
                             user.put("phone",phone);
+
+                            db = FirebaseFirestore.getInstance();
+                            CollectionReference dbSessions = db.collection("users");
+                            dbSessions.add(user);
+
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {

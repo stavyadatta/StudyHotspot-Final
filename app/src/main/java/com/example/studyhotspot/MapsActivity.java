@@ -9,25 +9,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 
-//
-
-import com.google.android.material.bottomappbar.BottomAppBar;
-import androidx.appcompat.widget.Toolbar;
-//
-
-
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdate;
@@ -50,6 +40,12 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
@@ -62,6 +58,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//
+//
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowLongClickListener {
 
@@ -94,6 +93,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     final LatLng Sg = new LatLng(1.353791, 103.818145);
 
     String name;
+    String userID;
     LatLng latLng;
     JSONObject jsonObject = null;
 
@@ -109,6 +109,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         StrictMode.setThreadPolicy(policy);
         // Get Hotspot Data
         getData();
+
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+        userID = fAuth.getCurrentUser().getUid();
+
+        DocumentReference documentReference = fStore.collection("users").document(userID);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                Log.d("GET USER ID","UID: "+ userID);
+            }
+        });
 
         // Initialize Places.
         Places.initialize(getApplicationContext(), "AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU");
