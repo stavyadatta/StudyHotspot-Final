@@ -1,16 +1,22 @@
 package com.example.studyhotspot;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,6 +41,9 @@ public class FindFriend extends AppCompatActivity {
     String userEmail;
     FirebaseFirestore firebaseFirestore;
 
+    private BottomAppBar bottomAppBar;
+    private FloatingActionButton homeButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -42,6 +51,8 @@ public class FindFriend extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
+        setUpBottomAppBar();
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         userID = fAuth.getCurrentUser().getUid();
@@ -55,9 +66,11 @@ public class FindFriend extends AppCompatActivity {
                 userEmail = documentSnapshot.getString("email");
                 //Log.d("ADDED FRIEND LIST", "List: "+((ArrayList<String>) documentSnapshot.get("addedfriends")).get(0));
                 //Log.d("ADDED FRIEND LIST", "Size: "+ addedFriendList.size());
-                Log.d("ADDED FRIEND LIST", "List: "+ addingFriendList.get(0));
+                //Log.d("ADDED FRIEND LIST", "List: "+ addingFriendList.get(0));
             }
         });
+
+        System.out.println(userEmail);
 
         firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -65,7 +78,7 @@ public class FindFriend extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         String email = document.getString("email");
-                        if(email.compareTo(userEmail)==0){
+                        if(email.contentEquals(userEmail)){
                             continue;
                         }
                         else{
@@ -120,5 +133,37 @@ public class FindFriend extends AppCompatActivity {
                 }
             }
         });
-}
+    }
+
+    private void setUpBottomAppBar() {
+        //find id
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+        homeButton = findViewById(R.id.homeButton);
+
+        //click event over Bottom bar menu item
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String title = item.getTitle().toString();
+                if (title.contentEquals("Fav")) {
+                    //
+                } else if (title.contentEquals("Activities")) {
+                    Intent intent = new Intent(FindFriend.this, ActivityPageMain.class);
+                    startActivity(intent);
+                } else if (title.contentEquals("Settings")) {
+                    //Intent intent = new Intent(MapsActivity.this, )
+                }
+
+                return false;
+            }
+        });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 }

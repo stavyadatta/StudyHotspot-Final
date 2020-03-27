@@ -204,7 +204,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 String title = item.getTitle().toString();
                 if (title.contentEquals("Fav")){
-                    //
+                    Intent intent = new Intent(MapsActivity.this, FindFriend.class);
+                    startActivity(intent);
                 }
                 else if (title.contentEquals("Activities")){
                     Intent intent = new Intent(MapsActivity.this, ActivityPageMain.class);
