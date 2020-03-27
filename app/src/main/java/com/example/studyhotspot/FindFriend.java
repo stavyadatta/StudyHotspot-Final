@@ -2,6 +2,7 @@ package com.example.studyhotspot;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,12 +32,17 @@ public class FindFriend extends AppCompatActivity {
     ArrayList<Integer> relationshipFriendList = new ArrayList<Integer>();
 
     String userID;
+    String userEmail;
+    FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ImageView mStatusPlaceholder = findViewById(R.id.status);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         userID = fAuth.getCurrentUser().getUid();
 
@@ -46,7 +52,7 @@ public class FindFriend extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 addedFriendList = (ArrayList<String>) documentSnapshot.get("addedfriends");
                 addingFriendList = (ArrayList<String>) documentSnapshot.get("addingfriends");
-                //String emailll = documentSnapshot.getString("email");
+                userEmail = documentSnapshot.getString("email");
                 //Log.d("ADDED FRIEND LIST", "List: "+((ArrayList<String>) documentSnapshot.get("addedfriends")).get(0));
                 //Log.d("ADDED FRIEND LIST", "Size: "+ addedFriendList.size());
                 Log.d("ADDED FRIEND LIST", "List: "+ addingFriendList.get(0));
@@ -59,21 +65,26 @@ public class FindFriend extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         String email = document.getString("email");
-                        if(addedFriendList.contains(email)){
-                            relationshipFriendList.add(2); //2 means added
-                        }
-                        else if(addingFriendList.contains(email)){
-                            relationshipFriendList.add(1); // 1 means adding
+                        if(email.compareTo(userEmail)==0){
+                            continue;
                         }
                         else{
-                            relationshipFriendList.add(0); // 0 means stranger
+                            if(addedFriendList.contains(email)){
+                                relationshipFriendList.add(2); //2 means added
+                            }
+                            else if(addingFriendList.contains(email)){
+                                relationshipFriendList.add(1); // 1 means adding
+                            }
+                            else{
+                                relationshipFriendList.add(0); // 0 means stranger
+                            }
+                            namelist.add(document.getString("fName"));
+                            emaillist.add(email);
                         }
-                        namelist.add(document.getString("fName"));
-                        emaillist.add(email);
                     }
                     Log.d("tagsuccess", namelist.toString());
-                    Log.d("relationship_list", "0: "+ relationshipFriendList.get(0));
-                    Log.d("relationship_list", "1: "+ relationshipFriendList.get(1));
+                    //Log.d("relationship_list", "0: "+ relationshipFriendList.get(0));
+                    //Log.d("relationship_list", "1: "+ relationshipFriendList.get(1));
                     initRecyclerView();
 
                 } else {
@@ -93,4 +104,21 @@ public class FindFriend extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
+    public void addFriend(String userID, String targetEmail){
+        Log.d("AddingFriends", "Entered");
+        Log.d("AddingFriends", "TargetEmail: "+targetEmail);
+
+        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String id = document.getId();
+                        Log.d("AddingFriends", "id: "+id);
+                    }
+                }
+            }
+        });
+}
 }
