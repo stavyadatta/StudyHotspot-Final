@@ -53,7 +53,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name="com.example.studyhotspot.ActivityPageMain">
+        <activity android:name="com.example.studyhotspot.Register">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
