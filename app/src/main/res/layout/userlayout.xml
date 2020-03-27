@@ -30,8 +30,46 @@
         android:layout_height="3dp"
         android:background="#777"
         android:layout_marginTop="20dp"
-        android:layout_alignTop="@+id/MS2"/>
+        android:id="@+id/straightLine"/>
 
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignEnd="@id/straightLine"
+        android:layout_alignBottom="@id/user_email"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:src="@drawable/plus_0"
+        android:visibility="invisible"
+        android:id="@+id/plus0"/>
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignEnd="@id/straightLine"
+        android:layout_alignBottom="@id/user_email"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:src="@drawable/pending_1"
+        android:visibility="invisible"
+        android:id="@+id/pending1"/>
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignEnd="@id/straightLine"
+        android:layout_alignBottom="@id/user_email"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:src="@drawable/check_2"
+        android:visibility="invisible"
+        android:id="@+id/check2"/>
 
 
 </RelativeLayout>
