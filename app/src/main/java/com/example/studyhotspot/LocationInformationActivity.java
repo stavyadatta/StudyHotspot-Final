@@ -2,19 +2,23 @@ package com.example.studyhotspot;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -33,8 +37,6 @@ public class LocationInformationActivity extends AppCompatActivity {
     private TextView openStatus;
     private TextView hours;
     private TextView price;
-    private TextView website;
-    private TextView rating;
     private RatingBar ratingBar;
     private TextView tempView;
     private TextView condDesc;
@@ -42,6 +44,7 @@ public class LocationInformationActivity extends AppCompatActivity {
     private TextView time;
     private SeekBar timeBar;
     private RatingBar favorite;
+    private BottomAppBar bottomAppBar;
 
 
     String name = null;
@@ -55,11 +58,66 @@ public class LocationInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_information);
 
-        locationName = findViewById(R.id.location_name);
-        createSession = findViewById(R.id.createSession);
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            name = extras.getString("Name");
+            coord = extras.getString("Coord");
+            rawPlaceID = extras.getString("PlaceID");
+        }
+
+        setUpTopBar();
+        setUpBottomAppBar();
+        setUpInformationPage();
+
+        /*favorite = findViewById(R.id.favorite);*/
+
+/*        favorite.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (rating == 1){
+                    System.out.println("Add to Favorites");
+                }
+                else if (rating == 0){
+                    System.out.println("Remove from Favorites");
+                }
+            }
+        });*/
+
+    }
+
+    private void setUpTopBar(){
         directions = findViewById(R.id.directions);
         back = findViewById(R.id.back_button);
+        locationName = findViewById(R.id.location_name);
 
+        locationName.setText(name);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("http://maps.google.com/maps?daddr=");
+        sb.append(coord);
+        String url = sb.toString();
+
+
+        directions.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse(url));
+                startActivity(intent);
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+    }
+    private void setUpInformationPage(){
+        //ids
         address = findViewById(R.id.address);
         phoneNumber = findViewById(R.id.phone);
         openStatus = findViewById(R.id.openStatus);
@@ -71,16 +129,8 @@ public class LocationInformationActivity extends AppCompatActivity {
         condIcon = findViewById(R.id.condIcon);
         time = findViewById(R.id.time);
         timeBar = findViewById(R.id.timeBar);
-        favorite = findViewById(R.id.favorite);
 
-
-        Bundle extras = getIntent().getExtras();
-        if(extras !=null) {
-            name = extras.getString("Name");
-            locationName.setText(name);
-            coord = extras.getString("Coord");
-            rawPlaceID = extras.getString("PlaceID");
-        }
+        //obtain + display details
 
         String placeID = null;
         int begin = rawPlaceID.indexOf(":");
@@ -259,25 +309,30 @@ public class LocationInformationActivity extends AppCompatActivity {
             }
         });
 
-        sb = new StringBuilder();
-        sb.append("http://maps.google.com/maps?daddr=");
-        sb.append(coord);
-        String url = sb.toString();
+    }
 
 
-        directions.setOnClickListener(new View.OnClickListener(){
+    private void setUpBottomAppBar() {
+        //find id
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+        createSession = findViewById(R.id.createSession);
+
+        //click event over Bottom bar menu item
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse(url));
-                startActivity(intent);
-            }
-        });
+            public boolean onMenuItemClick(MenuItem item) {
 
-        back.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                finish();
+                String title = item.getTitle().toString();
+                if (title.contentEquals("Fav")) {
+                    //
+                } else if (title.contentEquals("Activities")) {
+                    Intent intent = new Intent(LocationInformationActivity.this, ActivityPageMain.class);
+                    startActivity(intent);
+                } else if (title.contentEquals("Settings")) {
+                    //Intent intent = new Intent(MapsActivity.this, )
+                }
+
+                return false;
             }
         });
 
@@ -287,23 +342,8 @@ public class LocationInformationActivity extends AppCompatActivity {
                 Intent intent = new Intent(LocationInformationActivity.this, CreateSession.class);
                 intent.putExtra("Name", name);
                 intent.putExtra("Coord", coord);
-                Log.d("name:", name);
-                Log.d("Coord", coord);
                 startActivity(intent);
             }
         });
-
-        favorite.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (rating == 1){
-                    System.out.println("Add to Favorites");
-                }
-                else if (rating == 0){
-                    System.out.println("Remove from Favorites");
-                }
-            }
-        });
-
     }
 }

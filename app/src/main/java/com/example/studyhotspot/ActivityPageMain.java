@@ -1,14 +1,22 @@
 package com.example.studyhotspot;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -22,6 +30,8 @@ public class ActivityPageMain extends AppCompatActivity {
     ArrayList<Activity> listIActivity = new ArrayList<>();
     ArrayList<Activity> listFAActivity = new ArrayList<>();
 
+    private FloatingActionButton homeButton;
+    private BottomAppBar bottomAppBar;
 
     //RecyclerView stuffs
     private static final String TAG = "ActivityPageMain";
@@ -44,6 +54,8 @@ public class ActivityPageMain extends AppCompatActivity {
     private ArrayList<String> mImageUrls3 = new ArrayList<>();
     private ArrayList<String> fFA1 = new ArrayList<>();
 
+    private String previousActivity = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +67,16 @@ public class ActivityPageMain extends AppCompatActivity {
         listFAActivity.add(activityOS);
         listFAActivity.add(activityCP);
 
+        setUpBottomAppBar();
+
         initImageBitmaps();
         initImageBitmaps2();
         initImageBitmaps3();
 
-
-//1st box
-
-
-
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            previousActivity = extras.getString("prevActivity");
+        }
     }
 
     private void initImageBitmaps(){
@@ -83,7 +96,7 @@ public class ActivityPageMain extends AppCompatActivity {
 
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview1);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, fMS1, fMS2, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -135,6 +148,45 @@ public class ActivityPageMain extends AppCompatActivity {
         RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this);
         recyclerView3.setAdapter(adapter3);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void setUpBottomAppBar() {
+        //find id
+        homeButton = findViewById(R.id.homeButton);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+
+        //click event over Bottom bar menu item
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String title = item.getTitle().toString();
+                if (title.contentEquals("Fav")){
+                    //
+                }
+                else if (title.contentEquals("Activities")){
+                    Toast.makeText(ActivityPageMain.this, "Activity Page", Toast.LENGTH_LONG).show();
+                }
+                else if (title.contentEquals("Settings")){
+                    //Intent intent = new Intent(MapsActivity.this, )
+                }
+
+                return false;
+            }});
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (previousActivity != null && previousActivity.contentEquals("HOME")){
+                    finish();
+                }
+                else {
+                    Intent intent = new Intent(ActivityPageMain.this, MapsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 }

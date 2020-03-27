@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/location_name"
-            android:layout_width="190dp"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
@@ -34,7 +34,7 @@
             android:textColor="#FFF"
             android:textSize="21sp" />
 
-        <RatingBar
+<!--        <RatingBar
             android:id="@+id/favorite"
             android:layout_width="wrap_content"
             android:layout_height="47dp"
@@ -49,7 +49,7 @@
             android:clickable="true"
             android:numStars="1"
             android:progressTint="@color/quantum_yellow500"
-            android:stepSize="1" />
+            android:stepSize="1" />-->
 
     </RelativeLayout>
 
@@ -59,8 +59,7 @@
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        map:elevation="5dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:clickable="true"
         map:backgroundTint = "@color/quantum_bluegrey700"
         map:menu="@menu/app_bar_menu"
         map:navigationIcon="@drawable/ic_wifilogo" />
@@ -82,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:elevation="10dp"
         map:backgroundTint="@color/colorWhite"

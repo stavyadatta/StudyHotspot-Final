@@ -22,7 +22,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.studyhotspot.CreateSession"></activity>
+        <activity
+            android:name="com.example.studyhotspot.CreateSession"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
 
         <uses-library
             android:name="org.apache.http.legacy"
