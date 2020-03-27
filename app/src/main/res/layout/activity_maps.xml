@@ -74,10 +74,11 @@
             android:layout_toRightOf="@+id/ic_magnify"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textColor="#000"
             android:id="@+id/input_search"
-            android:background="@null"
+            android:backgroundTint="@color/quantum_white_100"
+            android:background="@color/quantum_white_100"
             android:text="Enter Name or Address" />
 
     </RelativeLayout>
@@ -99,6 +100,7 @@
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
+        android:clickable="true"
         map:backgroundTint = "@color/quantum_bluegrey700"
         map:menu="@menu/app_bar_menu"
         map:navigationIcon="@drawable/ic_wifilogo" />

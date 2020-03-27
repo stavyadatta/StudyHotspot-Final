@@ -29,15 +29,25 @@
             android:required="false" />
 
         <activity
+            android:name="com.example.studyhotspot.ActivityPageMain"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+
+        <activity
             android:name="com.example.studyhotspot.LocationInformationActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name="com.example.studyhotspot.RatingActivity"
             android:label="@string/title_activity_rating"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.example.studyhotspot.MapsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name="com.example.studyhotspot.Login" />
         <!--         <activity android:name=".Register"></activity> -->
-        <activity android:name="com.example.studyhotspot.MapsActivity" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
