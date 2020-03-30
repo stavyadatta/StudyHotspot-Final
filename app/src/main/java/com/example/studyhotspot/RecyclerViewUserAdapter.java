@@ -81,6 +81,7 @@ public class RecyclerViewUserAdapter extends RecyclerView.Adapter<RecyclerViewUs
                     Toast.makeText(mContext, "CAN BE ADDED", Toast.LENGTH_SHORT).show();
                     FindFriend friendFinder = new FindFriend();
                     friendFinder.addFriend(userID, meMails.get(position));
+                    holder.statusButton.setImageResource(R.drawable.pending_1);
                 }
                 else if(status==1){
                     Toast.makeText(mContext, "ALREADY ADDED", Toast.LENGTH_SHORT).show();

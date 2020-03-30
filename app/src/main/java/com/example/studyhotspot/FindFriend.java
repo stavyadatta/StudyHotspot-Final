@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -129,18 +132,73 @@ public class FindFriend extends AppCompatActivity {
     public void addFriend(String userID, String targetEmail){
         Log.d("AddingFriends", "Entered");
         Log.d("AddingFriends", "TargetEmail: "+targetEmail);
+        boolean status;
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String id = document.getId();
-                        Log.d("AddingFriends", "id: "+id);
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                                String targetUID = document.getId();
+
+                                DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
+                                DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                                Task<DocumentSnapshot> t =  userDoc.get();
+                                t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot docsnap) {
+                                        userEmail = docsnap.getString("email");
+                                        Log.d("get user email","success:" + userEmail);
+                                        addFriendUpdateDB(userDoc, targetDoc, targetEmail, userEmail);
+                                    }
+                                });
+                                t.addOnFailureListener(new OnFailureListener() {
+                                    public void onFailure(Exception e) {
+                                        Log.d("get user email","failed");
+                                    }
+                                });
+
+                            }
+                        } else {
+                            Log.d("AddingFriends", "Error getting documents: ", task.getException());
+                        }
                     }
-                }
-            }
-        });
+                });
+    }
+
+    private void addFriendUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail){
+
+        userDoc.update("addingfriends", FieldValue.arrayUnion(targetEmail))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Update DB", "Userdoc addingfriends successfully updated!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Update DB", "Error updating document", e);
+                                }
+                            });
+        Log.d("log driectly bove","success:" + userEmail);
+
+        targetDoc.update("awaitingfriends", FieldValue.arrayUnion(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
     }
 
     private void setUpBottomAppBar() {
