@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewRequest">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:elevation="5dp"
+        android:background="@drawable/blue_border"
+        android:id="@+id/relLayout2">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="39dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_arrow_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/back_button"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:text="View Request(s)"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#FFF"
+            android:background="@android:color/transparent"
+            />
+
+    </RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:clickable="true"
+        map:backgroundTint = "@color/quantum_bluegrey700"
+        map:menu="@menu/app_bar_menu"
+        map:navigationIcon="@drawable/ic_wifilogo" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_black_24dp"
+        map:backgroundTint="@color/quantum_bluegrey400"
+        map:layout_anchor = "@id/bottomAppBar"
+        map:maxImageSize="35dp"
+        map:tint = "@color/colorWhite"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:background="@color/quantum_bluegrey200">
+
+        <TextView
+            android:id="@+id/myRequests"
+            android:layout_width="358dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/white_border"
+            android:elevation="1.1dp"
+            android:gravity="center"
+            android:text="Incoming Friend Request(s)"
+            android:textColor="#000"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintTop_toTopOf="parent" />
+
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="357dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="74dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="120dp"
+            android:elevation="1dp"
+            android:background="#DBF3FA"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myFriends"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerRequests"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
