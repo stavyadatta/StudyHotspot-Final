@@ -1,7 +1,6 @@
 package com.example.studyhotspot;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,14 +46,16 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(@NonNull ViewRequestHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
+        Log.d("size", "" + meMails.size());
+        Log.e("size", "" + mfNames.size());
 
-        holder.fName.setText(mfNames.get(position));
         holder.eMail.setText(meMails.get(position));
+        holder.fName.setText(mfNames.get(position));
 
         holder.accept.setImageResource(R.drawable.check_2);
         holder.reject.setImageResource(R.drawable.cross_4);
 
-        holder.userlayout.setOnClickListener(new View.OnClickListener(){
+        holder.requestLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 Toast.makeText(mContext, mfNames.get(position), Toast.LENGTH_SHORT).show();
@@ -71,7 +72,18 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                 ViewRequest requestdecider = new ViewRequest();
                 requestdecider.acceptRequest(userID, meMails.get(position));
                 //holder.statusButton.setImageResource(R.drawable.pending_1);
-                
+                //notifyItemRemoved(position);
+                Log.d("emailsOld", ""+meMails.size());
+                Log.d("nameOld", ""+mfNames.size());
+                meMails.remove(position);
+                mfNames.remove(position);
+                //notifyItemRangeChanged(position, meMails.size());
+                //notifyItemRangeChanged(position, mfNames.size());
+                //notifyItemRemoved(position);
+                notifyDataSetChanged();
+                Log.d("emailsNew", ""+meMails.size());
+                Log.d("nameNew", ""+mfNames.size());
+
             }});
 
         holder.reject.setOnClickListener(new View.OnClickListener(){
@@ -89,12 +101,15 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemCount() {
-        return mfNames.size();
+        Log.d("getItemCount", "meMails: "+meMails.size());
+        Log.d("getItemCount", "mfNames: "+mfNames.size());
+
+        return Math.min(meMails.size(), mfNames.size());
     }
 
     public class ViewRequestHolder extends RecyclerView.ViewHolder{
 
-        RelativeLayout userlayout;
+        RelativeLayout requestLayout;
         TextView fName;
         TextView eMail;
         ImageView accept;
@@ -103,6 +118,7 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
 
         public ViewRequestHolder(@NonNull View itemView) {
             super(itemView);
+            requestLayout = itemView.findViewById(R.id.request_layout);
             fName = itemView.findViewById(R.id.user_name);
             eMail = itemView.findViewById(R.id.user_email);
             accept = itemView.findViewById(R.id.accept);

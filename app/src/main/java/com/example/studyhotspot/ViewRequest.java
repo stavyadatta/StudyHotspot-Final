@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,12 +53,9 @@ public class ViewRequest extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        ImageView mStatusPlaceholder = findViewById(R.id.status);
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_friend);
+        setContentView(R.layout.activity_view_request);
         setUpBottomAppBar();
-
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
             previousActivity = extras.getString("prevActivity");
@@ -76,8 +72,54 @@ public class ViewRequest extends AppCompatActivity {
                 addedFriendList = (ArrayList<String>) documentSnapshot.get("addedfriends");
                 awaitingFriendList = (ArrayList<String>) documentSnapshot.get("awaitingfriends");
                 userEmail = documentSnapshot.getString("email");
+                //Log.d("Oncreate","awaitingFriendList: " +awaitingFriendList.get(0));
+
+                for (String email :awaitingFriendList) {
+                    Log.d("forloop","email: " +email);
+                    firebaseFirestore.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("onComplete","success");
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("AddingFriends", document.getId() + " => " + document.getData());
+
+                                    String targetUID = document.getId();
+
+                                    DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                                    Task<DocumentSnapshot> t =  targetDoc.get();
+                                    t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot docsnap) {
+                                            String name = docsnap.getString("fName");
+                                            namelist.add(name);
+                                            Log.d("name", name);
+
+                                        }
+                                    });
+                                    t.addOnFailureListener(new OnFailureListener() {
+                                        public void onFailure(Exception e) {
+                                        }
+                                    });
+
+                                }
+
+                            } else {
+                                Log.d("AddingFriends", "Error getting documents: ", task.getException());
+                            }
+                            Log.d("init", "begin recyclerview");
+
+                        }
+                    });
+                }
+
             }
         });
+
+        //Log.d("useremail","useremail: " +awaitingFriendList.size());
+
+        initRecyclerView();
 
     }
 
@@ -85,7 +127,7 @@ public class ViewRequest extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d("Recycler Users", "initRecyclerView: init recyclerUsers.");
         RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
-        RecyclerViewRequestAdapter adapter = new RecyclerViewRequestAdapter(namelist, emaillist, this);
+        RecyclerViewRequestAdapter adapter = new RecyclerViewRequestAdapter(namelist, awaitingFriendList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -171,6 +213,12 @@ public class ViewRequest extends AppCompatActivity {
             }
         });
     }
+
+    public void refreshing() {
+        Intent intent = new Intent(ViewRequest.this, ViewRequest.class);
+        //finish();
+        startActivity(intent);
+    };
 
     private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail){
 
@@ -306,5 +354,6 @@ public class ViewRequest extends AppCompatActivity {
                 }
             }
         });
+
     }
 }

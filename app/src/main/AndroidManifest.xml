@@ -22,7 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewRequest"></activity>
+        <!-- <activity android:name=".ViewRequest"></activity> -->
         <activity
             android:name=".History"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -64,7 +64,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Register">
+        <activity android:name=".ViewRequest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
