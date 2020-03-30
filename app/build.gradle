@@ -54,4 +54,5 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
