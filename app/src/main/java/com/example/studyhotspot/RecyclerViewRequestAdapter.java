@@ -13,7 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -62,6 +72,7 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         });
 
+
         holder.accept.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -69,25 +80,11 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d("statusNumber", "status: " + status);
                 Toast.makeText(mContext, "CAN BE Accepted", Toast.LENGTH_SHORT).show();
-                ViewRequest requestdecider = new ViewRequest();
-                requestdecider.acceptRequest(userID, meMails.get(position));
-                //holder.statusButton.setImageResource(R.drawable.pending_1);
-                //notifyItemRemoved(position);
-                Log.d("emailsOld", ""+meMails.size());
-                Log.d("nameOld", ""+mfNames.size());
-                //meMails = new ArrayList<String>();
-                //mfNames = new ArrayList<String>();
-                //meMails.clear();
-                //mfNames.clear();
+
+                acceptRequest(userID, meMails.get(position), mfNames.get(position));
+
                 meMails.remove(position);
                 mfNames.remove(position);
-                //notifyItemRangeChanged(position, meMails.size());
-                //notifyItemRangeChanged(position, mfNames.size());
-                //notifyItemRemoved(position);
-                notifyDataSetChanged();
-                Log.d("emailsNew", ""+meMails.size());
-                Log.d("nameNew", ""+mfNames.size());
-
             }});
 
         holder.reject.setOnClickListener(new View.OnClickListener(){
@@ -97,8 +94,11 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d("statusNumber", "status: "+status);
                 Toast.makeText(mContext, "CAN BE rejected", Toast.LENGTH_SHORT).show();
-                ViewRequest requestdecider = new ViewRequest();
-                requestdecider.rejectRequest(userID, meMails.get(position));
+
+                rejectRequest(userID, meMails.get(position), mfNames.get(position));
+
+                meMails.remove(position);
+                mfNames.remove(position);
             }
         });
     }
@@ -128,5 +128,226 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
             accept = itemView.findViewById(R.id.accept);
             reject = itemView.findViewById(R.id.reject);
         }
+    }
+
+
+    public void acceptRequest(String userID, String targetEmail, String targetname){
+        Log.d("AcceptFriends", "Entered");
+        Log.d("AcceptFriends", "TargetEmail: "+targetEmail);
+        boolean status;
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        String targetUID = document.getId();
+
+                        DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                        /*
+                        final String[] targetName = new String[1];
+                        Task<DocumentSnapshot> x =  targetDoc.get();
+                        x.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot docsnap) {
+                                targetName[0] = docsnap.getString("fName");
+                            }
+                        });
+
+                         */
+
+                        Task<DocumentSnapshot> t =  userDoc.get();
+                        t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot docsnap) {
+                                String userEmail = docsnap.getString("email");
+                                String name = docsnap.getString("fName");
+                                Log.d("AcceptFriends","UserEmail:" + userEmail);
+
+                                acceptRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail, targetname);
+                                meMails.remove(userEmail);
+                                Log.d("sizexxxx", ""+mfNames.size());
+                                mfNames.remove(name);
+
+                            }
+                        });
+                        t.addOnFailureListener(new OnFailureListener() {
+                            public void onFailure(Exception e) {
+                                Log.d("get user email","failed");
+                            }
+                        });
+
+
+                    }
+                } else {
+                    Log.d("Accepting Request", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
+
+        userDoc.update("addedfriends", FieldValue.arrayUnion(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc addedfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriends", FieldValue.arrayRemove(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriendsname", FieldValue.arrayRemove(userName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        targetDoc.update("addedfriends", FieldValue.arrayUnion(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addedfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        targetDoc.update("addingfriends", FieldValue.arrayRemove(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+    }
+
+    public void rejectRequest(String userID, String targetEmail, String targetname){
+        Log.d("RejectFriends", "Entered");
+        Log.d("RejectFriends", "TargetEmail: "+targetEmail);
+        boolean status;
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        String targetUID = document.getId();
+
+                        DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                        Task<DocumentSnapshot> t =  userDoc.get();
+                        t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot docsnap) {
+                                String userEmail = docsnap.getString("email");
+                                Log.d("RejectFriends","UserEmail:" + userEmail);
+                                rejectRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail, targetname);
+                            }
+                        });
+                        t.addOnFailureListener(new OnFailureListener() {
+                            public void onFailure(Exception e) {
+                                Log.d("get user email","failed");
+                            }
+                        });
+
+                    }
+                } else {
+                    Log.d("Rejecting Request", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void rejectRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
+
+        userDoc.update("awaitingfriends", FieldValue.arrayRemove(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+
+        targetDoc.update("addingfriends", FieldValue.arrayRemove(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriendsname", FieldValue.arrayRemove(userName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
     }
 }
