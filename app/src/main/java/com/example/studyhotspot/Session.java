@@ -44,6 +44,14 @@ public class Session implements Serializable{
 
     public boolean getprivateORpublic() {return privateORpublic;}
 
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public Map<String, Boolean> getParticipantStatus() {
+        return participantStatus;
+    }
+
     public void updateParticipantStatus(String participantName, Boolean response){
         participantStatus.put(participantName, response);
         //write to DB
