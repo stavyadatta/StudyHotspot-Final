@@ -27,6 +27,9 @@
             android:name=".FindFriend"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".History"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".CreateSession"
             android:theme="@style/AppTheme.NoActionBar" />
 

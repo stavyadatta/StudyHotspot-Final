@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class ActivityPageMain extends AppCompatActivity {
 
     private FloatingActionButton homeButton;
     private BottomAppBar bottomAppBar;
+    private Button historyButton;
 
     //RecyclerView stuffs
     private static final String TAG = "ActivityPageMain";
@@ -77,6 +79,14 @@ public class ActivityPageMain extends AppCompatActivity {
         if(extras !=null) {
             previousActivity = extras.getString("prevActivity");
         }
+
+        historyButton = (Button) findViewById(R.id.history);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openHistory();
+            }
+        });
     }
 
     private void initImageBitmaps(){
@@ -111,8 +121,6 @@ public class ActivityPageMain extends AppCompatActivity {
             fI1.add("Created by: " + listIActivity.get(i).getCreator());
             mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
             mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
-
-
 
         }
         initRecyclerView2();
@@ -188,6 +196,11 @@ public class ActivityPageMain extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void openHistory() {
+        Intent intent = new Intent(this, History.class);
+        startActivity(intent);
     }
 
 }
