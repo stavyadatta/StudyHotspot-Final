@@ -82,7 +82,10 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
                 Toast.makeText(mContext, mImageNames.get(position), Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
+
     @Override
     public int getItemCount() {
         return mImageNames.size();

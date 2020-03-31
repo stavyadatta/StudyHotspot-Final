@@ -83,6 +83,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private ArrayList<String> fI1 = new ArrayList<>();
     private ArrayList<String> mImageUrls22 = new ArrayList<>();
     private ArrayList<String> mImageUrls23 = new ArrayList<>();
+    private ArrayList<String> id2 = new ArrayList<>();
 
     //for 3rd box
     private ArrayList<String> mNames3 = new ArrayList<>();
@@ -118,8 +119,13 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                 initImageBitmaps();
             }
         }, 3000);
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                initImageBitmaps2();
+            }
+        }, 3000);
         //initImageBitmaps();
-        initImageBitmaps2();
+        //initImageBitmaps2();
         initImageBitmaps3();
 
         Bundle extras = getIntent().getExtras();
@@ -169,7 +175,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                         HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
                         Log.d(TAG, "onComplete: creatorName is " + creatorName);
                         if(doch.containsKey(creatorName)){
-                            if(doch.get(creatorName)){
+                            if(doch.get(creatorName) != null && doch.get(creatorName) == true){
                             id1.add(document.getId());
                             mNames.add(document.getString("title"));
                             mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
@@ -270,6 +276,46 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
 
     private void initImageBitmaps2(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        String creatorName = creatorNameRaw.get(0);
+        /*SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+        String startDateTimeString = startDate + " " + startTime;
+        Date current = new Date();
+        try {
+            current = dateFormatter.parse(startDateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp currentTS = new Timestamp(current);*/
+
+
+        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+
+                    String status;
+                    int i = 0;
+                    for (QueryDocumentSnapshot document:task.getResult()){
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
+                        Log.d(TAG, "onComplete: creatorName is " + creatorName);
+                        if(doch.containsKey(creatorName)){
+                            if(doch.get(creatorName) == null){
+                                id2.add(document.getId());
+                                mNames2.add(document.getString("title"));
+                                mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                fI1.add("Created by: " + document.getString("creatorName"));
+                                mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
+                                mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
+                                initRecyclerView2();}}
+                    }
+                }
+            }
+        });
+
+        //Original
+        /*Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
         for (int i =0;i<listIActivity.size();i++){
             mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
@@ -279,7 +325,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
 
         }
-        initRecyclerView2();
+        initRecyclerView2();*/
 
     }
 
@@ -373,6 +419,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     @Override
     public void onNoteClick2(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
+        intent.putExtra("docname", id2.get(position));
         startActivity(intent);
     }
 }
