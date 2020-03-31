@@ -15,29 +15,15 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -243,7 +229,8 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                 }
                 else if (title.contentEquals("Settings")){
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(CreateSession.this, Logout.class);
+                    startActivity(intent);
                 }
                 return false;
             }});
@@ -267,7 +254,6 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
         back = findViewById(R.id.back_button);
         addParticipants = findViewById(R.id.addParticipants);
-
 
 
         mSwitchPublic.setOnClickListener(new View.OnClickListener() {

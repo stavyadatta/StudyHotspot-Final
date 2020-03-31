@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -39,11 +38,13 @@ public class ViewRequest extends AppCompatActivity {
     String userEmail;
     FirebaseFirestore firebaseFirestore;
 
+
     private BottomAppBar bottomAppBar;
     private FloatingActionButton homeButton;
 
     ImageView accept;
     ImageView reject;
+    ImageView back;
 
     RecyclerViewRequestAdapter adapter;
     RecyclerView recyclerView;
@@ -64,7 +65,7 @@ public class ViewRequest extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         userID = fAuth.getCurrentUser().getUid();
-
+        back = findViewById(R.id.back_button);
 
         DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -135,6 +136,12 @@ public class ViewRequest extends AppCompatActivity {
 
         //Log.d("useremail","useremail: " +awaitingFriendList.size());
 
+        back.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 
@@ -145,6 +152,7 @@ public class ViewRequest extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
     /*
     public void acceptRequest(String userID, String targetEmail){
         Log.d("AcceptFriends", "Entered");
@@ -342,12 +350,14 @@ public class ViewRequest extends AppCompatActivity {
 
                 String title = item.getTitle().toString();
                 if (title.contentEquals("Friends")) {
-                    Toast.makeText(ViewRequest.this, "Social Page", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ViewRequest.this, FindFriend.class);
+                    startActivity(intent);
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(ViewRequest.this, ActivityPageMain.class);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(ViewRequest.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;
@@ -368,4 +378,5 @@ public class ViewRequest extends AppCompatActivity {
             }
         });
     }
+
 }

@@ -1,35 +1,26 @@
 package com.example.studyhotspot;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.api.LogDescriptor;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -259,7 +250,8 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                     Toast.makeText(ActivityPageMain.this, "Activity Page", Toast.LENGTH_LONG).show();
                 }
                 else if (title.contentEquals("Settings")){
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(ActivityPageMain.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;

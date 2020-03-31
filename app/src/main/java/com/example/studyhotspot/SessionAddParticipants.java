@@ -8,24 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -105,7 +94,8 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
                     Intent intent = new Intent(SessionAddParticipants.this, ActivityPageMain.class);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(SessionAddParticipants.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;

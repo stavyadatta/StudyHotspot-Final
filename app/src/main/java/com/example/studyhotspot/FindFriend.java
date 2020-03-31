@@ -248,7 +248,8 @@ public class FindFriend extends AppCompatActivity {
                     Intent intent = new Intent(FindFriend.this, ActivityPageMain.class);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(FindFriend.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;
