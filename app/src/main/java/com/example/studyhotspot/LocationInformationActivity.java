@@ -38,12 +38,12 @@ public class LocationInformationActivity extends AppCompatActivity {
     private TextView hours;
     private TextView price;
     private RatingBar ratingBar;
+    private TextView ratingNum;
     private TextView tempView;
     private TextView condDesc;
     private ImageView condIcon;
     private TextView time;
     private SeekBar timeBar;
-    private RatingBar favorite;
     private BottomAppBar bottomAppBar;
 
 
@@ -68,20 +68,6 @@ public class LocationInformationActivity extends AppCompatActivity {
         setUpTopBar();
         setUpBottomAppBar();
         setUpInformationPage();
-
-        /*favorite = findViewById(R.id.favorite);*/
-
-/*        favorite.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (rating == 1){
-                    System.out.println("Add to Favorites");
-                }
-                else if (rating == 0){
-                    System.out.println("Remove from Favorites");
-                }
-            }
-        });*/
 
     }
 
@@ -124,6 +110,7 @@ public class LocationInformationActivity extends AppCompatActivity {
         hours = findViewById(R.id.hours);
         price = findViewById(R.id.price);
         ratingBar = findViewById(R.id.ratingBar);
+        ratingNum = findViewById(R.id.ratingNum);
         condDesc = findViewById(R.id.condDescr);
         tempView = findViewById(R.id.temp);
         condIcon = findViewById(R.id.condIcon);
@@ -175,6 +162,15 @@ public class LocationInformationActivity extends AppCompatActivity {
             price.setText(pLevel);
         } catch (JSONException e){
             price.setText("Unavailable");
+        }
+
+        //RATING
+        try {
+            ratingBar.setRating((float) result.getDouble("rating"));
+            ratingNum.setText("("+result.get("rating")+")");
+        } catch (JSONException e){
+            ratingBar.setRating(0);
+            ratingNum.setText("(Unavailable)");
         }
 
         //OPENING HOURS

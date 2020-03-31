@@ -3,31 +3,28 @@ package com.example.studyhotspot;
 import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Session implements Serializable{
 
     private String title;
     private String description;
+    private String creatorName;
     private Timestamp startDateTime;
     private Timestamp endDateTime;
     private int numOfParticipants;
     private boolean privateORpublic;
+    private Map<String, Boolean> participantStatus;
 
-    public Session() {
-
-    }
-
-    public Session(String title, String description){
+    public Session(String title, String description, String creatorName, Timestamp startDateTime, Timestamp endDateTime , Map<String,Boolean> participantStatus, boolean privateORpublic) {
         this.title = title;
         this.description = description;
-    }
-
-    public Session(String title, String description, Timestamp startDateTime, Timestamp endDateTime , int numOfParticipants, boolean privateORpublic) {
-        this.title = title;
-        this.description = description;
+        this.creatorName = creatorName;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-        this.numOfParticipants = numOfParticipants;
+        this.participantStatus = participantStatus;
+        this.numOfParticipants = participantStatus.size();
         this.privateORpublic = privateORpublic;
     }
 
@@ -46,4 +43,9 @@ public class Session implements Serializable{
     public int getNumOfParticipants() {return numOfParticipants;}
 
     public boolean getprivateORpublic() {return privateORpublic;}
+
+    public void updateParticipantStatus(String participantName, Boolean response){
+        participantStatus.put(participantName, response);
+        //write to DB
+    }
 }

@@ -22,20 +22,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class CreateSession extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener{
@@ -57,17 +68,25 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
     private FloatingActionButton sessionUpload;
     private BottomAppBar bottomAppBar;
 
+    private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
+
+    final int LAUNCH_ADD_PARTICIPANTS = 1;
+
 
     String startDate;
     String startTime;
     String endDate;
     String endTime;
-    int sessionParticipants;
     boolean isPublic;
 
-    boolean isStartTime = true;
+    FirebaseFirestore firebaseFirestore;
+    String creatorID;
+    String creatorEmail;
 
-    FirebaseFirestore db;
+    ArrayList<String> creatorNameRaw = new ArrayList<>();
+    static Map<String, Boolean> participantStatus = new HashMap<String, Boolean>();
+
+    boolean isStartTime = true;
 
     String name = null;
     String coord = null;
@@ -77,7 +96,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_session);
 
-        db = FirebaseFirestore.getInstance();
+        getCreatorName();
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
@@ -87,6 +106,40 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
         setUpBottomAppBar();
         setUpDetailsPage();
+    }
+
+    private void getCreatorName(){
+        userDatabaseManager.getCurrentUsername(creatorNameRaw);
+
+        /*firebaseFirestore = FirebaseFirestore.getInstance();
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        creatorID = fAuth.getCurrentUser().getUid();
+
+        DocumentReference documentReference = firebaseFirestore.collection("users").document(creatorID);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                creatorEmail = documentSnapshot.getString("email");
+            }
+        });
+
+
+        firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String email = document.getString("email");
+                        if(email.contentEquals(creatorEmail)){
+                            creatorName = document.getString("fName");
+                            participantStatus.put(creatorName, true);
+                        }
+                    }
+                } else {
+                    Log.d("tagfail", "Error getting documents: ", task.getException());
+                }
+            }
+        });*/
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -115,6 +168,11 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         String title = editTitle.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
 
+        String creatorName = creatorNameRaw.get(0);
+        participantStatus.put(creatorName, true);
+
+        System.out.println("DEBUG 1");
+
         //Date Time
         SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
         dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
@@ -136,33 +194,27 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
+        System.out.println("DEBUG 4");
+
         
         Timestamp startDateTimeTimestamp = new Timestamp(startDateFormatted);
         Timestamp endDateTimeTimestamp = new Timestamp(endDateFormatted);
 
+        System.out.println(title);
+        System.out.println(description);
+        System.out.println(creatorName);
+        System.out.println(startDateTimeTimestamp);
+        System.out.println(endDateTimeTimestamp);
+        System.out.println(participantStatus);
+        System.out.println(isPublic);
+
 
         if (!hasValidationErrors(title)) {
-
-
-            CollectionReference dbSessions = db.collection("sessions");
-
-            Session session = new Session(
-                    title, description, startDateTimeTimestamp, endDateTimeTimestamp, sessionParticipants, isPublic
+            Session newSession = new Session(
+                    title, description, creatorName, startDateTimeTimestamp, endDateTimeTimestamp, participantStatus, isPublic
             );
 
-            dbSessions.add(session)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(CreateSession.this, "Session Added", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(CreateSession.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+            userDatabaseManager.addSession(newSession);
         }
     }
 
@@ -226,15 +278,6 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
                 }
                 else
                     isPublic = false;
-            }
-        });
-
-        mSessionParticipants.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sessionParticipants = Integer.valueOf(mSessionParticipants.getText().toString());
-                Log.d("NUMBER","Successful number input");
-                mSessionParticipants.setText(String.valueOf(sessionParticipants));
             }
         });
 
@@ -333,9 +376,27 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         addParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Add participants
+                Intent intent = new Intent(CreateSession.this, SessionAddParticipants.class);
+                startActivityForResult(intent, LAUNCH_ADD_PARTICIPANTS);
             }
         });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_ADD_PARTICIPANTS) {
+            if(resultCode == RESULT_OK){
+                ArrayList<String> participants = data.getStringArrayListExtra("Participants");
+
+                for (int i = 0; i<participants.size(); i++){
+                    participantStatus.put(participants.get(i), null);
+                }
+
+                mSessionParticipants.setText(""+(participantStatus.size()+1));
+                System.out.println(participantStatus);
+            }
+        }
     }
 
 }

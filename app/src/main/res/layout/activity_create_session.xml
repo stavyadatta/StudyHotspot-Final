@@ -393,7 +393,7 @@
                     android:layout_height="38dp"
                     android:ems="1"
                     android:gravity="center"
-                    android:inputType="number"
+                    android:inputType="none"
                     android:text="1"
                     map:layout_constraintBottom_toBottomOf="parent"
                     map:layout_constraintEnd_toEndOf="parent"

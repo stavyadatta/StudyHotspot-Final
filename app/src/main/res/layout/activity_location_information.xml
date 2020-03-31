@@ -287,26 +287,25 @@
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="45dp"
+                    android:layout_marginTop="44dp"
                     android:isIndicator="true"
                     android:numStars="5"
                     android:progressTint="@color/quantum_yellow600"
                     android:stepSize="0.1"
                     map:layout_constraintEnd_toEndOf="parent"
-                    map:layout_constraintHorizontal_bias="0.365"
+                    map:layout_constraintHorizontal_bias="0.413"
                     map:layout_constraintStart_toStartOf="parent"
                     map:layout_constraintTop_toBottomOf="@+id/price" />
 
-                <Button
-                    android:id="@+id/seeReviews"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="28dp"
-                    android:background="@drawable/blue_border"
-                    android:text="View Past Ratings"
-                    android:textSize="12sp"
+                <TextView
+                    android:id="@+id/ratingNum"
+                    android:layout_width="154dp"
+                    android:layout_height="31dp"
+                    android:layout_marginTop="36dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     map:layout_constraintEnd_toEndOf="@+id/scroll"
-                    map:layout_constraintHorizontal_bias="0.483"
+                    map:layout_constraintHorizontal_bias="0.696"
                     map:layout_constraintStart_toEndOf="@+id/ratingBar"
                     map:layout_constraintTop_toBottomOf="@+id/price" />
 
@@ -374,7 +373,7 @@
                     android:id="@+id/time"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="20dp"
                     android:text="Now:"
                     android:textColor="#000"
                     android:textSize="18sp"
@@ -382,7 +381,7 @@
                     map:layout_constraintEnd_toEndOf="parent"
                     map:layout_constraintHorizontal_bias="0.293"
                     map:layout_constraintStart_toEndOf="@+id/condIcon"
-                    map:layout_constraintTop_toBottomOf="@+id/seeReviews" />
+                    map:layout_constraintTop_toBottomOf="@+id/ratingNum" />
 
                 <SeekBar
                     android:id="@+id/timeBar"
