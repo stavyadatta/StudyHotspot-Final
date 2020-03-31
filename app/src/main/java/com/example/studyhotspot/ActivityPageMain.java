@@ -46,7 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener, RecyclerViewAdapter2.OnNoteListener2 {
+public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener, RecyclerViewAdapter2.OnNoteListener2, RecyclerViewAdapter3.OnNoteListener3 {
     Activity activitySS = new Activity("Study @ Starbucks", "001", "Ongoing", "1100","1200", "Chris Johnson");
     Activity activityCU = new Activity("Catch Up", "002", "Upcoming", "1100", "1200", "Lia Palosanu");
     Activity activityEP = new Activity("Exam Prep", "003", "Upcoming", "1100", "1200", "Mike Lee");
@@ -167,9 +167,12 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                     int i = 0;
                     for (QueryDocumentSnapshot document:task.getResult()){
                         HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
-                        Log.d(TAG, "onComplete: creatorName is " + creatorName);
+                        Log.v(TAG, "onComplete: creatorName is " + doch);
+                        if (doch == null){
+                            Log.d(TAG, "onComplete: This is executed");
+                            return;}
                         if(doch.containsKey(creatorName)){
-                            if(doch.get(creatorName)){
+                            if(doch.get(creatorName) != null && doch.get(creatorName) == true ){
                             id1.add(document.getId());
                             mNames.add(document.getString("title"));
                             mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
@@ -309,7 +312,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private void initRecyclerView3(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView3 = findViewById(R.id.recyclerview3);
-        RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this);
+        RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this, this);
         recyclerView3.setAdapter(adapter3);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -374,5 +377,12 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     public void onNoteClick2(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onNoteClick3(int position) {
+        Intent intent = new Intent(this, FriendsActivityPage.class);
+        startActivity(intent);
+
     }
 }
