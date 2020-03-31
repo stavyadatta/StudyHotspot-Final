@@ -73,42 +73,50 @@ public class ViewRequest extends AppCompatActivity {
                 awaitingFriendList = (ArrayList<String>) documentSnapshot.get("awaitingfriends");
                 userEmail = documentSnapshot.getString("email");
                 //Log.d("Oncreate","awaitingFriendList: " +awaitingFriendList.get(0));
-
+                emaillist = new ArrayList<>();
+                namelist = new ArrayList<>();
                 for (String email :awaitingFriendList) {
                     Log.d("forloop","email: " +email);
                     firebaseFirestore.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                Log.d("onComplete","success");
+                                System.out.println("HERE");
+                                Log.d("onComplete","entered on complete for email: "+email);
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                                    //Log.d("AddingFriends", document.getId() + " => " + document.getData());
 
                                     String targetUID = document.getId();
 
                                     DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+                                    namelist.add(document.getString("fName"));
+                                    emaillist.add(document.getString("email"));
+                                    initRecyclerView();
 
-                                    Task<DocumentSnapshot> t =  targetDoc.get();
+                                    /*Task<DocumentSnapshot> t =  targetDoc.get();
                                     t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot docsnap) {
                                             String name = docsnap.getString("fName");
                                             namelist.add(name);
-                                            Log.d("name", name);
+                                            String email = docsnap.getString("email");
+                                            emaillist.add(email);
+                                            Log.d("added to namelist, name:", name);
+
+                                            Log.d("before init", "to begin recyclerview");
 
                                         }
                                     });
                                     t.addOnFailureListener(new OnFailureListener() {
                                         public void onFailure(Exception e) {
                                         }
-                                    });
+                                    });*/
 
                                 }
 
                             } else {
                                 Log.d("AddingFriends", "Error getting documents: ", task.getException());
                             }
-                            Log.d("init", "begin recyclerview");
 
                         }
                     });
@@ -119,22 +127,20 @@ public class ViewRequest extends AppCompatActivity {
 
         //Log.d("useremail","useremail: " +awaitingFriendList.size());
 
-        initRecyclerView();
-
     }
 
 
     private void initRecyclerView(){
-        Log.d("Recycler Users", "initRecyclerView: init recyclerUsers.");
+        Log.d("init Recycler View", "enter initRecyclerView functions.");
         RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
-        RecyclerViewRequestAdapter adapter = new RecyclerViewRequestAdapter(namelist, awaitingFriendList, this);
+        RecyclerViewRequestAdapter adapter = new RecyclerViewRequestAdapter(namelist, emaillist, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     public void acceptRequest(String userID, String targetEmail){
-        Log.d("acceptFriends", "Entered");
-        Log.d("AcceptFriend", "TargetEmail: "+targetEmail);
+        Log.d("AcceptFriends", "Entered");
+        Log.d("AcceptFriends", "TargetEmail: "+targetEmail);
         boolean status;
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -144,7 +150,7 @@ public class ViewRequest extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
-                        Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
                         String targetUID = document.getId();
 
                         DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
@@ -155,7 +161,7 @@ public class ViewRequest extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot docsnap) {
                                 userEmail = docsnap.getString("email");
-                                Log.d("get user email","success:" + userEmail);
+                                Log.d("AcceptFriends","UserEmail:" + userEmail);
                                 acceptRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail);
                             }
                         });
@@ -174,8 +180,8 @@ public class ViewRequest extends AppCompatActivity {
     }
 
     public void rejectRequest(String userID, String targetEmail){
-        Log.d("acceptFriends", "Entered");
-        Log.d("AcceptFriend", "TargetEmail: "+targetEmail);
+        Log.d("RejectFriends", "Entered");
+        Log.d("RejectFriends", "TargetEmail: "+targetEmail);
         boolean status;
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -185,7 +191,7 @@ public class ViewRequest extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
-                        Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
                         String targetUID = document.getId();
 
                         DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
@@ -196,7 +202,7 @@ public class ViewRequest extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot docsnap) {
                                 userEmail = docsnap.getString("email");
-                                Log.d("get user email","success:" + userEmail);
+                                Log.d("RejectFriends","UserEmail:" + userEmail);
                                 rejectRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail);
                             }
                         });
@@ -213,13 +219,13 @@ public class ViewRequest extends AppCompatActivity {
             }
         });
     }
-
+    /*
     public void refreshing() {
         Intent intent = new Intent(ViewRequest.this, ViewRequest.class);
         //finish();
         startActivity(intent);
     };
-
+    */
     private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail){
 
         userDoc.update("addedfriends", FieldValue.arrayUnion(targetEmail))
