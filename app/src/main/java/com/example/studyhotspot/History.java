@@ -1,10 +1,5 @@
 package com.example.studyhotspot;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +7,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -117,7 +117,8 @@ public class History extends AppCompatActivity implements RecyclerViewAdapter.On
                     Toast.makeText(History.this, "Activity Page", Toast.LENGTH_LONG).show();
                 }
                 else if (title.contentEquals("Settings")){
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(History.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;
@@ -141,7 +142,7 @@ public class History extends AppCompatActivity implements RecyclerViewAdapter.On
 
     @Override
     public void onNoteClick(int position) {
-        Intent intent = new Intent(this, detailsPage.class);
+        Intent intent = new Intent(this, SessionDetails.class);
         startActivity(intent);
     }
 }

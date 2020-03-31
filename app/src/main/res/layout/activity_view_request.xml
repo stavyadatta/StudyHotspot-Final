@@ -24,40 +24,23 @@
             android:clickable="true"/>
 
         <TextView
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/back_button"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginLeft="20dp"
-            android:layout_centerVertical="true"
-            android:text="View Request(s)"
-            android:textStyle="bold"
-            android:textSize="30dp"
-            android:textColor="#FFF"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="29dp"
+            android:layout_toRightOf="@+id/back_button"
             android:background="@android:color/transparent"
-            />
+            android:text="View Request(s)"
+            android:textColor="#FFF"
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:clickable="true"
-        map:backgroundTint = "@color/quantum_bluegrey700"
-        map:menu="@menu/app_bar_menu"
-        map:navigationIcon="@drawable/ic_wifilogo" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/homeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_home_black_24dp"
-        map:backgroundTint="@color/quantum_bluegrey400"
-        map:layout_anchor = "@id/bottomAppBar"
-        map:maxImageSize="35dp"
-        map:tint = "@color/colorWhite"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -125,8 +108,24 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        map:backgroundTint="@color/quantum_bluegrey700"
+        map:menu="@menu/app_bar_menu"
+        map:navigationIcon="@drawable/ic_wifilogo" />
 
-
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_black_24dp"
+        map:backgroundTint="@color/quantum_bluegrey400"
+        map:layout_anchor="@id/bottomAppBar"
+        map:maxImageSize="35dp"
+        map:tint="@color/colorWhite" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.api.LogDescriptor;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,7 +39,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener, RecyclerViewAdapter2.OnNoteListener2 {
     Activity activitySS = new Activity("Study @ Starbucks", "001", "Ongoing", "1100","1200", "Chris Johnson");
@@ -42,6 +55,11 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     ArrayList<Activity> listMSActivity = new ArrayList<Activity>();
     ArrayList<Activity> listIActivity = new ArrayList<>();
     ArrayList<Activity> listFAActivity = new ArrayList<>();
+
+    private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
+    ArrayList<String> creatorNameRaw = new ArrayList<String>();
+    String startDate;
+    String startTime;
 
 
     private FloatingActionButton homeButton;
@@ -86,13 +104,21 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         listFAActivity.add(activityOS);
         listFAActivity.add(activityCP);
         db = FirebaseFirestore.getInstance();
+        getCreatorName();
 
 
 
 
 
         setUpBottomAppBar();
-        initImageBitmaps();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                initImageBitmaps();
+            }
+        }, 3000);
+        //initImageBitmaps();
         initImageBitmaps2();
         initImageBitmaps3();
 
@@ -112,9 +138,57 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
 
     }
 
+    private void getCreatorName() {
+        userDatabaseManager.getCurrentUsername(creatorNameRaw);
+    }
+
     private void initImageBitmaps(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-        db.collection("sessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        String creatorName = creatorNameRaw.get(0);
+        SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+        String startDateTimeString = startDate + " " + startTime;
+        Date current = new Date();
+        try {
+            current = dateFormatter.parse(startDateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp currentTS = new Timestamp(current);
+
+
+        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+
+                    String status;
+                    int i = 0;
+                    for (QueryDocumentSnapshot document:task.getResult()){
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
+                        Log.d(TAG, "onComplete: creatorName is " + creatorName);
+                        if(doch.containsKey(creatorName)){
+                            if(doch.get(creatorName)){
+                            id1.add(document.getId());
+                            mNames.add(document.getString("title"));
+                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+
+                            Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
+                            if (currentTS.compareTo(actTS) < 0)
+                                status = "Upcoming";
+                            else
+                                status = "Ongoing";
+                            fMS1.add("Status: " + status);
+                            fMS2.add("Created by: " + document.getString("creatorName"));
+                            initRecyclerView();}}
+                    }
+                }
+            }
+        });
+
+        //Working
+        /*db.collection("sessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -130,6 +204,12 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                         initRecyclerView();
                     }
                 }
+            }
+        });*/
+
+                //End of working
+
+
                 /*for (int j = 0; j < id1.size(); j++){
                     DocumentReference docRef = db.collection("sessions").document(id1.get(j));
                     //final int finalJ = j;
@@ -148,8 +228,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                     });
                 }*/
 
-            }
-        });
+
 
 
 
@@ -175,11 +254,6 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             }
         });*/
         //mNames.add("Testing");
-
-
-
-
-
 
     }
 
@@ -259,7 +333,8 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                     Toast.makeText(ActivityPageMain.this, "Activity Page", Toast.LENGTH_LONG).show();
                 }
                 else if (title.contentEquals("Settings")){
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(ActivityPageMain.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;
@@ -288,8 +363,8 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     //From actvity page to activity info page, to pass in document id
     @Override
     public void onNoteClick(int position) {
-        Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
-        Intent intent = new Intent(this, detailsPage.class);
+        //Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
+        Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", id1.get(position));
         startActivity(intent);
     }

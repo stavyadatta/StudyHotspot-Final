@@ -23,6 +23,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Logout"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ViewRequest"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SessionDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SessionAddParticipants"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".InvitationPage"
             android:label="@string/title_activity_invitation_page"
             android:theme="@style/AppTheme.NoActionBar" />
