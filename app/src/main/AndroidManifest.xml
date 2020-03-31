@@ -22,13 +22,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SessionAddParticipants"></activity>
+        <activity android:name="com.example.studyhotspot.detailsPage" />
+        <activity android:name=".SessionAddParticipants"/>
         <activity
             android:name=".FindFriend"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".History"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".FindFriend" />
         <activity
             android:name=".CreateSession"
             android:theme="@style/AppTheme.NoActionBar" />

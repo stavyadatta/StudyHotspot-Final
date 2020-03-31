@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class History extends AppCompatActivity {
+public class History extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener {
 
     private Button backButton;
     Activity activityFG = new Activity("Friday Grind", "006","Completed","1200","1500", "Lisa Ong");
@@ -87,7 +87,7 @@ public class History extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.recyclerviewhist);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(Name, ImageUrls, fCC1, fCC2, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(Name, ImageUrls, fCC1, fCC2, this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -139,4 +139,9 @@ public class History extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onNoteClick(int position) {
+        Intent intent = new Intent(this, detailsPage.class);
+        startActivity(intent);
+    }
 }
