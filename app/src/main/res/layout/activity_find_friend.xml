@@ -35,11 +35,14 @@
             android:id="@+id/viewRequestBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/quantum_bluegrey50"
+            android:textColor="@color/quantum_black_100"
+            android:textSize="14sp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="34dp"
-            android:layout_marginBottom="22dp"
-            android:text="View Request" />
+            android:layout_marginEnd="28dp"
+            android:layout_marginBottom="26dp"
+            android:text="View Requests" />
 
     </RelativeLayout>
 
