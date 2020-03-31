@@ -63,10 +63,9 @@ public class Logout extends AppCompatActivity {
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();//logout
         Intent intent = new Intent(this, Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Log.d("signing out", "ready to start new");
         startActivity(intent);
-        //startActivity(new Intent(getApplicationContext(),Login.class));
-        //finish();
     }
 
     private void setUpBottomAppBar() {
@@ -97,14 +96,7 @@ public class Logout extends AppCompatActivity {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (previousActivity != null && previousActivity.contentEquals("HOME")){
-                    finish();
-                }
-                else {
-                    Intent intent = new Intent(Logout.this, MapsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
+                finish();
             }
         });
     }
