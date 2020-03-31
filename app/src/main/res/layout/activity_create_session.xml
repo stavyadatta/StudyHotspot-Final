@@ -387,20 +387,21 @@
                     map:layout_constraintTop_toBottomOf="@+id/publicT"
                     map:layout_constraintVertical_bias="0.49" />
 
-                <EditText
+                <TextView
                     android:id="@+id/sessionparticipants"
                     android:layout_width="30dp"
                     android:layout_height="38dp"
-                    android:ems="1"
+                    android:layout_marginTop="5dp"
+                    android:clickable="false"
                     android:gravity="center"
-                    android:inputType="none"
-                    android:text="1"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
                     map:layout_constraintBottom_toBottomOf="parent"
                     map:layout_constraintEnd_toEndOf="parent"
-                    map:layout_constraintHorizontal_bias="0.195"
+                    map:layout_constraintHorizontal_bias="0.146"
                     map:layout_constraintStart_toEndOf="@+id/sessionparticipantsT"
                     map:layout_constraintTop_toBottomOf="@+id/switchBtn"
-                    map:layout_constraintVertical_bias="0.327" />
+                    map:layout_constraintVertical_bias="0.272" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/addParticipants"

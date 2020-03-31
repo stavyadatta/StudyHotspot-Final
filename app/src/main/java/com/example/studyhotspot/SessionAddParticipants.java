@@ -8,24 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -35,7 +24,7 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
 
     ArrayList<String> addedFriendList = new ArrayList<String>();
     ArrayList<String> friendNameList = new ArrayList<>();
-    private ArrayList<String> participants = new ArrayList<String>();
+    private ArrayList<String> participants;
 
     //FirebaseFirestore firebaseFirestore;
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
@@ -60,6 +49,11 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_add_participants);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            participants = extras.getStringArrayList("Participants");
+        }
+
         setUpFriends();
         setUpBottomAppBar();
         setUpContent();
@@ -70,6 +64,8 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
         userID = userDatabaseManager.getCurrentUserID();
         userEmail = userDatabaseManager.getCurrentUserEmail();
         userDatabaseManager.getUserAddedFriends(friendNameList);
+
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -82,8 +78,18 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
     private void initRecyclerView(){
         recyclerView = findViewById(R.id.recyclerParticipants);
         adapter = new RecyclerViewAddParticipantAdapter(friendNameList,this);
+
+        if (participants.size() > 0) {
+            for (int i = 0; i < friendNameList.size(); i++) {
+                if (participants.contains(friendNameList.get(i))) {
+                    adapter.setPositives(i);
+                }
+            }
+        }
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     private void setUpBottomAppBar() {
@@ -105,7 +111,8 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
                     Intent intent = new Intent(SessionAddParticipants.this, ActivityPageMain.class);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(SessionAddParticipants.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;
@@ -132,6 +139,8 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
     private void setUpContent(){
         participantCount = findViewById(R.id.participantCount);
         addParticipants = findViewById(R.id.addParticipants);
+
+        participantCount.setText(""+participants.size());
 
         addParticipants.setOnClickListener(new View.OnClickListener() {
             @Override

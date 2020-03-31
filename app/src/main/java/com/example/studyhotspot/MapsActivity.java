@@ -214,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     startActivity(intent);
                 }
                 else if (title.contentEquals("Settings")){
-                    Intent intent = new Intent(MapsActivity.this, SessionAddParticipants.class);
+                    Intent intent = new Intent(MapsActivity.this, Logout.class);
                     startActivity(intent);
                 }
 

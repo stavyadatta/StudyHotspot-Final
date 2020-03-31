@@ -26,6 +26,7 @@ public class RecyclerViewAddParticipantAdapter extends RecyclerView.Adapter<Recy
     private static final String TAG = "RecyclerViewAdapter";
 
     private ArrayList<String> mfNames;
+    private ArrayList<Integer> positives = new ArrayList<Integer>();
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -49,6 +50,10 @@ public class RecyclerViewAddParticipantAdapter extends RecyclerView.Adapter<Recy
 
         holder.name.setText(mfNames.get(position));
 
+        if (positives != null && positives.contains(position)){
+            holder.chip.setChecked(true);
+        }
+
         holder.chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -60,6 +65,10 @@ public class RecyclerViewAddParticipantAdapter extends RecyclerView.Adapter<Recy
                 }
             }
         });
+    }
+
+    public void setPositives(int position){
+        positives.add(position);
     }
 
     @Override

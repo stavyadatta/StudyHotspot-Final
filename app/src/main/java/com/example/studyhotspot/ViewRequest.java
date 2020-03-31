@@ -5,29 +5,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -39,14 +31,23 @@ public class ViewRequest extends AppCompatActivity {
     ArrayList<String> emaillist = new ArrayList<>();
     ArrayList<String> addedFriendList = new ArrayList<String>();
     ArrayList<String> awaitingFriendList = new ArrayList<String>();
+    ArrayList<String> awaitingFriendNameList = new ArrayList<String>();
 
 
     String userID;
     String userEmail;
     FirebaseFirestore firebaseFirestore;
 
+
     private BottomAppBar bottomAppBar;
     private FloatingActionButton homeButton;
+
+    ImageView accept;
+    ImageView reject;
+    ImageView back;
+
+    RecyclerViewRequestAdapter adapter;
+    RecyclerView recyclerView;
 
     private String previousActivity = null;
 
@@ -64,6 +65,7 @@ public class ViewRequest extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         userID = fAuth.getCurrentUser().getUid();
+        back = findViewById(R.id.back_button);
 
         DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -71,8 +73,11 @@ public class ViewRequest extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 addedFriendList = (ArrayList<String>) documentSnapshot.get("addedfriends");
                 awaitingFriendList = (ArrayList<String>) documentSnapshot.get("awaitingfriends");
+                awaitingFriendNameList = (ArrayList<String>) documentSnapshot.get("awaitingfriendsname");
                 userEmail = documentSnapshot.getString("email");
-                //Log.d("Oncreate","awaitingFriendList: " +awaitingFriendList.get(0));
+
+                /*
+
                 emaillist = new ArrayList<>();
                 namelist = new ArrayList<>();
                 for (String email :awaitingFriendList) {
@@ -91,7 +96,9 @@ public class ViewRequest extends AppCompatActivity {
                                     DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
                                     namelist.add(document.getString("fName"));
                                     emaillist.add(document.getString("email"));
-                                    initRecyclerView();
+                                    adapter.notifyDataSetChanged();
+
+                                };
 
                                     /*Task<DocumentSnapshot> t =  targetDoc.get();
                                     t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -110,9 +117,9 @@ public class ViewRequest extends AppCompatActivity {
                                     t.addOnFailureListener(new OnFailureListener() {
                                         public void onFailure(Exception e) {
                                         }
-                                    });*/
+                                    });
 
-                                }
+
 
                             } else {
                                 Log.d("AddingFriends", "Error getting documents: ", task.getException());
@@ -120,24 +127,37 @@ public class ViewRequest extends AppCompatActivity {
 
                         }
                     });
-                }
 
+                }
+                */
+                initRecyclerView();
             }
         });
 
         //Log.d("useremail","useremail: " +awaitingFriendList.size());
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(ViewRequest.this, FindFriend.class);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+
+        });
     }
 
 
     private void initRecyclerView(){
         Log.d("initRecyclerView", "initRecyclerView");
-        RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
-        RecyclerViewRequestAdapter adapter = new RecyclerViewRequestAdapter(namelist, emaillist, this);
+        recyclerView = findViewById(R.id.recyclerRequests);
+        adapter = new RecyclerViewRequestAdapter(awaitingFriendNameList, awaitingFriendList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    /*
     public void acceptRequest(String userID, String targetEmail){
         Log.d("AcceptFriends", "Entered");
         Log.d("AcceptFriends", "TargetEmail: "+targetEmail);
@@ -161,8 +181,14 @@ public class ViewRequest extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot docsnap) {
                                 userEmail = docsnap.getString("email");
+                                String name = docsnap.getString("fName");
                                 Log.d("AcceptFriends","UserEmail:" + userEmail);
+                                Log.d("sizeyyyy", ""+emaillist.size());
                                 acceptRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail);
+                                emaillist.remove(userEmail);
+                                Log.d("sizexxxx", ""+emaillist.size());
+                                namelist.remove(name);
+
                             }
                         });
                         t.addOnFailureListener(new OnFailureListener() {
@@ -170,6 +196,7 @@ public class ViewRequest extends AppCompatActivity {
                                 Log.d("get user email","failed");
                             }
                         });
+
 
                     }
                 } else {
@@ -219,13 +246,8 @@ public class ViewRequest extends AppCompatActivity {
             }
         });
     }
-    /*
-    public void refreshing() {
-        Intent intent = new Intent(ViewRequest.this, ViewRequest.class);
-        //finish();
-        startActivity(intent);
-    };
-    */
+
+
     private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail){
 
         userDoc.update("addedfriends", FieldValue.arrayUnion(targetEmail))
@@ -319,7 +341,7 @@ public class ViewRequest extends AppCompatActivity {
     }
 
 
-
+    */
     private void setUpBottomAppBar() {
         //find id
         bottomAppBar = findViewById(R.id.bottomAppBar);
@@ -332,12 +354,14 @@ public class ViewRequest extends AppCompatActivity {
 
                 String title = item.getTitle().toString();
                 if (title.contentEquals("Friends")) {
-                    Toast.makeText(ViewRequest.this, "Social Page", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ViewRequest.this, FindFriend.class);
+                    startActivity(intent);
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(ViewRequest.this, ActivityPageMain.class);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
-                    //Intent intent = new Intent(MapsActivity.this, )
+                    Intent intent = new Intent(ViewRequest.this, Logout.class);
+                    startActivity(intent);
                 }
 
                 return false;
@@ -357,6 +381,6 @@ public class ViewRequest extends AppCompatActivity {
                 }
             }
         });
-
     }
+
 }

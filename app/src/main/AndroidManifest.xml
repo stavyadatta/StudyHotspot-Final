@@ -22,9 +22,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewRequest"></activity>
-        <activity android:name="com.example.studyhotspot.detailsPage" />
-        <activity android:name=".SessionAddParticipants"/>
+        <activity
+            android:name=".Logout"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ViewRequest"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SessionDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SessionAddParticipants"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FindFriend"
             android:theme="@style/AppTheme.NoActionBar" />

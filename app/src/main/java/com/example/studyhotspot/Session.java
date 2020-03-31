@@ -11,21 +11,25 @@ public class Session implements Serializable{
     private String title;
     private String description;
     private String creatorName;
+    private String location;
     private Timestamp startDateTime;
     private Timestamp endDateTime;
     private int numOfParticipants;
     private boolean privateORpublic;
     private Map<String, Boolean> participantStatus;
 
-    public Session(String title, String description, String creatorName, Timestamp startDateTime, Timestamp endDateTime , Map<String,Boolean> participantStatus, boolean privateORpublic) {
+    public Session(String title, String description, String creatorName, String location,
+                   Timestamp startDateTime, Timestamp endDateTime , Map<String,Boolean> participantStatus, boolean privateORpublic) {
         this.title = title;
         this.description = description;
         this.creatorName = creatorName;
+        this.location = location;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.participantStatus = participantStatus;
         this.numOfParticipants = participantStatus.size();
         this.privateORpublic = privateORpublic;
+
     }
 
     public String getTitle() {
@@ -35,6 +39,8 @@ public class Session implements Serializable{
     public String getDescription() {
         return description;
     }
+
+    public String getLocation(){ return location; }
 
     public Timestamp getStartDateTime() {return startDateTime;}
 

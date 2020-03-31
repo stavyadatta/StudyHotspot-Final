@@ -46,12 +46,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class detailsPage extends AppCompatActivity {
+public class SessionDetails extends AppCompatActivity {
+
+    TextView titleView;
+    TextView description;
+    TextView startTime;
+    TextView startDate;
+
+    TextView endDatetime;
+
+    TextView endDate;
+    TextView endTime;
+
+    TextView session_participants;
+
+    TextView location;
+
 
     public String title;
     private String des;
-    private Date startDate;
-    private Date endTime;
+    private String documentName;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -64,13 +78,7 @@ public class detailsPage extends AppCompatActivity {
     private static final String KEY_LOCATION = "location";
     private static final String KEY_LOCATION_NAME = "locationName";
 
-
     private static final String TAG = "ScrollingActivity" ;
-
-    private String documentName;
-
-
-
 
 
     @Override
@@ -79,31 +87,33 @@ public class detailsPage extends AppCompatActivity {
         setContentView(R.layout.activity_details_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        final TextView description = findViewById(R.id.description);
-        final TextView startTime = findViewById(R.id.start_time);
-        final TextView startDate = findViewById(R.id.start_date);
+        titleView = findViewById(R.id.title);
+        description = findViewById(R.id.description);
+        startTime = findViewById(R.id.start_time);
+        startDate = findViewById(R.id.start_date);
 
-        TextView endDatetime = findViewById(R.id.end_time);
+        endDatetime = findViewById(R.id.end_time);
 
-        final TextView endDate = findViewById(R.id.end_date);
-        final TextView endTime = findViewById(R.id.end_time);
+        endDate = findViewById(R.id.end_date);
+        endTime = findViewById(R.id.end_time);
 
         // session participants
 
-        final TextView session_participants = findViewById((R.id.session_participants));
+        session_participants = findViewById((R.id.session_participants));
 
         // location
 
-        final TextView location = findViewById(R.id.location_name);
+        location = findViewById(R.id.location_name);
 
         //setTitle("hey I am great");
 
-        //Log.v(TAG, "the document name is + " + MainActivity.documentName);
         if (getIntent().hasExtra("docname")){
             documentName = getIntent().getStringExtra("docname");
         }
-        else
+        else {
             documentName = "X8lsLhFVKURYht6enWnr";
+        }
+
         final DocumentReference docRef = db.collection("hashsessions")
                 .document(documentName);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -143,22 +153,41 @@ public class detailsPage extends AppCompatActivity {
                 session_participants.setTypeface(null, Typeface.BOLD_ITALIC);
 
                 // location putting
-                String locationName = "<u>" + documentSnapshot.getString(KEY_LOCATION_NAME) + "</u>";
-                final GeoPoint location_coordinates = documentSnapshot.getGeoPoint(KEY_LOCATION);
+                String locationName = documentSnapshot.getString(KEY_LOCATION_NAME);
 
-                location.setText(Html.fromHtml(locationName ));
+                location.setText(Html.fromHtml("<u>" + locationName + "</u>" ));
                 location.setTextColor(getColor(R.color.hyperlinkBlue));
                 location.setTypeface(null, Typeface.BOLD);
+
                 location.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        assert location_coordinates != null;
-                        String uri = String.format(Locale.ENGLISH,
-                                "geo: %f,%f?q=%f, %f", location_coordinates.getLatitude(),
-                                location_coordinates.getLongitude(),location_coordinates.getLatitude(),
-                                location_coordinates.getLongitude());
-                        Uri location_uri = Uri.parse(uri);
-                        showMap(location_uri);
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=");
+                        sb.append(locationName);
+                        sb.append("&inputtype=textquery&fields=place_id&key=AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU&locationbias=ipbias");
+                        String url = sb.toString();
+
+                        System.out.println(url);
+                        JSONObject jsonObject = null;
+
+                        try {
+                            String jsonstring = URLReader.readUrl(sb.toString());
+                            jsonObject = new JSONObject(jsonstring);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        Intent intent = new Intent(SessionDetails.this, LocationInformationActivity.class);
+                        intent.putExtra("Name", locationName);
+                        try {
+                            intent.putExtra("PlaceID", jsonObject.get("candidates").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        startActivity(intent);
+
                     }
                 });
                 // leave session button
@@ -166,7 +195,7 @@ public class detailsPage extends AppCompatActivity {
                 leave_session_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(detailsPage.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SessionDetails.this);
 
                         // title for ur dialog box
                         builder.setTitle("Leaving session");
@@ -175,7 +204,7 @@ public class detailsPage extends AppCompatActivity {
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText( detailsPage.this, "Yes has been clicked",
+                                Toast.makeText( SessionDetails.this, "Yes has been clicked",
                                         Toast.LENGTH_SHORT).show();
                                 // uncomment to delete the document really
                                 //docRef.delete();
@@ -185,7 +214,7 @@ public class detailsPage extends AppCompatActivity {
                         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(detailsPage.this, "No has been clicked",
+                                Toast.makeText(SessionDetails.this, "No has been clicked",
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -197,14 +226,4 @@ public class detailsPage extends AppCompatActivity {
             }
         });
     }
-
-    public void showMap(Uri geoLocation){
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
-
-
 }

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.studyhotspot.Logout">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:elevation="5dp"
+        android:background="@drawable/blue_border"
+        android:id="@+id/relLayout2">
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_centerVertical="true"
+            android:text="SETTINGS"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#FFF"
+            android:background="@android:color/transparent"
+            />
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="102dp"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/wallpaper">
+
+        <RelativeLayout
+            android:layout_width="350dp"
+            android:layout_height="180dp"
+            android:background="@drawable/white_border"
+            android:elevation="15dp"
+            android:outlineAmbientShadowColor="@color/quantum_bluegrey500"
+            android:layout_margin="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="94dp"
+                android:text="PROFILE"
+                android:textColor="@color/quantum_black_100"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="165dp"
+                android:layout_height="227dp"
+                android:elevation="5dp"
+                app:srcCompat="@mipmap/ic_launcher_foreground" />
+
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView4"
+                android:layout_alignParentEnd="true"
+                android:elevation="5dp"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="11dp"
+                android:textColor="@color/quantum_grey900"
+                android:text="Your Name" />
+
+            <TextView
+                android:id="@+id/profileEmail"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profileName"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="11dp"
+                android:textSize="16sp"
+                android:textColor="@color/quantum_grey900"
+                android:text="Your Email Address" />
+
+            <TextView
+                android:id="@+id/profilePhone"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profileEmail"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="11dp"
+                android:textSize="16sp"
+                android:textColor="@color/quantum_grey900"
+                android:text="Phone Number" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="108dp"
+            android:onClick="logout"
+            android:text="LOGOUT"
+            android:textSize="22sp"
+            android:textColor="@color/quantum_black_100"
+            android:backgroundTint="@color/quantum_amberA700"
+            android:elevation="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<com.google.android.material.bottomappbar.BottomAppBar
+android:id="@+id/bottomAppBar"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_alignParentBottom="true"
+android:layout_gravity="bottom"
+map:backgroundTint="@color/quantum_bluegrey700"
+map:menu="@menu/app_bar_menu"
+map:navigationIcon="@drawable/ic_wifilogo" />
+
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+android:id="@+id/homeButton"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:src="@drawable/ic_home_black_24dp"
+map:backgroundTint="@color/quantum_bluegrey400"
+map:layout_anchor="@id/bottomAppBar"
+map:maxImageSize="35dp"
+map:tint="@color/colorWhite" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
