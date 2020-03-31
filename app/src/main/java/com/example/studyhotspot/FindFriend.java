@@ -165,8 +165,9 @@ public class FindFriend extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(DocumentSnapshot docsnap) {
                                         userEmail = docsnap.getString("email");
+                                        String name = docsnap.getString("fName");
                                         Log.d("get user email","success:" + userEmail);
-                                        addFriendUpdateDB(userDoc, targetDoc, targetEmail, userEmail);
+                                        addFriendUpdateDB(userDoc, targetDoc, targetEmail, userEmail, name);
                                     }
                                 });
                                 t.addOnFailureListener(new OnFailureListener() {
@@ -183,7 +184,8 @@ public class FindFriend extends AppCompatActivity {
                 });
     }
 
-    private void addFriendUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail){
+    private void addFriendUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
+
 
         userDoc.update("addingfriends", FieldValue.arrayUnion(targetEmail))
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -201,6 +203,20 @@ public class FindFriend extends AppCompatActivity {
         Log.d("log driectly bove","success:" + userEmail);
 
         targetDoc.update("awaitingfriends", FieldValue.arrayUnion(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        targetDoc.update("awaitingfriendsname", FieldValue.arrayUnion(userName))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
