@@ -79,8 +79,8 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                 //mfNames = new ArrayList<String>();
                 //meMails.clear();
                 //mfNames.clear();
-                //meMails.remove(position);
-                //mfNames.remove(position);
+                meMails.remove(position);
+                mfNames.remove(position);
                 //notifyItemRangeChanged(position, meMails.size());
                 //notifyItemRangeChanged(position, mfNames.size());
                 //notifyItemRemoved(position);

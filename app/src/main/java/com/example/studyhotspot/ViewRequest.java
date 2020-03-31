@@ -81,7 +81,7 @@ public class ViewRequest extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                System.out.println("HERE");
+                                Log.d("","HERE");
                                 Log.d("onComplete","entered on complete for email: "+email);
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     //Log.d("AddingFriends", document.getId() + " => " + document.getData());
@@ -131,7 +131,7 @@ public class ViewRequest extends AppCompatActivity {
 
 
     private void initRecyclerView(){
-        Log.d("init Recycler View", "enter initRecyclerView functions.");
+        Log.d("initRecyclerView", "initRecyclerView");
         RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
         RecyclerViewRequestAdapter adapter = new RecyclerViewRequestAdapter(namelist, emaillist, this);
         recyclerView.setAdapter(adapter);
@@ -241,7 +241,6 @@ public class ViewRequest extends AppCompatActivity {
                         Log.w("Update DB", "Error updating document", e);
                     }
                 });
-        Log.d("log driectly above","success:" + userEmail);
 
         userDoc.update("awaitingfriends", FieldValue.arrayRemove(targetEmail))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -256,7 +255,6 @@ public class ViewRequest extends AppCompatActivity {
                         Log.w("Update DB", "Error updating document", e);
                     }
                 });
-        Log.d("log driectly above","success:" + userEmail);
 
         targetDoc.update("addedfriends", FieldValue.arrayUnion(userEmail))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -303,7 +301,6 @@ public class ViewRequest extends AppCompatActivity {
                         Log.w("Update DB", "Error updating document", e);
                     }
                 });
-        Log.d("log driectly above","success:" + userEmail);
 
 
         targetDoc.update("addingfriends", FieldValue.arrayRemove(userEmail))
