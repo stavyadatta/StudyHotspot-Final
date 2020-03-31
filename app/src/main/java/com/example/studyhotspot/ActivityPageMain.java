@@ -117,7 +117,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             public void run() {
                 initImageBitmaps();
             }
-        }, 1500);
+        }, 3000);
         //initImageBitmaps();
         initImageBitmaps2();
         initImageBitmaps3();
@@ -364,7 +364,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     @Override
     public void onNoteClick(int position) {
         //Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
-        Intent intent = new Intent(this, detailsPage.class);
+        Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", id1.get(position));
         startActivity(intent);
     }
