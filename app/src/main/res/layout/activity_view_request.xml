@@ -61,8 +61,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="572dp"
         android:layout_marginTop="100dp"
+        android:layout_marginBottom="60dp"
         android:background="@color/quantum_bluegrey200">
 
         <TextView
@@ -91,8 +92,8 @@
             android:layout_marginTop="74dp"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="120dp"
-            android:elevation="1dp"
             android:background="#DBF3FA"
+            android:elevation="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
 
 

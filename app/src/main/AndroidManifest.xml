@@ -22,7 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewRequest"></activity>
+        <activity
+            android:name=".ViewRequest"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.example.studyhotspot.detailsPage" />
         <activity android:name=".SessionAddParticipants"/>
         <activity

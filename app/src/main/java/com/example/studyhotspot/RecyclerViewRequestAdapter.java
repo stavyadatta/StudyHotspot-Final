@@ -83,12 +83,8 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 acceptRequest(userID, meMails.get(position), mfNames.get(position));
 
-                Log.d("emailsOld", ""+meMails.size());
-                Log.d("nameOld", ""+mfNames.size());
                 meMails.remove(position);
                 mfNames.remove(position);
-                Log.d("emailsNew", ""+meMails.size());
-                Log.d("nameNew", ""+mfNames.size());
             }});
 
         holder.reject.setOnClickListener(new View.OnClickListener(){
@@ -98,8 +94,11 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d("statusNumber", "status: "+status);
                 Toast.makeText(mContext, "CAN BE rejected", Toast.LENGTH_SHORT).show();
-                ViewRequest requestdecider = new ViewRequest();
-                requestdecider.rejectRequest(userID, meMails.get(position));
+
+                rejectRequest(userID, meMails.get(position), mfNames.get(position));
+
+                meMails.remove(position);
+                mfNames.remove(position);
             }
         });
     }
@@ -255,6 +254,93 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Update DB", "targetDoc addingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+    }
+
+    public void rejectRequest(String userID, String targetEmail, String targetname){
+        Log.d("RejectFriends", "Entered");
+        Log.d("RejectFriends", "TargetEmail: "+targetEmail);
+        boolean status;
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        String targetUID = document.getId();
+
+                        DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                        Task<DocumentSnapshot> t =  userDoc.get();
+                        t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot docsnap) {
+                                String userEmail = docsnap.getString("email");
+                                Log.d("RejectFriends","UserEmail:" + userEmail);
+                                rejectRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail, targetname);
+                            }
+                        });
+                        t.addOnFailureListener(new OnFailureListener() {
+                            public void onFailure(Exception e) {
+                                Log.d("get user email","failed");
+                            }
+                        });
+
+                    }
+                } else {
+                    Log.d("Rejecting Request", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void rejectRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
+
+        userDoc.update("awaitingfriends", FieldValue.arrayRemove(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+
+        targetDoc.update("addingfriends", FieldValue.arrayRemove(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriendsname", FieldValue.arrayRemove(userName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

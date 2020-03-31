@@ -8,27 +8,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -63,7 +55,7 @@ public class ViewRequest extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_request);
-        //setUpBottomAppBar();
+        setUpBottomAppBar();
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
             previousActivity = extras.getString("prevActivity");
@@ -137,10 +129,6 @@ public class ViewRequest extends AppCompatActivity {
 
                 }
                 */
-
-                Log.d("testxxx", "test" + namelist.size());
-                Log.d("testxxx", "test" + emaillist.size());
-
                 initRecyclerView();
             }
         });
@@ -157,7 +145,7 @@ public class ViewRequest extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
+    /*
     public void acceptRequest(String userID, String targetEmail){
         Log.d("AcceptFriends", "Entered");
         Log.d("AcceptFriends", "TargetEmail: "+targetEmail);
@@ -247,9 +235,6 @@ public class ViewRequest extends AppCompatActivity {
         });
     }
 
-    public void refreshing() {
-        initRecyclerView();
-    };
 
     private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail){
 
@@ -344,7 +329,7 @@ public class ViewRequest extends AppCompatActivity {
     }
 
 
-
+    */
     private void setUpBottomAppBar() {
         //find id
         bottomAppBar = findViewById(R.id.bottomAppBar);
@@ -382,6 +367,5 @@ public class ViewRequest extends AppCompatActivity {
                 }
             }
         });
-
     }
 }
