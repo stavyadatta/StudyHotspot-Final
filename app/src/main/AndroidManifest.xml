@@ -30,7 +30,6 @@
         <activity
             android:name=".History"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FindFriend" />
         <activity
             android:name=".CreateSession"
             android:theme="@style/AppTheme.NoActionBar" />
