@@ -98,7 +98,7 @@ public class Register extends AppCompatActivity {
                             user.put("fName",fullName);
                             user.put("email",email);
                             user.put("phone",phone);
-                            user.put("addedfroemds", new ArrayList<String>());
+                            user.put("addedfriends", new ArrayList<String>());
                             user.put("addingfriends", new ArrayList<String>());
                             user.put("awaitingfriends", new ArrayList<String>());
                             user.put("awaitingfriendsname", new ArrayList<String>());

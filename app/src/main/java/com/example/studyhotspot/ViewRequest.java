@@ -136,11 +136,15 @@ public class ViewRequest extends AppCompatActivity {
 
         //Log.d("useremail","useremail: " +awaitingFriendList.size());
 
-        back.setOnClickListener(new View.OnClickListener(){
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                Intent intent = new Intent(ViewRequest.this, FindFriend.class);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
+
         });
     }
 

@@ -40,6 +40,7 @@ public class FindFriend extends AppCompatActivity {
     ArrayList<String> emaillist = new ArrayList<>();
     ArrayList<String> addedFriendList = new ArrayList<String>();
     ArrayList<String> addingFriendList = new ArrayList<String>();
+    ArrayList<String> awaitingFriendList = new ArrayList<String>();
     ArrayList<Integer> relationshipFriendList = new ArrayList<Integer>();
 
     String userID;
@@ -77,6 +78,8 @@ public class FindFriend extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 addedFriendList = (ArrayList<String>) documentSnapshot.get("addedfriends");
                 addingFriendList = (ArrayList<String>) documentSnapshot.get("addingfriends");
+                awaitingFriendList = (ArrayList<String>) documentSnapshot.get("awaitingfriends");
+
                 userEmail = documentSnapshot.getString("email");
                 //Log.d("ADDED FRIEND LIST", "List: "+((ArrayList<String>) documentSnapshot.get("addedfriends")).get(0));
                 //Log.d("ADDED FRIEND LIST", "Size: "+ addedFriendList.size());
@@ -92,11 +95,15 @@ public class FindFriend extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         String email = document.getString("email");
+                        Log.d("email", email);
                         if(email.contentEquals(userEmail)){
                             continue;
                         }
                         else{
-                            if(addedFriendList.contains(email)){
+                            if(awaitingFriendList.contains(email)){
+                                continue;
+                            }
+                            else if(addedFriendList.contains(email)){
                                 relationshipFriendList.add(2); //2 means added
                             }
                             else if(addingFriendList.contains(email)){
@@ -130,6 +137,7 @@ public class FindFriend extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FindFriend.this, ViewRequest.class);
                 startActivity(intent);
+                //initRecyclerView();
 
             }
         });

@@ -192,7 +192,7 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
-
+        
         userDoc.update("addedfriends", FieldValue.arrayUnion(targetEmail))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
