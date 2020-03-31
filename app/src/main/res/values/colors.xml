@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#D0F0C0</color>
     <color name = "colorWhite">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name = "hyperlinkBlue">#0000EE</color>
 
 </resources>
 

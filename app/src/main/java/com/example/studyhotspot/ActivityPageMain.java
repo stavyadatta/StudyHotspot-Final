@@ -1,5 +1,6 @@
 package com.example.studyhotspot;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,12 +17,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.api.LogDescriptor;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class ActivityPageMain extends AppCompatActivity {
+public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener {
     Activity activitySS = new Activity("Study @ Starbucks", "001", "Ongoing", "1100","1200", "Chris Johnson");
     Activity activityCU = new Activity("Catch Up", "002", "Upcoming", "1100", "1200", "Lia Palosanu");
     Activity activityEP = new Activity("Exam Prep", "003", "Upcoming", "1100", "1200", "Mike Lee");
@@ -31,6 +43,7 @@ public class ActivityPageMain extends AppCompatActivity {
     ArrayList<Activity> listIActivity = new ArrayList<>();
     ArrayList<Activity> listFAActivity = new ArrayList<>();
 
+
     private FloatingActionButton homeButton;
     private BottomAppBar bottomAppBar;
     private Button historyButton;
@@ -39,10 +52,12 @@ public class ActivityPageMain extends AppCompatActivity {
     private static final String TAG = "ActivityPageMain";
 
     //for 1st box
-    private ArrayList<String> mNames = new ArrayList<>();
+
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> fMS1 = new ArrayList<>();
     private ArrayList<String> fMS2 = new ArrayList<>();
+    private ArrayList<String> mNames = new ArrayList<String>();
+    private ArrayList<String> id1 = new ArrayList<>();
 
     //for 2nd box
     private ArrayList<String> mNames2 = new ArrayList<>();
@@ -58,6 +73,8 @@ public class ActivityPageMain extends AppCompatActivity {
 
     private String previousActivity = null;
 
+    FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +85,13 @@ public class ActivityPageMain extends AppCompatActivity {
         listIActivity.add(activityEP);
         listFAActivity.add(activityOS);
         listFAActivity.add(activityCP);
+        db = FirebaseFirestore.getInstance();
+
+
+
+
 
         setUpBottomAppBar();
-
         initImageBitmaps();
         initImageBitmaps2();
         initImageBitmaps3();
@@ -87,27 +108,88 @@ public class ActivityPageMain extends AppCompatActivity {
                 openHistory();
             }
         });
+
+
     }
 
     private void initImageBitmaps(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        db.collection("sessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    int i = 0;
+                    for (QueryDocumentSnapshot document:task.getResult()){
+                        id1.add(document.getId());
+                        mNames.add(document.getString("title"));
+                        mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                        fMS1.add("Status: Testing");
+                        fMS2.add("Created by: Testing");
+                        Log.v(TAG, "this is adding id of document" + id1.get(i++));
+                        Log.d(TAG, "onComplete: " + id1.size());
+                        initRecyclerView();
+                    }
+                }
+                /*for (int j = 0; j < id1.size(); j++){
+                    DocumentReference docRef = db.collection("sessions").document(id1.get(j));
+                    //final int finalJ = j;
+                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            //documentName = id1.get(finalJ);
+                            Log.d(TAG, "onSuccess: " + documentSnapshot.getString("title"));
+                            mNames.add(documentSnapshot.getString("title"));
+                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                            fMS1.add("Status: Testing");
+                            fMS2.add("Created by: Testing");
+                            initRecyclerView();
 
-        for (int i =0;i<listMSActivity.size();i++){
-            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-            mNames.add(listMSActivity.get(i).getname());
-            fMS1.add("Status: " + listMSActivity.get(i).getStatus());
-            fMS2.add("Created by: " + listMSActivity.get(i).getCreator());
+                        }
+                    });
+                }*/
+
+            }
+        });
 
 
-        }
-        initRecyclerView();
+
+        //Trying to read database into mNames
+        /*DocumentReference docRef = db.collection("sessions").document("5nacJiy7Ch1sstSdZIyV");
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mNames.add(documentSnapshot.getString("title"));
+                mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                fMS1.add("Status: Testing");
+                fMS2.add("Created by: Testing");
+                initRecyclerView();
+            }
+        });*/
+
+
+        /*docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Session s = documentSnapshot.toObject(Session.class);
+                mNames.add(s.getTitle());
+            }
+        });*/
+        //mNames.add("Testing");
+
+
+
+
+
 
     }
 
     private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
+        Log.d(TAG, "initRecyclerView: the last of titles are:" + mNames.get(mNames.size()-1));
+        if (mNames.size() != id1.size())
+            return;
+        Log.d(TAG, "1initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.recyclerview1);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, fMS1, fMS2, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, fMS1, fMS2, this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -200,6 +282,15 @@ public class ActivityPageMain extends AppCompatActivity {
 
     public void openHistory() {
         Intent intent = new Intent(this, History.class);
+        startActivity(intent);
+    }
+
+    //From actvity page to activity info page, to pass in document id
+    @Override
+    public void onNoteClick(int position) {
+        Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
+        Intent intent = new Intent(this, detailsPage.class);
+        intent.putExtra("docname", id1.get(position));
         startActivity(intent);
     }
 

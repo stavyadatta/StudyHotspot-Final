@@ -8,6 +8,72 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:832759390220:android:565b169eb2bf4322f3ce29",
+        "android_client_info": {
+          "package_name": "com.example.activitydetail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832759390220-jts98v6bensecpc9hkd18kbfgk3l119v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.activitydetail",
+            "certificate_hash": "cd3d3627c2bce71250309ceac33437c4d7b01d56"
+          }
+        },
+        {
+          "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEiMOD3q4UmlzsC1k41t13S91CNC7Wox8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832759390220:android:bd0d73b0ec0345daf3ce29",
+        "android_client_info": {
+          "package_name": "com.example.studyhotspot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEiMOD3q4UmlzsC1k41t13S91CNC7Wox8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832759390220-1dre4dv3i9lqrlfp2mub6u48ub9fs37v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:832759390220:android:a50dd67642e792e0f3ce29",
         "android_client_info": {
           "package_name": "com.example.studyhotspot2"

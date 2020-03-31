@@ -22,32 +22,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name="com.example.studyhotspot.detailsPage" />
         <activity
             android:name=".History"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FindFriend" />
         <activity
-            android:name="com.example.studyhotspot.CreateSession"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".CreateSession"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <activity
-            android:name="com.example.studyhotspot.ActivityPageMain"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-
+            android:name=".ActivityPageMain"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.studyhotspot.LocationInformationActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".LocationInformationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.studyhotspot.RatingActivity"
+            android:name=".RatingActivity"
             android:label="@string/title_activity_rating"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.studyhotspot.MapsActivity"
+            android:name=".MapsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Login" /> <!-- <activity android:name=".Register"></activity> -->
         <!--
