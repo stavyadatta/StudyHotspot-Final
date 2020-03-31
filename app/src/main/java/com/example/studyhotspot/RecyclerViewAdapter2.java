@@ -28,21 +28,23 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
     private ArrayList<String> mImages2 = new ArrayList<>();
     private ArrayList<String > mImages3 = new ArrayList<>();
     private Context mContext;
+    private OnNoteListener2 mOnNoteListener2;
 
-    public RecyclerViewAdapter2(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mImages2, ArrayList<String> mImages3, Context mContext) {
+    public RecyclerViewAdapter2(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mImages2, ArrayList<String> mImages3, Context mContext, OnNoteListener2 onNoteListener2) {
         this.mImageNames = mImageNames;
         this.mImages = mImages;
         this.mContext = mContext;
         this.mMS1 = mMS1;
         this.mImages2 = mImages2;
         this.mImages3 = mImages3;
+        this.mOnNoteListener2 = onNoteListener2;
     }
 
     @NonNull
     @Override
     public RecyclerViewAdapter2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activitylayout_2, parent, false);
-        RecyclerViewAdapter2.ViewHolder holder = new RecyclerViewAdapter2.ViewHolder(view);
+        RecyclerViewAdapter2.ViewHolder holder = new RecyclerViewAdapter2.ViewHolder(view, mOnNoteListener2);
 
         return holder;
     }
@@ -86,14 +88,15 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
         return mImageNames.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         CircleImageView image, image2, image3;
         TextView imageName;
         RelativeLayout parentLayout;
         TextView MS2;
+        OnNoteListener2 onNoteListener2;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnNoteListener2 onNoteListener2) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
             image2 = itemView.findViewById(R.id.image2);
@@ -101,6 +104,18 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
             imageName = itemView.findViewById(R.id.image_name);
             parentLayout = itemView.findViewById(R.id.parent_layout);
             MS2 = itemView.findViewById(R.id.MS2);
+            this.onNoteListener2 = onNoteListener2;
+            image.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener2.onNoteClick2(getAdapterPosition());
+
+        }
+    }
+
+    public interface OnNoteListener2{
+        void onNoteClick2(int position);
     }
 }

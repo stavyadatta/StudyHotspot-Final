@@ -9,8 +9,7 @@
         android:layout_height="30dp"
         android:id="@+id/image"
         android:src="@mipmap/ic_launcher"
-        android:layout_toRightOf="@+id/image_name"
-        android:layout_marginLeft="50dp"
+        android:layout_alignParentRight="true"
 
         />
     <TextView

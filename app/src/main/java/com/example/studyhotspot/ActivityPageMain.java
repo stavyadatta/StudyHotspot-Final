@@ -33,7 +33,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener {
+public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener, RecyclerViewAdapter2.OnNoteListener2 {
     Activity activitySS = new Activity("Study @ Starbucks", "001", "Ongoing", "1100","1200", "Chris Johnson");
     Activity activityCU = new Activity("Catch Up", "002", "Upcoming", "1100", "1200", "Lia Palosanu");
     Activity activityEP = new Activity("Exam Prep", "003", "Upcoming", "1100", "1200", "Mike Lee");
@@ -212,7 +212,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private void initRecyclerView2(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -294,4 +294,10 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         startActivity(intent);
     }
 
+
+    @Override
+    public void onNoteClick2(int position) {
+        Intent intent = new Intent(this, InvitationPage.class);
+        startActivity(intent);
+    }
 }

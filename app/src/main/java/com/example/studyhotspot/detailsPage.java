@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -87,6 +89,11 @@ public class detailsPage extends AppCompatActivity {
 
         final TextView endDate = findViewById(R.id.end_date);
         final TextView endTime = findViewById(R.id.end_time);
+
+        ActionBar actionBar = getSupportActionBar();
+        //setActivityBackgroundColor(0x9CFC97, actionBar);
+
+
 
         // session participants
 
@@ -204,6 +211,13 @@ public class detailsPage extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    public void setActivityBackgroundColor(int color, ActionBar actionBar) {
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#E7E61D"));
+
+        actionBar.setBackgroundDrawable(colorDrawable);
+
     }
 
 
