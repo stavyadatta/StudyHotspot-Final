@@ -24,7 +24,7 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
 
     ArrayList<String> addedFriendList = new ArrayList<String>();
     ArrayList<String> friendNameList = new ArrayList<>();
-    private ArrayList<String> participants = new ArrayList<String>();
+    private ArrayList<String> participants;
 
     //FirebaseFirestore firebaseFirestore;
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
@@ -49,6 +49,11 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_add_participants);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            participants = extras.getStringArrayList("Participants");
+        }
+
         setUpFriends();
         setUpBottomAppBar();
         setUpContent();
@@ -59,6 +64,8 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
         userID = userDatabaseManager.getCurrentUserID();
         userEmail = userDatabaseManager.getCurrentUserEmail();
         userDatabaseManager.getUserAddedFriends(friendNameList);
+
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -71,8 +78,18 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
     private void initRecyclerView(){
         recyclerView = findViewById(R.id.recyclerParticipants);
         adapter = new RecyclerViewAddParticipantAdapter(friendNameList,this);
+
+        if (participants.size() > 0) {
+            for (int i = 0; i < friendNameList.size(); i++) {
+                if (participants.contains(friendNameList.get(i))) {
+                    adapter.setPositives(i);
+                }
+            }
+        }
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     private void setUpBottomAppBar() {
@@ -122,6 +139,8 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
     private void setUpContent(){
         participantCount = findViewById(R.id.participantCount);
         addParticipants = findViewById(R.id.addParticipants);
+
+        participantCount.setText(""+participants.size());
 
         addParticipants.setOnClickListener(new View.OnClickListener() {
             @Override

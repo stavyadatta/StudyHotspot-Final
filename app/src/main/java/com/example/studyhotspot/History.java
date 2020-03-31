@@ -142,7 +142,7 @@ public class History extends AppCompatActivity implements RecyclerViewAdapter.On
 
     @Override
     public void onNoteClick(int position) {
-        Intent intent = new Intent(this, detailsPage.class);
+        Intent intent = new Intent(this, SessionDetails.class);
         startActivity(intent);
     }
 }

@@ -335,7 +335,6 @@ public class LocationInformationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LocationInformationActivity.this, CreateSession.class);
                 intent.putExtra("Name", name);
-                intent.putExtra("Coord", coord);
                 startActivity(intent);
             }
         });
