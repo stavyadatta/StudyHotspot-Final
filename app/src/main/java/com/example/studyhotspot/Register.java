@@ -20,10 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,10 +98,12 @@ public class Register extends AppCompatActivity {
                             user.put("fName",fullName);
                             user.put("email",email);
                             user.put("phone",phone);
+                            user.put("addedfroemds", new ArrayList<String>());
+                            user.put("addingfriends", new ArrayList<String>());
+                            user.put("awaitingfriends", new ArrayList<String>());
+                            user.put("awaitingfriendsname", new ArrayList<String>());
 
                             db = FirebaseFirestore.getInstance();
-                            CollectionReference dbSessions = db.collection("users");
-                            dbSessions.add(user);
 
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
