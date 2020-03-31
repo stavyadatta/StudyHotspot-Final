@@ -104,7 +104,7 @@ public class detailsPage extends AppCompatActivity {
         }
         else
             documentName = "X8lsLhFVKURYht6enWnr";
-        final DocumentReference docRef = db.collection("sessions")
+        final DocumentReference docRef = db.collection("hashsessions")
                 .document(documentName);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
