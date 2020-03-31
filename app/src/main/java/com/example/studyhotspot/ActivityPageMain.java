@@ -130,57 +130,8 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                         initRecyclerView();
                     }
                 }
-                /*for (int j = 0; j < id1.size(); j++){
-                    DocumentReference docRef = db.collection("sessions").document(id1.get(j));
-                    //final int finalJ = j;
-                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            //documentName = id1.get(finalJ);
-                            Log.d(TAG, "onSuccess: " + documentSnapshot.getString("title"));
-                            mNames.add(documentSnapshot.getString("title"));
-                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-                            fMS1.add("Status: Testing");
-                            fMS2.add("Created by: Testing");
-                            initRecyclerView();
-
-                        }
-                    });
-                }*/
-
             }
         });
-
-
-
-        //Trying to read database into mNames
-        /*DocumentReference docRef = db.collection("sessions").document("5nacJiy7Ch1sstSdZIyV");
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mNames.add(documentSnapshot.getString("title"));
-                mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-                fMS1.add("Status: Testing");
-                fMS2.add("Created by: Testing");
-                initRecyclerView();
-            }
-        });*/
-
-
-        /*docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Session s = documentSnapshot.toObject(Session.class);
-                mNames.add(s.getTitle());
-            }
-        });*/
-        //mNames.add("Testing");
-
-
-
-
-
-
     }
 
     private void initRecyclerView(){
@@ -289,7 +240,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     @Override
     public void onNoteClick(int position) {
         Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
-        Intent intent = new Intent(this, detailsPage.class);
+        Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", id1.get(position));
         startActivity(intent);
     }
