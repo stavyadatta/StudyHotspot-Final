@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class FindFriend extends AppCompatActivity {
 
     String userID;
     String userEmail;
+    private Button mViewRequestBtn;
     FirebaseFirestore firebaseFirestore;
 
     private BottomAppBar bottomAppBar;
@@ -58,6 +60,7 @@ public class FindFriend extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
         setUpBottomAppBar();
+        setUpRequestBtn();
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
@@ -120,6 +123,17 @@ public class FindFriend extends AppCompatActivity {
 
     }
 
+    public void setUpRequestBtn() {
+        mViewRequestBtn = findViewById(R.id.viewRequestBtn);
+        mViewRequestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FindFriend.this, ViewRequest.class);
+                startActivity(intent);
+
+            }
+        });
+    }
 
     private void initRecyclerView(){
         Log.d("Recycler Users", "initRecyclerView: init recyclerview.");

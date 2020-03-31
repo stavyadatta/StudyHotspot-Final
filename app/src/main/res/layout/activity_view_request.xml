@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindFriend">
+    tools:context=".ViewRequest">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,34 +14,50 @@
         android:background="@drawable/blue_border"
         android:id="@+id/relLayout2">
 
-        <TextView
-            android:layout_width="190dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="39dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="178dp"
-            android:layout_marginBottom="29dp"
-            android:layout_toRightOf="@+id/back_button"
-            android:background="@android:color/transparent"
-            android:text="SOCIAL"
-            android:textColor="#FFF"
-            android:textSize="30dp"
-            android:textStyle="bold" />
+            android:src="@drawable/ic_arrow_back"
+            android:clickable="true"/>
 
-        <Button
-            android:id="@+id/viewRequestBtn"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="34dp"
-            android:layout_marginBottom="22dp"
-            android:text="View Request" />
+            android:layout_toRightOf="@+id/back_button"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:text="View Request(s)"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#FFF"
+            android:background="@android:color/transparent"
+            />
 
     </RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:clickable="true"
+        map:backgroundTint = "@color/quantum_bluegrey700"
+        map:menu="@menu/app_bar_menu"
+        map:navigationIcon="@drawable/ic_wifilogo" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_black_24dp"
+        map:backgroundTint="@color/quantum_bluegrey400"
+        map:layout_anchor = "@id/bottomAppBar"
+        map:maxImageSize="35dp"
+        map:tint = "@color/colorWhite"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -50,7 +66,7 @@
         android:background="@color/quantum_bluegrey200">
 
         <TextView
-            android:id="@+id/myFriends"
+            android:id="@+id/myRequests"
             android:layout_width="358dp"
             android:layout_height="45dp"
             android:layout_marginLeft="35dp"
@@ -59,7 +75,7 @@
             android:background="@drawable/white_border"
             android:elevation="1.1dp"
             android:gravity="center"
-            android:text="MY FRIENDS"
+            android:text="Incoming Friend Request(s)"
             android:textColor="#000"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -90,7 +106,7 @@
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerUsers"
+                    android:id="@+id/recyclerRequests"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -109,24 +125,8 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        map:backgroundTint="@color/quantum_bluegrey700"
-        map:menu="@menu/app_bar_menu"
-        map:navigationIcon="@drawable/ic_wifilogo" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/homeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_home_black_24dp"
-        map:backgroundTint="@color/quantum_bluegrey400"
-        map:layout_anchor="@id/bottomAppBar"
-        map:maxImageSize="35dp"
-        map:tint="@color/colorWhite" />
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
