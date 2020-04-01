@@ -29,7 +29,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.text.Html;
 import android.util.Log;
@@ -50,7 +49,7 @@ import java.util.Locale;
 
 public class SessionDetails extends AppCompatActivity {
 
-    TextView titleView;
+    TextView creatorName;
     TextView description;
     TextView startTime;
     TextView startDate;
@@ -66,6 +65,7 @@ public class SessionDetails extends AppCompatActivity {
 
 
     public String title;
+    public String creatorN;
     private String des;
     private String documentName;
 
@@ -73,12 +73,12 @@ public class SessionDetails extends AppCompatActivity {
 
 
     public static final String KEY_TITLE = "title";
+    public static final String KEY_CREATOR = "creatorName";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_STARTTIME = "startDateTime";
     private static final String KEY_ENDTIME = "endDateTime";
     private static final String KEY_SESSION_NUMBERS = "numOfParticipants";
     private static final String KEY_LOCATION = "location";
-    private static final String KEY_LOCATION_NAME = "locationName";
 
 
     private static final String TAG = "ScrollingActivity" ;
@@ -89,9 +89,8 @@ public class SessionDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_page);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        titleView = findViewById(R.id.title);
+        creatorName = findViewById(R.id.creator_name);
         description = findViewById(R.id.description);
         startTime = findViewById(R.id.start_time);
         startDate = findViewById(R.id.start_date);
@@ -132,6 +131,10 @@ public class SessionDetails extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 title = documentSnapshot.getString(KEY_TITLE);
+                creatorN = documentSnapshot.getString(KEY_CREATOR);
+
+                creatorName.setText(creatorN);
+
                 des = documentSnapshot.getString(KEY_DESCRIPTION);
                 description.setText(des);
                 description.setTypeface(null, Typeface.BOLD);
@@ -140,6 +143,8 @@ public class SessionDetails extends AppCompatActivity {
                 // title of the scroll view
 
                 TextView scrollTitle = findViewById(R.id.title);
+
+
 
                 scrollTitle.setText(title);
                 scrollTitle.setTypeface(null, Typeface.BOLD);
@@ -163,7 +168,7 @@ public class SessionDetails extends AppCompatActivity {
                 session_participants.setTypeface(null, Typeface.BOLD_ITALIC);
 
                 // location putting
-                String locationName = documentSnapshot.getString(KEY_LOCATION_NAME);
+                String locationName = documentSnapshot.getString(KEY_LOCATION);
 
                 location.setText(Html.fromHtml("<u>" + locationName + "</u>" ));
                 location.setTextColor(getColor(R.color.hyperlinkBlue));
