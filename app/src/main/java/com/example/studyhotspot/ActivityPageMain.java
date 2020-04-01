@@ -366,10 +366,5 @@ public class ActivityPageMain extends AppCompatActivity {
         System.out.println(id2.get(position));
         startActivity(intent);
     }
-
-    public void showFriendActivityInfo(int position) {
-        Intent intent = new Intent(this, FriendsActivityPage.class);
-        startActivity(intent);
-    }
 }
 

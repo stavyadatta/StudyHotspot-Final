@@ -26,10 +26,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             />
         <activity
-            android:name=".FriendsActivityPage"
-            android:label="@string/title_activity_friends_page"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".Logout"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
