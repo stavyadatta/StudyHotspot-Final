@@ -52,6 +52,8 @@ public class ActivityPageMain extends AppCompatActivity {
     ArrayList<Activity> listIActivity = new ArrayList<>();
     ArrayList<Activity> listFAActivity = new ArrayList<>();
 
+
+
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
 
     String userID;
@@ -219,6 +221,7 @@ public class ActivityPageMain extends AppCompatActivity {
                                     initRecyclerView();
                                 }
                                 else if (currentTS.compareTo(endTS) > 0){
+                                    status = "Passed";
                                     historyIDs.add(document.getId());
                                     historyNames.add(document.getString("title"));
                                     historyCreators.add("Created by: " + document.getString("creatorName"));
@@ -280,7 +283,7 @@ public class ActivityPageMain extends AppCompatActivity {
     private void initRecyclerView2() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(id2, mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
