@@ -137,7 +137,7 @@ public class ViewRequest extends AppCompatActivity implements RecyclerViewReques
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ViewRequest.this, MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });

@@ -100,81 +100,18 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
         holder.image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: Clicked here starting");
-                FirebaseAuth fAuth = FirebaseAuth.getInstance();
-                String userID = fAuth.getCurrentUser().getUid();
-                Log.d(TAG, "onClick: Clicked here before AcceptSession");
-                acceptSession(userID,position);
+                activityPageMain.processInvitation(position, true);
+                Toast.makeText(mContext, "ACCEPTING...", Toast.LENGTH_LONG).show();
             }
         });
 
-
-    }
-
-    public void acceptSession(String userID, int position){
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
-                firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document:task.getResult()){
-                                if(document.getId().equals(userID)){
-                                    name = document.getString("fName");
-                                    Log.d(TAG, "onComplete: instance of same userid" + userID + name);
-                                }
-                            }
-                        }
-                    }
-                });
-
-        handler.postDelayed(new Runnable() {
-            public void run() {
-        //error here - name is null
-        Log.d(TAG, "acceptSession: after getting username " + name + userID);
-        firebaseFirestore.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        holder.image3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    int i =0;
-                    for(QueryDocumentSnapshot document:task.getResult()){
-                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
-                        if(doch.containsKey(name)){
-                            Log.d(TAG, "onComplete: Finding the hashmap with the user's name");
-                            if(doch.get(name) == null){
-                                Log.d(TAG, "onComplete: Finding the invitation activity");
-                                if(position == i){
-                                    Log.d(TAG, "onComplete: Found position");
-                                    doch.replace(name, null,true);
-                                    DocumentReference documentRef=document.getReference();
-                                    documentRef.update("participantStatus", doch).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            ///activityPageMain.initImageBitmaps2();
-                                            Log.d(TAG, "onSuccess: Sucess here");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "onFailure: Failure here");
-
-                                        }
-                                    });
-                                }
-                                else{
-                                    i++;
-                                    continue;
-                                }
-                            }
-
-                        }
-                    }
-                }
+            public void onClick(View v) {
+                Toast.makeText(mContext, "REJECTING...", Toast.LENGTH_LONG).show();
+                activityPageMain.processInvitation(position, false);
             }
         });
-            }
-        }, 5000);
     }
 
     @Override

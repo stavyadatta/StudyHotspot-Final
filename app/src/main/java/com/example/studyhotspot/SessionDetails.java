@@ -74,6 +74,8 @@ public class SessionDetails extends AppCompatActivity {
     String currentUser;
     String userEmail;
 
+    int position;
+
     public String title;
     public String creatorN;
     private String des;
@@ -113,6 +115,7 @@ public class SessionDetails extends AppCompatActivity {
             userID = getIntent().getStringExtra("currentUID");
             userEmail = getIntent().getStringExtra("userEmail");
             status = getIntent().getStringExtra("Status");
+            position = getIntent().getIntExtra("position", -1);
         } else {
             Toast.makeText(SessionDetails.this, "ERROR", Toast.LENGTH_LONG).show();
             finish();
@@ -123,7 +126,7 @@ public class SessionDetails extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                setUpContent();
+                setUpContent(0);
             }
         }, 1500);
     }
@@ -160,7 +163,11 @@ public class SessionDetails extends AppCompatActivity {
         });
     }
 
-    private void setUpContent(){
+    private void setUpContent(int time){
+        if (time > 5){
+            Toast.makeText(SessionDetails.this, "PLEASE TRY AGAIN", Toast.LENGTH_LONG).show();
+            finish();
+        }
         sessionTitle = findViewById(R.id.toolbar_layout);
         creatorName = findViewById(R.id.creator_name);
         location = findViewById(R.id.location_name);
@@ -199,7 +206,12 @@ public class SessionDetails extends AppCompatActivity {
         }catch(Exception e){
             e.printStackTrace();
             Toast.makeText(SessionDetails.this, "LOADING", Toast.LENGTH_LONG).show();
-            setUpContent();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    setUpContent(time+1);
+                }
+            }, 500);
         }
 
         location.setOnClickListener(new View.OnClickListener() {
@@ -252,10 +264,22 @@ public class SessionDetails extends AppCompatActivity {
             }
         });
 
-        if (status != null && status.contentEquals("past")){
-            leave_session.setBackgroundColor(0xFFF0F0F0);
+        if (status != null){
             leave_session.setClickable(false);
-            leave_session.setText("PAST");
+
+            if(status.contentEquals("Status: Past")) {
+                leave_session.setBackgroundColor(0xFFF0F0F0);
+                leave_session.setText("PAST");
+            }
+            else if(status.contentEquals("Status: Rejected")) {
+                leave_session.setBackgroundColor(0xFFFFBBBB);
+                leave_session.setText("REJECTED");
+            }
+            else if (status.contentEquals("friend")){
+                leave_session.setBackgroundColor(0xFFDCF8C6);
+                leave_session.setText("FRIEND ACTIVITY");
+                leave_session.setTextSize(16);
+            }
         }
         else {
             leave_session.setOnClickListener(new View.OnClickListener() {
@@ -270,21 +294,23 @@ public class SessionDetails extends AppCompatActivity {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(SessionDetails.this, "Yes has been clicked",
+                            Toast.makeText(SessionDetails.this, "LEAVING...",
                                     Toast.LENGTH_SHORT).show();
-                            // uncomment to delete the document really
-                            //docRef.delete();
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra("position",position);
+                            System.out.println(position);
+                            setResult(RESULT_OK,returnIntent);
+                            finish();
                         }
                     });
 
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(SessionDetails.this, "No has been clicked",
+                            Toast.makeText(SessionDetails.this, "REQUEST CANCELLED",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }

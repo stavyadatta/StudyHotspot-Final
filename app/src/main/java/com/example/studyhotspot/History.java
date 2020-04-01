@@ -28,7 +28,7 @@ public class History extends AppCompatActivity {
     private ArrayList<String> historyCreators = new ArrayList<>();
     private ArrayList<String> historyIDs = new ArrayList<String>();
     private ArrayList<String> images = new ArrayList<String>();
-    private ArrayList<String> status = new ArrayList<String>();
+    private ArrayList<String> historyStatus = new ArrayList<String>();
 
     private static final String TAG = "HistoryPage";
 
@@ -46,6 +46,7 @@ public class History extends AppCompatActivity {
             historyIDs = extras.getStringArrayList("IDs");
             historyNames = extras.getStringArrayList("Names");
             historyCreators = extras.getStringArrayList("Creators");
+            historyStatus = extras.getStringArrayList("Status");
         }
 
         backButton = findViewById(R.id.back_button);
@@ -64,7 +65,6 @@ public class History extends AppCompatActivity {
 
         for (int i = 0; i < historyIDs.size(); i++){
             images.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-            status.add("Status: Past");
         }
         initRecyclerView();
     }
@@ -72,7 +72,7 @@ public class History extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.recyclerviewhist);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(historyNames, images, status, historyCreators, this, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(historyNames, images, historyStatus, historyCreators, this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -80,7 +80,7 @@ public class History extends AppCompatActivity {
     public void showPastSessionInfo(int position) {
         Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", historyIDs.get(position));
-        intent.putExtra("Status", "past");
+        intent.putExtra("Status", historyStatus.get(position));
         startActivity(intent);
     }
 }
