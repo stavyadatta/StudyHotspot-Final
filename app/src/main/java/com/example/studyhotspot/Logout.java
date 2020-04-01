@@ -96,7 +96,15 @@ public class Logout extends AppCompatActivity {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                if (previousActivity != null && previousActivity.contentEquals("HOME")){
+                    finish();
+                }
+                else{
+                    Intent intent = new Intent(Logout.this, MapsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
         });
     }

@@ -66,6 +66,22 @@
             map:layout_constraintEnd_toEndOf="parent"
             map:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorWhite"
+            android:outlineSpotShadowColor="@color/quantum_bluegrey500"
+            android:outlineAmbientShadowColor="@color/quantum_bluegrey500"
+            android:elevation="5dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/myRequests"
+            app:layout_constraintEnd_toEndOf="@+id/myRequests"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/myRequests"
+            app:fabCustomSize="26dp"
+            map:srcCompat="@drawable/ic_refresh_black_24dp" />
+
 
         <ScrollView
             android:id="@+id/scrollView2"

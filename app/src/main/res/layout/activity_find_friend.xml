@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -44,6 +45,20 @@
             android:layout_marginBottom="26dp"
             android:text="View Requests" />
 
+        <TextView
+            android:id="@+id/requestCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="22dp"
+            android:elevation="7dp"
+            android:gravity="center"
+            android:background="@drawable/transparent"
+            android:textColor="@color/quantum_white_100"
+            android:textSize="12sp" />
+
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,6 +84,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             map:layout_constraintEnd_toEndOf="parent"
             map:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorWhite"
+            android:outlineSpotShadowColor="@color/quantum_bluegrey500"
+            android:outlineAmbientShadowColor="@color/quantum_bluegrey500"
+            android:elevation="5dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/myFriends"
+            app:layout_constraintEnd_toEndOf="@+id/myFriends"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/myFriends"
+            app:fabCustomSize="26dp"
+            map:srcCompat="@drawable/ic_refresh_black_24dp" />
 
 
         <ScrollView

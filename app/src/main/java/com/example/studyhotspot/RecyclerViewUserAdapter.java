@@ -1,6 +1,7 @@
 package com.example.studyhotspot;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 
@@ -24,13 +26,24 @@ public class RecyclerViewUserAdapter extends RecyclerView.Adapter<RecyclerViewUs
     private ArrayList<String> mfNames = new ArrayList<>();
     private ArrayList<String> meMails = new ArrayList<>();
     private  ArrayList<Integer> relationshipList = new ArrayList<>();
+
+    ArrayList<String> awaitingFriendList = new ArrayList<String>();
+    ArrayList<String> awaitingFriendName = new ArrayList<String>();
+
+    UserDatabaseManager userDatabaseManager;
+
+    private FindFriend findFriend;
+
     private Context mContext;
     int status;
 
-    public RecyclerViewUserAdapter(ArrayList<String> mfNames, ArrayList<String> meMails, ArrayList<Integer> rsList, Context mContext) {
+    public RecyclerViewUserAdapter(ArrayList<String> mfNames, ArrayList<String> meMails, ArrayList<Integer> rsList,
+                                   UserDatabaseManager userDatabaseManager, FindFriend findFriend, Context mContext) {
         this.mfNames = mfNames;
         this.meMails = meMails;
         this.relationshipList = rsList;
+        this.userDatabaseManager = userDatabaseManager;
+        this.findFriend = findFriend;
         this.mContext = mContext;
     }
 
@@ -77,10 +90,9 @@ public class RecyclerViewUserAdapter extends RecyclerView.Adapter<RecyclerViewUs
                 FirebaseAuth fAuth = FirebaseAuth.getInstance();
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d("statusNumber", "status: "+status);
+
                 if(status==0){
-                    Toast.makeText(mContext, "CAN BE ADDED", Toast.LENGTH_SHORT).show();
-                    FindFriend friendFinder = new FindFriend();
-                    friendFinder.addFriend(userID, meMails.get(position));
+                    findFriend.addFriend(userID, meMails.get(position));
                     holder.statusButton.setImageResource(R.drawable.pending_1);
                 }
                 else if(status==1){

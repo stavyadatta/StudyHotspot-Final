@@ -35,18 +35,23 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
     private ArrayList<String> meMails = new ArrayList<>();
     private Context mContext;
     int status;
+    private OnItemClickListener mOnItemClickListener;
+    private ViewRequest viewRequest;
 
-    public RecyclerViewRequestAdapter(ArrayList<String> mfNames, ArrayList<String> meMails, Context mContext) {
+    public RecyclerViewRequestAdapter(ArrayList<String> mfNames, ArrayList<String> meMails, ViewRequest viewRequest,
+                                      Context mContext, OnItemClickListener onItemClickListener) {
         this.mfNames = mfNames;
         this.meMails = meMails;
+        this.viewRequest = viewRequest;
         this.mContext = mContext;
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     @NonNull
     @Override
     public ViewRequestHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.requestlayout, parent, false);
-        ViewRequestHolder holder = new ViewRequestHolder(view);
+        ViewRequestHolder holder = new ViewRequestHolder(view, mOnItemClickListener);
 
         return holder;
     }
@@ -85,6 +90,7 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 meMails.remove(position);
                 mfNames.remove(position);
+                viewRequest.initRecyclerView();
             }});
 
         holder.reject.setOnClickListener(new View.OnClickListener(){
@@ -99,6 +105,7 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 meMails.remove(position);
                 mfNames.remove(position);
+                viewRequest.initRecyclerView();
             }
         });
     }
@@ -111,22 +118,30 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
         return Math.min(meMails.size(), mfNames.size());
     }
 
-    public class ViewRequestHolder extends RecyclerView.ViewHolder{
+    public class ViewRequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         RelativeLayout requestLayout;
         TextView fName;
         TextView eMail;
         ImageView accept;
         ImageView reject;
+        OnItemClickListener VOnItemClickListener;
 
 
-        public ViewRequestHolder(@NonNull View itemView) {
+        public ViewRequestHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
             requestLayout = itemView.findViewById(R.id.request_layout);
             fName = itemView.findViewById(R.id.user_name);
             eMail = itemView.findViewById(R.id.user_email);
             accept = itemView.findViewById(R.id.accept);
             reject = itemView.findViewById(R.id.reject);
+            VOnItemClickListener = onItemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            VOnItemClickListener.onItemClick(getAdapterPosition());
+
         }
     }
 
@@ -149,18 +164,6 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                         DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
                         DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
 
-                        /*
-                        final String[] targetName = new String[1];
-                        Task<DocumentSnapshot> x =  targetDoc.get();
-                        x.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot docsnap) {
-                                targetName[0] = docsnap.getString("fName");
-                            }
-                        });
-
-                         */
-
                         Task<DocumentSnapshot> t =  userDoc.get();
                         t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
@@ -173,7 +176,6 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                                 meMails.remove(userEmail);
                                 Log.d("sizexxxx", ""+mfNames.size());
                                 mfNames.remove(name);
-
                             }
                         });
                         t.addOnFailureListener(new OnFailureListener() {
@@ -349,5 +351,9 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
                         Log.w("Update DB", "Error updating document", e);
                     }
                 });
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }

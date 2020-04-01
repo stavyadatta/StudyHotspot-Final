@@ -26,7 +26,6 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
     ArrayList<String> friendNameList = new ArrayList<>();
     private ArrayList<String> participants;
 
-    //FirebaseFirestore firebaseFirestore;
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
 
     private String userID;

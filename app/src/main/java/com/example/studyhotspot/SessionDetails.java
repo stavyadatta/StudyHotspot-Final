@@ -82,7 +82,8 @@ public class SessionDetails extends AppCompatActivity {
 
 
     private static final String TAG = "ScrollingActivity" ;
-    
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

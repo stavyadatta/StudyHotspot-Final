@@ -215,6 +215,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 else if (title.contentEquals("Settings")){
                     Intent intent = new Intent(MapsActivity.this, Logout.class);
+                    intent.putExtra("prevActivity", "HOME");
                     startActivity(intent);
                 }
 

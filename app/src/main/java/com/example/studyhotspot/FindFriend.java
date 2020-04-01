@@ -1,24 +1,36 @@
 package com.example.studyhotspot;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,35 +43,43 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
-
 public class FindFriend extends AppCompatActivity {
-    ArrayList<String> namelist = new ArrayList<>();
-    ArrayList<String> emaillist = new ArrayList<>();
-    ArrayList<String> addedFriendList = new ArrayList<String>();
-    ArrayList<String> addingFriendList = new ArrayList<String>();
+    ArrayList<String> namelist;
+    ArrayList<String> emaillist;
+    ArrayList<String> addedFriendList;
+    ArrayList<String> addingFriendList;
+    ArrayList<Integer> relationshipFriendList;
+
     ArrayList<String> awaitingFriendList = new ArrayList<String>();
-    ArrayList<Integer> relationshipFriendList = new ArrayList<Integer>();
+    ArrayList<String> awaitingFriendName = new ArrayList<String>();
 
     String userID;
     String userEmail;
     private Button mViewRequestBtn;
-    FirebaseFirestore firebaseFirestore;
+
+    private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
 
     private BottomAppBar bottomAppBar;
     private FloatingActionButton homeButton;
+    private FloatingActionButton refresh;
+    private RecyclerView recyclerView;
+    private TextView requestCount;
 
     private String previousActivity = null;
+    final int VIEW_REQUEST = 1;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        ImageView mStatusPlaceholder = findViewById(R.id.status);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
+
+        context = this;
+
         setUpBottomAppBar();
         setUpRequestBtn();
 
@@ -68,66 +88,9 @@ public class FindFriend extends AppCompatActivity {
             previousActivity = extras.getString("prevActivity");
         }
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        FirebaseAuth fAuth = FirebaseAuth.getInstance();
-        userID = fAuth.getCurrentUser().getUid();
-
-        DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                addedFriendList = (ArrayList<String>) documentSnapshot.get("addedfriends");
-                addingFriendList = (ArrayList<String>) documentSnapshot.get("addingfriends");
-                awaitingFriendList = (ArrayList<String>) documentSnapshot.get("awaitingfriends");
-
-                userEmail = documentSnapshot.getString("email");
-                //Log.d("ADDED FRIEND LIST", "List: "+((ArrayList<String>) documentSnapshot.get("addedfriends")).get(0));
-                //Log.d("ADDED FRIEND LIST", "Size: "+ addedFriendList.size());
-                //Log.d("ADDED FRIEND LIST", "List: "+ addingFriendList.get(0));
-            }
-        });
-
-        System.out.println(userEmail);
-
-        firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String email = document.getString("email");
-                        Log.d("email", email);
-                        if(email.contentEquals(userEmail)){
-                            continue;
-                        }
-                        else{
-                            if(awaitingFriendList.contains(email)){
-                                continue;
-                            }
-                            else if(addedFriendList.contains(email)){
-                                relationshipFriendList.add(2); //2 means added
-                            }
-                            else if(addingFriendList.contains(email)){
-                                relationshipFriendList.add(1); // 1 means adding
-                            }
-                            else{
-                                relationshipFriendList.add(0); // 0 means stranger
-                            }
-                            namelist.add(document.getString("fName"));
-                            emaillist.add(email);
-                        }
-                    }
-                    Log.d("tagsuccess", namelist.toString());
-                    //Log.d("relationship_list", "0: "+ relationshipFriendList.get(0));
-                    //Log.d("relationship_list", "1: "+ relationshipFriendList.get(1));
-                    initRecyclerView();
-
-                } else {
-                    Log.d("tagfail", "Error getting documents: ", task.getException());
-                }
-            }
-        });
-        Log.d("Before Recycler", "Before Recycler");
-
+        userID = userDatabaseManager.getCurrentUserID();
+        userEmail = userDatabaseManager.getCurrentUserEmail();
+        initRecyclerView();
     }
 
     public void setUpRequestBtn() {
@@ -136,107 +99,95 @@ public class FindFriend extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FindFriend.this, ViewRequest.class);
-                startActivity(intent);
-                //initRecyclerView();
+                startActivityForResult(intent, VIEW_REQUEST);
+            }
+        });
 
+        requestCount = findViewById(R.id.requestCount);
+
+        refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initRecyclerView();
             }
         });
     }
 
     private void initRecyclerView(){
+        resetLists();
+
+        userDatabaseManager.getUserAddedAddingFriends(addedFriendList, addingFriendList,
+                relationshipFriendList, namelist, emaillist);
+        userDatabaseManager.getUserAwaitingFriends(awaitingFriendList,awaitingFriendName);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                refreshRecyclerView();
+            }
+        }, 1500);
+    }
+
+    private void refreshRecyclerView(){
         Log.d("Recycler Users", "initRecyclerView: init recyclerview.");
-        RecyclerView recyclerView = findViewById(R.id.recyclerUsers);
-        RecyclerViewUserAdapter adapter = new RecyclerViewUserAdapter(namelist, emaillist, relationshipFriendList, this);
+        recyclerView = findViewById(R.id.recyclerUsers);
+        RecyclerViewUserAdapter adapter = new RecyclerViewUserAdapter(namelist, emaillist, relationshipFriendList, userDatabaseManager,
+                this, FindFriend.this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(FindFriend.this));
+        refreshRequestCount();
+    }
+
+    private void refreshRequestCount(){
+        if (awaitingFriendList.size()>0){
+            requestCount.setText(""+awaitingFriendList.size());
+            requestCount.setBackground(getResources().getDrawable(R.drawable.circle_textview));
+        }
+        else{
+            requestCount.setText("");
+            requestCount.setBackground(getResources().getDrawable(R.drawable.transparent));
+        }
+    }
+
+    private void resetLists(){
+        addedFriendList = new ArrayList<String>();
+        addingFriendList = new ArrayList<String>();
+        relationshipFriendList = new ArrayList<Integer>();
+        namelist = new ArrayList<String>();
+        emaillist = new ArrayList<String>();
+        awaitingFriendList = new ArrayList<String>();
+        awaitingFriendName = new ArrayList<String>();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == VIEW_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                initRecyclerView();
+            }
+        }
     }
 
     public void addFriend(String userID, String targetEmail){
-        Log.d("AddingFriends", "Entered");
-        Log.d("AddingFriends", "TargetEmail: "+targetEmail);
-        boolean status;
+        resetLists();
+        userDatabaseManager.getUserAwaitingFriends(awaitingFriendList,awaitingFriendName);
+        userDatabaseManager.getUserAddedAddingFriends(addedFriendList, addingFriendList,
+                relationshipFriendList, namelist, emaillist);
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("AddingFriends", document.getId() + " => " + document.getData());
-                                String targetUID = document.getId();
-
-                                DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
-                                DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
-
-                                Task<DocumentSnapshot> t =  userDoc.get();
-                                t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot docsnap) {
-                                        userEmail = docsnap.getString("email");
-                                        String name = docsnap.getString("fName");
-                                        Log.d("get user email","success:" + userEmail);
-                                        addFriendUpdateDB(userDoc, targetDoc, targetEmail, userEmail, name);
-                                    }
-                                });
-                                t.addOnFailureListener(new OnFailureListener() {
-                                    public void onFailure(Exception e) {
-                                        Log.d("get user email","failed");
-                                    }
-                                });
-
-                            }
-                        } else {
-                            Log.d("AddingFriends", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void addFriendUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
-
-
-        userDoc.update("addingfriends", FieldValue.arrayUnion(targetEmail))
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("Update DB", "Userdoc addingfriends successfully updated!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("Update DB", "Error updating document", e);
-                                }
-                            });
-        Log.d("log driectly bove","success:" + userEmail);
-
-        targetDoc.update("awaitingfriends", FieldValue.arrayUnion(userEmail))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Update DB", "targetDoc awaitingfriends successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Update DB", "Error updating document", e);
-                    }
-                });
-
-        targetDoc.update("awaitingfriendsname", FieldValue.arrayUnion(userName))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Update DB", "targetDoc awaitingfriends successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Update DB", "Error updating document", e);
-                    }
-                });
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if (awaitingFriendList.contains(targetEmail)){
+                    Toast.makeText(FindFriend.this, "CHECK REQUESTS", Toast.LENGTH_SHORT).show();
+                    refreshRecyclerView();
+                }
+                else {
+                    Toast.makeText(FindFriend.this, "CAN BE ADDED", Toast.LENGTH_SHORT).show();
+                    userDatabaseManager.addFriend(userID, targetEmail);
+                }
+            }
+        }, 1500);
     }
 
     private void setUpBottomAppBar() {
