@@ -1,6 +1,7 @@
 package com.example.studyhotspot;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,6 +118,7 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
                 mMS1.remove(position);
                 mImages2.remove(position);
                 mImages3.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -134,6 +136,7 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
                 mMS1.remove(position);
                 mImages2.remove(position);
                 mImages3.remove(position);
+                notifyDataSetChanged();
             }
         });
     }
