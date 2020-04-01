@@ -1,6 +1,7 @@
 package com.example.studyhotspot;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -29,8 +41,12 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
     private ArrayList<String > mImages3 = new ArrayList<>();
     private Context mContext;
     private OnNoteListener2 mOnNoteListener2;
+    String name;
+    Handler handler = new Handler();
+    private ActivityPageMain activityPageMain;
+    //String documentRef;
 
-    public RecyclerViewAdapter2(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mImages2, ArrayList<String> mImages3, Context mContext, OnNoteListener2 onNoteListener2) {
+    public RecyclerViewAdapter2(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mImages2, ArrayList<String> mImages3, Context mContext, OnNoteListener2 onNoteListener2, ActivityPageMain activityPageMain) {
         this.mImageNames = mImageNames;
         this.mImages = mImages;
         this.mContext = mContext;
@@ -38,6 +54,7 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
         this.mImages2 = mImages2;
         this.mImages3 = mImages3;
         this.mOnNoteListener2 = onNoteListener2;
+        this.activityPageMain = activityPageMain;
     }
 
     @NonNull
@@ -74,16 +91,89 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
 
 
         // Change this for button effects
-        holder.parentLayout.setOnClickListener(new View.OnClickListener(){
+        holder.image2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Log.d(TAG, "onClick: clicked on: " + mImageNames.get(position));
-
-                Toast.makeText(mContext, mImageNames.get(position), Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Clicked here starting");
+                FirebaseAuth fAuth = FirebaseAuth.getInstance();
+                String userID = fAuth.getCurrentUser().getUid();
+                Log.d(TAG, "onClick: Clicked here before AcceptSession");
+                acceptSession(userID,position);
+                //mImageNames.remove(position);
+                //mImages.remove(position);
+                //mMS1.remove(position);
+                //mImages2.remove(position);
+                //mImages3.remove(position);
             }
         });
 
 
+    }
+
+    public void acceptSession(String userID, int position){
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+                firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document:task.getResult()){
+                                if(document.getId().equals(userID)){
+                                    name = document.getString("fName");
+                                    Log.d(TAG, "onComplete: instance of same userid" + userID + name);
+                                }
+                            }
+                        }
+                    }
+                });
+
+        handler.postDelayed(new Runnable() {
+            public void run() {
+        //error here - name is null
+        Log.d(TAG, "acceptSession: after getting username " + name + userID);
+        firebaseFirestore.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    int i =0;
+                    for(QueryDocumentSnapshot document:task.getResult()){
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
+                        if(doch.containsKey(name)){
+                            Log.d(TAG, "onComplete: Finding the hashmap with the user's name");
+                            if(doch.get(name) == null){
+                                Log.d(TAG, "onComplete: Finding the invitation activity");
+                                if(position == i){
+                                    Log.d(TAG, "onComplete: Found position");
+                                    doch.replace(name, null,true);
+                                    DocumentReference documentRef=document.getReference();
+                                    documentRef.update("participantStatus", doch).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            activityPageMain.initImageBitmaps2();
+                                            Log.d(TAG, "onSuccess: Sucess here");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "onFailure: Failure here");
+
+                                        }
+                                    });
+                                }
+                                else{
+                                    i++;
+                                    continue;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+            }
+        }, 5000);
     }
 
     @Override
@@ -109,6 +199,7 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
             MS2 = itemView.findViewById(R.id.MS2);
             this.onNoteListener2 = onNoteListener2;
             image.setOnClickListener(this);
+
         }
 
         @Override
@@ -116,9 +207,11 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
             onNoteListener2.onNoteClick2(getAdapterPosition());
 
         }
+
     }
 
     public interface OnNoteListener2{
         void onNoteClick2(int position);
     }
+
 }

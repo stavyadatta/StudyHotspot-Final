@@ -118,12 +118,12 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             public void run() {
                 initImageBitmaps();
             }
-        }, 3000);
+        }, 5000);
         handler.postDelayed(new Runnable() {
             public void run() {
                 initImageBitmaps2();
             }
-        }, 3000);
+        }, 5000);
         //initImageBitmaps();
         //initImageBitmaps2();
         initImageBitmaps3();
@@ -181,10 +181,13 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                             mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
 
                             Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
+                            Timestamp endTS = new Timestamp(document.getDate("endDateTime"));
                             if (currentTS.compareTo(actTS) < 0)
                                 status = "Upcoming";
-                            else
+                            else if (currentTS.compareTo(endTS) < 0)
                                 status = "Ongoing";
+                            else
+                                status = "Past";
                             fMS1.add("Status: " + status);
                             fMS2.add("Created by: " + document.getString("creatorName"));
                             initRecyclerView();}}
@@ -274,9 +277,15 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void initImageBitmaps2(){
+    public void initImageBitmaps2(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         String creatorName = creatorNameRaw.get(0);
+        id2.clear();
+        mNames2.clear();
+        mImageUrls2.clear();
+        fI1.clear();
+        mImageUrls22.clear();
+        mImageUrls23.clear();
         /*SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
         dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
 
@@ -332,7 +341,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private void initRecyclerView2(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -422,4 +431,5 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         intent.putExtra("docname", id2.get(position));
         startActivity(intent);
     }
+
 }
