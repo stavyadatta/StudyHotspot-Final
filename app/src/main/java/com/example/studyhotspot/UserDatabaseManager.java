@@ -59,6 +59,7 @@ public class UserDatabaseManager {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 currentUserEmail = documentSnapshot.getString("email");
+
                 System.out.println(currentUserEmail);
             }
         });

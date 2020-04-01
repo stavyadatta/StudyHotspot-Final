@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".History">
+    tools:context=".ViewParticipants">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,18 +14,6 @@
         android:elevation="5dp"
         android:background="@drawable/blue_border"
         android:id="@+id/relLayout2">
-
-        <TextView
-            android:layout_width="190dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="28dp"
-            android:layout_toRightOf="@+id/back_button"
-            android:background="@android:color/transparent"
-            android:text="MY HISTORY"
-            android:textColor="#FFF"
-            android:textSize="30dp"
-            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/back_button"
@@ -36,27 +24,42 @@
             android:src="@drawable/ic_arrow_back"
             android:clickable="true"/>
 
-    </RelativeLayout>
+        <TextView
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="29dp"
+            android:layout_toRightOf="@+id/back_button"
+            android:background="@android:color/transparent"
+            android:text="Session Title"
+            android:textColor="#FFF"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:id="@+id/sessionTitle"/>
 
+    </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
-        android:background="@color/quantum_grey500"
-        map:layout_anchorGravity="center">
+        android:background="@color/quantum_bluegrey200">
 
         <TextView
-            android:id="@+id/pastSessions"
+            android:id="@+id/myFriends"
             android:layout_width="358dp"
-            android:layout_height="45dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="24dp"
             android:background="@drawable/white_border"
             android:elevation="1.1dp"
             android:gravity="center"
-            android:text="PAST SESSIONS"
+            android:text="SESSION PARTICIPANTS"
             android:textColor="#000"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -64,15 +67,16 @@
             map:layout_constraintEnd_toEndOf="parent"
             map:layout_constraintTop_toTopOf="parent" />
 
+
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="357dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="74dp"
+            android:layout_marginTop="89dp"
             android:layout_marginEnd="25dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="50dp"
             android:elevation="1dp"
-            android:background="@color/quantum_grey200"
+            android:background="#DCF8C6"
             app:layout_constraintBottom_toBottomOf="parent"
 
 
@@ -86,7 +90,7 @@
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerviewhist"
+                    android:id="@+id/recyclerParticipants"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -100,6 +104,7 @@
 
 
         </ScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

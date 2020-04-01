@@ -59,6 +59,9 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
     final int LAUNCH_ADD_PARTICIPANTS = 1;
 
+    String userID;
+    String currentUser;
+    String userEmail;
 
     String location = null;
     String startDate;
@@ -67,7 +70,6 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
     String endTime;
     boolean isPublic;
 
-    ArrayList<String> creatorNameRaw = new ArrayList<>();
     ArrayList<String> participants = new ArrayList<>();
     static Map<String, Boolean> participantStatus = new HashMap<String, Boolean>();
 
@@ -78,49 +80,16 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_session);
 
-        getCreatorName();
-
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
             location = extras.getString("Name");
+            currentUser = extras.getString("currentUser");
+            userID = extras.getString("currentUID");
+            userEmail = extras.getString("userEmail");
         }
 
         setUpBottomAppBar();
         setUpDetailsPage();
-    }
-
-    private void getCreatorName(){
-        userDatabaseManager.getCurrentUsername(creatorNameRaw);
-
-        /*firebaseFirestore = FirebaseFirestore.getInstance();
-        FirebaseAuth fAuth = FirebaseAuth.getInstance();
-        creatorID = fAuth.getCurrentUser().getUid();
-
-        DocumentReference documentReference = firebaseFirestore.collection("users").document(creatorID);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                creatorEmail = documentSnapshot.getString("email");
-            }
-        });
-
-
-        firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String email = document.getString("email");
-                        if(email.contentEquals(creatorEmail)){
-                            creatorName = document.getString("fName");
-                            participantStatus.put(creatorName, true);
-                        }
-                    }
-                } else {
-                    Log.d("tagfail", "Error getting documents: ", task.getException());
-                }
-            }
-        });*/
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -149,8 +118,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         String title = editTitle.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
 
-        String creatorName = creatorNameRaw.get(0);
-        participantStatus.put(creatorName, true);
+        participantStatus.put(currentUser, true);
 
         System.out.println("DEBUG 1");
 
@@ -183,7 +151,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
         System.out.println(title);
         System.out.println(description);
-        System.out.println(creatorName);
+        System.out.println(currentUser);
         System.out.println(startDateTimeTimestamp);
         System.out.println(endDateTimeTimestamp);
         System.out.println(participantStatus);
@@ -192,9 +160,8 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
         if (!hasValidationErrors(title)) {
             Session newSession = new Session(
-                    title, description, creatorName, location, startDateTimeTimestamp, endDateTimeTimestamp, participantStatus, isPublic
+                    title, description, currentUser, location, startDateTimeTimestamp, endDateTimeTimestamp, participantStatus, isPublic
             );
-
             userDatabaseManager.addSession(newSession);
         }
     }
@@ -217,14 +184,23 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
                 String title = item.getTitle().toString();
                 if (title.contentEquals("Friends")){
                     Intent intent = new Intent(CreateSession.this, FindFriend.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
                 else if (title.contentEquals("Activities")){
                     Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
                 else if (title.contentEquals("Settings")){
                     Intent intent = new Intent(CreateSession.this, Logout.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
                 return false;
@@ -235,6 +211,9 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 saveSession();
                 Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);
+                intent.putExtra("currentUser", currentUser);
+                intent.putExtra("currentUID", userID);
+                intent.putExtra("userEmail", userEmail);
                 startActivity(intent);
             }
         });
@@ -360,6 +339,9 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 Intent intent = new Intent(CreateSession.this, SessionAddParticipants.class);
                 intent.putExtra("Participants", participants);
+                intent.putExtra("currentUser", currentUser);
+                intent.putExtra("currentUID", userID);
+                intent.putExtra("userEmail", userEmail);
                 startActivityForResult(intent, LAUNCH_ADD_PARTICIPANTS);
             }
         });

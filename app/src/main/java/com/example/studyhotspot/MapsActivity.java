@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
@@ -96,10 +97,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     String name;
     String userID;
+    String userEmail;
     LatLng latLng;
     JSONObject jsonObject = null;
 
     JSONObject HotspotData;
+
+    ArrayList<String> currentUserRaw = new ArrayList<String>();
+    String currentUser;
+    private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,17 +119,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Get Hotspot Data
         getData();
 
-        FirebaseAuth fAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-        userID = fAuth.getCurrentUser().getUid();
-
-        DocumentReference documentReference = fStore.collection("users").document(userID);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                Log.d("GET USER ID","UID: "+ userID);
-            }
-        });
+        userID = userDatabaseManager.getCurrentUserID();
+        userDatabaseManager.getCurrentUsername(currentUserRaw);
+        userEmail = userDatabaseManager.getCurrentUserEmail();
 
         // Initialize Places.
         Places.initialize(getApplicationContext(), "AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU");
@@ -135,9 +133,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-
     }
 
     private void setUpSearchBar(){
@@ -203,19 +198,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
+                currentUser = currentUserRaw.get(0);
                 if (title.contentEquals("Friends")){
                     Intent intent = new Intent(MapsActivity.this, FindFriend.class);
                     intent.putExtra("prevActivity", "HOME");
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
                 else if (title.contentEquals("Activities")){
                     Intent intent = new Intent(MapsActivity.this, ActivityPageMain.class);
                     intent.putExtra("prevActivity", "HOME");
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
                 else if (title.contentEquals("Settings")){
                     Intent intent = new Intent(MapsActivity.this, Logout.class);
                     intent.putExtra("prevActivity", "HOME");
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
 
@@ -404,6 +409,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        currentUser = currentUserRaw.get(0);
+        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUID", userID);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
         marker.hideInfoWindow();
     }

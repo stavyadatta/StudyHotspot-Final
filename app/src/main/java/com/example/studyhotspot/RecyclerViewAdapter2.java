@@ -40,20 +40,19 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
     private ArrayList<String> mImages2 = new ArrayList<>();
     private ArrayList<String > mImages3 = new ArrayList<>();
     private Context mContext;
-    private OnNoteListener2 mOnNoteListener2;
     String name;
     Handler handler = new Handler();
     private ActivityPageMain activityPageMain;
     //String documentRef;
 
-    public RecyclerViewAdapter2(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mImages2, ArrayList<String> mImages3, Context mContext, OnNoteListener2 onNoteListener2, ActivityPageMain activityPageMain) {
+    public RecyclerViewAdapter2(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1,
+                                ArrayList<String> mImages2, ArrayList<String> mImages3, Context mContext, ActivityPageMain activityPageMain) {
         this.mImageNames = mImageNames;
         this.mImages = mImages;
         this.mContext = mContext;
         this.mMS1 = mMS1;
         this.mImages2 = mImages2;
         this.mImages3 = mImages3;
-        this.mOnNoteListener2 = onNoteListener2;
         this.activityPageMain = activityPageMain;
     }
 
@@ -61,7 +60,7 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
     @Override
     public RecyclerViewAdapter2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activitylayout_2, parent, false);
-        RecyclerViewAdapter2.ViewHolder holder = new RecyclerViewAdapter2.ViewHolder(view, mOnNoteListener2);
+        RecyclerViewAdapter2.ViewHolder holder = new RecyclerViewAdapter2.ViewHolder(view);
 
         return holder;
     }
@@ -90,6 +89,13 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
         holder.MS2.setText(mMS1.get(position));
 
 
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activityPageMain.showInviteInfo(position);
+            }
+        });
+
         // Change this for button effects
         holder.image2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +105,6 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d(TAG, "onClick: Clicked here before AcceptSession");
                 acceptSession(userID,position);
-                //mImageNames.remove(position);
-                //mImages.remove(position);
-                //mMS1.remove(position);
-                //mImages2.remove(position);
-                //mImages3.remove(position);
             }
         });
 
@@ -181,15 +182,14 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
         return mImageNames.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         CircleImageView image, image2, image3;
         TextView imageName;
         RelativeLayout parentLayout;
         TextView MS2;
-        OnNoteListener2 onNoteListener2;
 
-        public ViewHolder(@NonNull View itemView, OnNoteListener2 onNoteListener2) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
             image2 = itemView.findViewById(R.id.image2);
@@ -197,21 +197,8 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
             imageName = itemView.findViewById(R.id.image_name);
             parentLayout = itemView.findViewById(R.id.parent_layout);
             MS2 = itemView.findViewById(R.id.MS2);
-            this.onNoteListener2 = onNoteListener2;
-            image.setOnClickListener(this);
-
         }
 
-        @Override
-        public void onClick(View v) {
-            onNoteListener2.onNoteClick2(getAdapterPosition());
-
-        }
-
-    }
-
-    public interface OnNoteListener2{
-        void onNoteClick2(int position);
     }
 
 }

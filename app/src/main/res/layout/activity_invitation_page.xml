@@ -7,6 +7,17 @@
     android:fitsSystemWindows="true"
     tools:context=".InvitationPage">
 
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:elevation="10dp"
+        android:src="@drawable/ic_arrow_back"
+        android:clickable="true"/>
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -19,16 +30,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:title="INVITATION"
+            app:collapsedTitleGravity="center"
+            app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar"
-            android:background="#fcca03">
+            app:contentScrim="?attr/colorPrimary"
+            android:background="@color/quantum_brown600">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
+                android:background="@color/quantum_brown600"
+                app:layout_collapseMode="pin"/>
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

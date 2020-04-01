@@ -35,8 +35,6 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
     private TextView participantCount;
     private FloatingActionButton addParticipants;
 
-    private BottomAppBar bottomAppBar;
-    private FloatingActionButton homeButton;
     private FloatingActionButton refresh;
 
     private RecyclerView recyclerView;
@@ -54,17 +52,12 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
         }
 
         setUpFriends();
-        setUpBottomAppBar();
         setUpContent();
     }
 
 
     private void setUpFriends(){
-        userID = userDatabaseManager.getCurrentUserID();
-        userEmail = userDatabaseManager.getCurrentUserEmail();
         userDatabaseManager.getUserAddedFriends(friendNameList);
-
-
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -91,50 +84,6 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
 
     }
 
-    private void setUpBottomAppBar() {
-        //find id
-        bottomAppBar = findViewById(R.id.bottomAppBar);
-        homeButton = findViewById(R.id.homeButton);
-        refresh = findViewById(R.id.refresh);
-
-        //click event over Bottom bar menu item
-        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                String title = item.getTitle().toString();
-                if (title.contentEquals("Friends")) {
-                    Intent intent = new Intent(SessionAddParticipants.this, ActivityPageMain.class);
-                    startActivity(intent);
-                } else if (title.contentEquals("Activities")) {
-                    Intent intent = new Intent(SessionAddParticipants.this, ActivityPageMain.class);
-                    startActivity(intent);
-                } else if (title.contentEquals("Settings")) {
-                    Intent intent = new Intent(SessionAddParticipants.this, Logout.class);
-                    startActivity(intent);
-                }
-
-                return false;
-            }
-        });
-
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SessionAddParticipants.this, MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
-
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initRecyclerView();
-            }
-        });
-    }
-
     private void setUpContent(){
         participantCount = findViewById(R.id.participantCount);
         addParticipants = findViewById(R.id.addParticipants);
@@ -148,6 +97,14 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
                 returnIntent.putExtra("Participants",participants);
                 setResult(RESULT_OK,returnIntent);
                 finish();
+            }
+        });
+
+        refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initRecyclerView();
             }
         });
     }

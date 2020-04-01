@@ -26,7 +26,9 @@ public class Logout extends AppCompatActivity {
     TextView fullName,email,phone;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userId;
+    String userID;
+    String currentUser;
+    String userEmail;
 
     private BottomAppBar bottomAppBar;
     private FloatingActionButton homeButton;
@@ -39,6 +41,9 @@ public class Logout extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
             previousActivity = extras.getString("prevActivity");
+            currentUser = extras.getString("currentUser");
+            userID = extras.getString("currentUID");
+            userEmail = extras.getString("userEmail");
         }
 
         phone = findViewById(R.id.profilePhone);
@@ -48,9 +53,7 @@ public class Logout extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        userId = fAuth.getCurrentUser().getUid();
-
-        DocumentReference documentReference = fStore.collection("users").document(userId);
+        DocumentReference documentReference = fStore.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -81,9 +84,15 @@ public class Logout extends AppCompatActivity {
                 String title = item.getTitle().toString();
                 if (title.contentEquals("Friends")) {
                     Intent intent = new Intent(Logout.this, FindFriend.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(Logout.this, ActivityPageMain.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
                     Toast.makeText(Logout.this, "Settings Page", Toast.LENGTH_LONG).show();

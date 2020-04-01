@@ -22,48 +22,64 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InvitationPage extends AppCompatActivity {
 
     TextView titleView;
     TextView description;
+    TextView creatorName;
+    TextView location;
+
     TextView startTime;
     TextView startDate;
-
-    TextView endDatetime;
-
     TextView endDate;
     TextView endTime;
 
     TextView session_participants;
+    Button view_participants;
+    ImageView back;
 
-    TextView location;
-
+    String userID;
+    String currentUser;
+    String userEmail;
 
     public String title;
     private String des;
+    private String creatorN;
+    private String locationName;
     private String documentName;
+
+    private Date date_starting;
+    private Date date_ending;
+
+    private Long session_numbers;
+    private Map<String, Boolean> participantStatus = new HashMap<String, Boolean>();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
     public static final String KEY_TITLE = "title";
+    public static final String KEY_CREATOR = "creatorName";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_STARTTIME = "startDateTime";
     private static final String KEY_ENDTIME = "endDateTime";
     private static final String KEY_SESSION_NUMBERS = "numOfParticipants";
-    private static final String KEY_LOCATION = "location";
-    private static final String KEY_LOCATION_NAME = "locationName";
+    private static final String KEY_LOCATION_NAME = "location";
+    private static final String KEY_PARTICIPANTS = "participantStatus";
 
 
     private static final String TAG = "InvitationPage";
@@ -72,151 +88,147 @@ public class InvitationPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitation_page);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        //color
-        ActionBar actionBar = getSupportActionBar();
-        setActivityBackgroundColor(0xfcec03, actionBar);
-
-        titleView = findViewById(R.id.title);
-        description = findViewById(R.id.description);
-        startTime = findViewById(R.id.start_time);
-        startDate = findViewById(R.id.start_date);
-
-        endDatetime = findViewById(R.id.end_time);
-
-        endDate = findViewById(R.id.end_date);
-        endTime = findViewById(R.id.end_time);
-
-
-
-        session_participants = findViewById((R.id.session_participants));
-
-        // location
-        location = findViewById(R.id.location_name);
 
         if (getIntent().hasExtra("docname")){
             documentName = getIntent().getStringExtra("docname");
+            currentUser = getIntent().getStringExtra("currentUser");
+            userID = getIntent().getStringExtra("currentUID");
+            userEmail = getIntent().getStringExtra("userEmail");
         }
         else {
-            documentName = "X8lsLhFVKURYht6enWnr";
+            Toast.makeText(InvitationPage.this, "ERROR", Toast.LENGTH_LONG).show();
+            finish();
         }
 
+        getInformation();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                setUpContent();
+            }
+        }, 1500);
+    }
+
+    private void getInformation(){
+
         final DocumentReference docRef = db.collection("hashsessions")
-                .document("XNv0L7iQCIxBZzwcy3Ww");
+                .document(documentName);
+
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @SuppressLint({"SetTextI18n", "ResourceAsColor"})
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
+
                 title = documentSnapshot.getString(KEY_TITLE);
+                creatorN = documentSnapshot.getString(KEY_CREATOR);
                 des = documentSnapshot.getString(KEY_DESCRIPTION);
-                description.setText(des);
-                description.setTypeface(null, Typeface.BOLD);
-                description.setTextColor(Color.BLACK);
 
+                participantStatus = (Map<String, Boolean>) documentSnapshot.get(KEY_PARTICIPANTS);
 
+                date_starting = documentSnapshot.getDate(KEY_STARTTIME);
 
-
-                Date date_starting = documentSnapshot.getDate(KEY_STARTTIME);
-                startTime.setText(date_starting.toString().substring(10,20));
-
-                startDate.setText(date_starting.toString().substring(0, 10));
-
-                // ending time
-
-                Date date_ending = documentSnapshot.getDate(KEY_ENDTIME);
-                endDate.setText(date_ending.toString().substring(0, 10));
-                endTime.setText(date_ending.toString().substring(10, 20));
+                date_ending = documentSnapshot.getDate(KEY_ENDTIME);
 
                 // session participants
-                Long session_numbers = documentSnapshot.getLong(KEY_SESSION_NUMBERS);
+                session_numbers = documentSnapshot.getLong(KEY_SESSION_NUMBERS);
                 assert session_numbers != null;
-                session_participants.setText(session_numbers.toString());
-                session_participants.setTypeface(null, Typeface.BOLD_ITALIC);
 
                 // location putting
-                String locationName = documentSnapshot.getString(KEY_LOCATION_NAME);
+                locationName = documentSnapshot.getString(KEY_LOCATION_NAME);
+            }
+        });
+    }
 
-                location.setText(Html.fromHtml("<u>" + locationName + "</u>" ));
-                location.setTextColor(getColor(R.color.hyperlinkBlue));
-                location.setTypeface(null, Typeface.BOLD);
+    private void setUpContent(){
+        titleView = findViewById(R.id.title);
+        creatorName = findViewById(R.id.creator_name);
+        location = findViewById(R.id.location_name);
+        description = findViewById(R.id.description);
 
-                location.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=");
-                        sb.append(locationName);
-                        sb.append("&inputtype=textquery&fields=place_id&key=AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU&locationbias=ipbias");
-                        String url = sb.toString();
+        startTime = findViewById(R.id.start_time);
+        startDate = findViewById(R.id.start_date);
 
-                        System.out.println(url);
-                        JSONObject jsonObject = null;
+        endDate = findViewById(R.id.end_date);
+        endTime = findViewById(R.id.end_time);
 
-                        try {
-                            String jsonstring = URLReader.readUrl(sb.toString());
-                            jsonObject = new JSONObject(jsonstring);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+        session_participants = findViewById(R.id.session_participants);
+        view_participants = findViewById(R.id.view_all_participants);
+        back = findViewById(R.id.back_button);
+
+        titleView.setText(title);
+        creatorName.setText(creatorN);
+        description.setText(des);
+        description.setTypeface(null, Typeface.BOLD);
+
+        try{
+            startTime.setText(date_starting.toString().substring(10,20));
+            startDate.setText(date_starting.toString().substring(0, 10));
+
+            endDate.setText(date_ending.toString().substring(0, 10));
+            endTime.setText(date_ending.toString().substring(10, 20));
+
+            session_participants.setText(session_numbers.toString());
+            session_participants.setTypeface(null, Typeface.BOLD_ITALIC);
+
+            location.setText(Html.fromHtml("<u>" + locationName + "</u>" ));
+            location.setTextColor(getColor(R.color.hyperlinkBlue));
+            location.setTypeface(null, Typeface.BOLD);
+
+        }catch(Exception e){
+            Toast.makeText(InvitationPage.this, "LOADING", Toast.LENGTH_LONG).show();
+            setUpContent();
+        }
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=");
+                sb.append(locationName);
+                sb.append("&inputtype=textquery&fields=place_id&key=AIzaSyCo7BtlsuOVcER0l-THnPurg5v1RjBXXtU&locationbias=ipbias");
+                String url = sb.toString();
+
+                System.out.println(url);
+                JSONObject jsonObject = null;
+
+                try {
+                    String jsonstring = URLReader.readUrl(sb.toString());
+                    jsonObject = new JSONObject(jsonstring);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 
-                        Intent intent = new Intent(InvitationPage.this, LocationInformationActivity.class);
-                        intent.putExtra("Name", locationName);
-                        try {
-                            intent.putExtra("PlaceID", jsonObject.get("candidates").toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        startActivity(intent);
+                Intent intent = new Intent(InvitationPage.this, LocationInformationActivity.class);
+                intent.putExtra("Name", locationName);
+                try {
+                    intent.putExtra("PlaceID", jsonObject.get("candidates").toString());
 
-                    }
-                });
-                // leave session button
-//                Button leave_session_btn = findViewById(R.id.leave_session);
-//                leave_session_btn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(InvitationPage.this);
-//
-//                        // title for ur dialog box
-//                        builder.setTitle("Leaving session");
-//                        builder.setMessage("Are you sure you want to leave this session");
-//
-//                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Toast.makeText( InvitationPage.this, "Yes has been clicked",
-//                                        Toast.LENGTH_SHORT).show();
-//                                // uncomment to delete the document really
-//                                //docRef.delete();
-//                            }
-//                        });
-//
-//                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Toast.makeText(InvitationPage.this, "No has been clicked",
-//                                        Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//
-//                        AlertDialog dialog = builder.create();
-//                        dialog.show();
-//                    }
-//                });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(intent);
+
             }
         });
 
+        view_participants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InvitationPage.this, ViewParticipants.class);
+                intent.putExtra("Title", title);
+                intent.putExtra("ParticipantStatus", (Serializable) participantStatus);
+                startActivity(intent);
+            }
+        });
 
-    }
-
-    public void setActivityBackgroundColor(int color, ActionBar actionBar) {
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#E7E61D"));
-
-        actionBar.setBackgroundDrawable(colorDrawable);
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

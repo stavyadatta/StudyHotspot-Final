@@ -47,6 +47,10 @@ public class LocationInformationActivity extends AppCompatActivity {
     String coord = null;
     String rawPlaceID = null;
 
+    String userID;
+    String currentUser;
+    String userEmail;
+
     JSONObject jsonObject = null;
 
     @Override
@@ -59,6 +63,10 @@ public class LocationInformationActivity extends AppCompatActivity {
             name = extras.getString("Name");
             coord = extras.getString("Coord");
             rawPlaceID = extras.getString("PlaceID");
+
+            currentUser = extras.getString("currentUser");
+            userID = extras.getString("currentUID");
+            userEmail = extras.getString("userEmail");
         }
 
         setUpTopBar();
@@ -317,12 +325,21 @@ public class LocationInformationActivity extends AppCompatActivity {
                 String title = item.getTitle().toString();
                 if (title.contentEquals("Friends")) {
                     Intent intent = new Intent(LocationInformationActivity.this, FindFriend.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(LocationInformationActivity.this, ActivityPageMain.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
                     Intent intent = new Intent(LocationInformationActivity.this, Logout.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
 
@@ -335,6 +352,9 @@ public class LocationInformationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LocationInformationActivity.this, CreateSession.class);
                 intent.putExtra("Name", name);
+                intent.putExtra("currentUser", currentUser);
+                intent.putExtra("currentUID", userID);
+                intent.putExtra("userEmail", userEmail);
                 startActivity(intent);
             }
         });

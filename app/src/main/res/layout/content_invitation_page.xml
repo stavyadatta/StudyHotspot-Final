@@ -12,59 +12,129 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginBottom="4dp"
-            android:text="Description"
-            />
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/textview_borders"
-            android:padding="10dp"
-            android:id="@+id/description"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="Title: "
+                android:textColor="@color/quantum_grey900"
+                android:layout_margin="16dp"/>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/quantum_grey700"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/title"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="Creator: "
+                android:textColor="@color/quantum_grey900"
+                android:layout_margin="16dp"/>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/quantum_grey700"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/creator_name"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/quantum_grey900"
+            android:text="Description"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            />
+
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="348dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"
+            android:textSize="16dp"
+            android:textColor="@color/quantum_grey700"
+            android:background="@drawable/textview_borders"
+            android:padding="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="67dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:layout_weight="1"
                 android:text="Start Date:"
-                android:layout_weight="1"
-                android:layout_marginLeft="8dp"/>
+                android:textSize="16dp"
+                android:textColor="@color/quantum_grey900"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="date"
                 android:id="@+id/start_date"
-                android:layout_weight="2"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="End Date"
-                android:textStyle="bold"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="date"
+                android:textColor="@color/quantum_grey700"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="57dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                />
+                android:text="End Date:"
+                android:textSize="16dp"
+                android:textColor="@color/quantum_grey900"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="date"
+                android:textSize="16dp"
                 android:layout_weight="2"
+                android:gravity="center"
+                android:textColor="@color/quantum_grey700"
                 android:id="@+id/end_date"
                 />
 
@@ -74,60 +144,75 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             >
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="Start Time:"
-                android:textStyle="bold"
+                android:layout_marginLeft="9dp"
+                android:textSize="16dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="8dp"/>
+                android:text="Start Time:"
+                android:textColor="@color/quantum_grey900"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="time"
                 android:id="@+id/start_time"
-                android:layout_weight="2"/>
-
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="11dp"
+                android:textSize="16dp"
                 android:layout_height="wrap_content"
-                android:text="End Time"
-                android:textStyle="bold"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="time"
+                android:textColor="@color/quantum_grey700"
+                android:gravity="center"
                 android:layout_weight="2"
-                android:id="@+id/end_time"/>
+                android:text="time" />
+
+            <TextView
+                android:layout_width="48dp"
+                android:textSize="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="End Time:"
+                android:textColor="@color/quantum_grey900"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/end_time"
+                android:textSize="16dp"
+                android:layout_width="14dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/quantum_grey700"
+                android:layout_weight="2"
+                android:text="time" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textSize="18dp"
                 android:text="Location: "
+                android:textColor="@color/quantum_grey900"
                 android:layout_margin="16dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="18dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/quantum_grey700"
                 android:id="@+id/location_name"/>
 
         </LinearLayout>
@@ -136,21 +221,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"
             >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Session Participants: "
+                android:text="Session Participants:"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:textSize="18dp"
+                android:textColor="@color/quantum_grey900"
                 android:textStyle="bold"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/session_participants"
-                android:layout_marginLeft="8dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="14dp"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:textColor="@color/quantum_grey700"
+                />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:text="View All"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#FFF"
+                android:layout_gravity="center"
+                android:background="@drawable/blue_border"
+                android:backgroundTint="@color/quantum_bluegrey500"
+                android:id="@+id/view_all_participants"
                 />
 
         </LinearLayout>
@@ -164,23 +272,29 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accept"
+                android:text="Decline"
                 android:layout_margin="20dp"
                 android:padding="20dp"
-                android:background="#9CFC97"
-                android:id="@+id/accept"
+                android:id="@+id/DECLINE"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:textStyle="bold"
                 android:layout_weight="1"
+                android:backgroundTint="@color/quantum_googred500"
                 />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Decline"
+                android:text="Accept"
                 android:layout_margin="20dp"
                 android:padding="20dp"
-                android:id="@+id/decline"
+                android:backgroundTint="@color/quantum_googgreen400"
+                android:id="@+id/accept"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:layout_weight="1"
-                android:background="#fcec03"
                 />
 
         </LinearLayout>

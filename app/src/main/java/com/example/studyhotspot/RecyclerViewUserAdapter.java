@@ -23,6 +23,7 @@ public class RecyclerViewUserAdapter extends RecyclerView.Adapter<RecyclerViewUs
 
     private static final String TAG = "RecyclerViewAdapter";
 
+
     private ArrayList<String> mfNames = new ArrayList<>();
     private ArrayList<String> meMails = new ArrayList<>();
     private  ArrayList<Integer> relationshipList = new ArrayList<>();

@@ -58,6 +58,7 @@ public class FindFriend extends AppCompatActivity {
     ArrayList<String> awaitingFriendName = new ArrayList<String>();
 
     String userID;
+    String currentUser;
     String userEmail;
     private Button mViewRequestBtn;
 
@@ -86,6 +87,9 @@ public class FindFriend extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
             previousActivity = extras.getString("prevActivity");
+            currentUser = extras.getString("currentUser");
+            userID = extras.getString("currentUID");
+            userEmail = extras.getString("userEmail");
         }
 
         userID = userDatabaseManager.getCurrentUserID();
@@ -126,10 +130,19 @@ public class FindFriend extends AppCompatActivity {
             public void run() {
                 refreshRecyclerView();
             }
-        }, 1500);
+        }, 1000);
     }
 
     private void refreshRecyclerView(){
+        if (namelist.isEmpty()){
+            Toast.makeText(FindFriend.this, "LOADING...", Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    refreshRecyclerView();
+                }
+            }, 1000);
+        }
         Log.d("Recycler Users", "initRecyclerView: init recyclerview.");
         recyclerView = findViewById(R.id.recyclerUsers);
         RecyclerViewUserAdapter adapter = new RecyclerViewUserAdapter(namelist, emaillist, relationshipFriendList, userDatabaseManager,
@@ -178,16 +191,31 @@ public class FindFriend extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                if (awaitingFriendList.contains(targetEmail)){
-                    Toast.makeText(FindFriend.this, "CHECK REQUESTS", Toast.LENGTH_SHORT).show();
-                    refreshRecyclerView();
-                }
-                else {
+
+                if (checkIfCanAdd(targetEmail)){
                     Toast.makeText(FindFriend.this, "CAN BE ADDED", Toast.LENGTH_SHORT).show();
                     userDatabaseManager.addFriend(userID, targetEmail);
                 }
+                else{
+                    Toast.makeText(FindFriend.this, "CHECK REQUESTS", Toast.LENGTH_SHORT).show();
+                    refreshRecyclerView();
+                }
             }
         }, 1500);
+    }
+
+    private boolean checkIfCanAdd(String targetEmail){
+        if (awaitingFriendList.isEmpty()){
+            checkIfCanAdd(targetEmail);
+        }
+        else {
+            if (awaitingFriendList.contains(targetEmail)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setUpBottomAppBar() {
@@ -205,9 +233,15 @@ public class FindFriend extends AppCompatActivity {
                     Toast.makeText(FindFriend.this, "Social Page", Toast.LENGTH_LONG).show();
                 } else if (title.contentEquals("Activities")) {
                     Intent intent = new Intent(FindFriend.this, ActivityPageMain.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 } else if (title.contentEquals("Settings")) {
                     Intent intent = new Intent(FindFriend.this, Logout.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
 

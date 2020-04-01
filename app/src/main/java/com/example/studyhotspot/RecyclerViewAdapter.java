@@ -28,22 +28,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> mMS1 = new ArrayList<>();
     private ArrayList<String> mMS2 = new ArrayList<>();
     private Context mContext;
-    private OnNoteListener mOnNoteListener;
+    private ActivityPageMain activityPageMain;
+    private History history;
 
-    public RecyclerViewAdapter(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mMS2, Context mContext, OnNoteListener onNoteListener) {
+    public RecyclerViewAdapter(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mMS2,
+                               Context mContext, ActivityPageMain activityPageMain) {
         this.mImageNames = mImageNames;
         this.mImages = mImages;
         this.mContext = mContext;
         this.mMS1 = mMS1;
         this.mMS2 = mMS2;
-        this.mOnNoteListener = onNoteListener;
+        this.activityPageMain = activityPageMain;
+    }
+
+    public RecyclerViewAdapter(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mMS2,
+                               Context mContext, History history) {
+        this.mImageNames = mImageNames;
+        this.mImages = mImages;
+        this.mContext = mContext;
+        this.mMS1 = mMS1;
+        this.mMS2 = mMS2;
+        this.history = history;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activitylayout_1, parent, false);
-        ViewHolder holder = new ViewHolder(view, mOnNoteListener);
+        ViewHolder holder = new ViewHolder(view);
 
         return holder;
     }
@@ -58,12 +70,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .load(mImages.get(position))
                 .into(holder.image);
 
-        holder.imageName.setText(mImageNames.get(position));
-        holder.MS1.setText(mMS1.get(position));
-        holder.MS2.setText(mMS2.get(position));
+        holder.sessionName.setText(mImageNames.get(position));
+        holder.status.setText(mMS1.get(position));
+        holder.creatorName.setText(mMS2.get(position));
 
-
-
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activityPageMain != null) {
+                    activityPageMain.showOwnSessionInfo(position);
+                }
+                else{
+                    history.showPastSessionInfo(position);
+                }
+            }
+        });
     }
 
     @Override
@@ -71,36 +92,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mImageNames.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView image;
-        TextView imageName;
-        RelativeLayout parentLayout;
-        TextView MS1, MS2;
-        OnNoteListener onNoteListener;
+        TextView sessionName;
+        TextView status, creatorName;
 
-        public ViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
-            imageName = itemView.findViewById(R.id.image_name);
-            parentLayout = itemView.findViewById(R.id.parent_layout);
-            MS1 = itemView.findViewById(R.id.MS1);
-            MS2 = itemView.findViewById(R.id.MS2);
-            this.onNoteListener = onNoteListener;
-            image.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            onNoteListener.onNoteClick(getAdapterPosition());
+            sessionName = itemView.findViewById(R.id.sessionName);
+            status = itemView.findViewById(R.id.status);
+            creatorName = itemView.findViewById(R.id.creatorName);
         }
     }
-
-
-    public interface OnNoteListener{
-        void onNoteClick(int position);
-    }
-
-
 
 }

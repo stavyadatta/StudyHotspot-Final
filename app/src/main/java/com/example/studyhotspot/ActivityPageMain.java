@@ -45,19 +45,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
-public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener, RecyclerViewAdapter2.OnNoteListener2, RecyclerViewAdapter3.OnNoteListener3 {
-    Activity activitySS = new Activity("Study @ Starbucks", "001", "Ongoing", "1100","1200", "Chris Johnson");
-    Activity activityCU = new Activity("Catch Up", "002", "Upcoming", "1100", "1200", "Lia Palosanu");
-    Activity activityEP = new Activity("Exam Prep", "003", "Upcoming", "1100", "1200", "Mike Lee");
-    Activity activityOS = new Activity("Open Study!", "004", "Upcoming", "1100","1200","Alvin Choo");
-    Activity activityCP = new Activity("Chemistry Practice!", "005", "Upcoming", "1100", "1200", "McCoy Tan");
+public class ActivityPageMain extends AppCompatActivity {
     ArrayList<Activity> listMSActivity = new ArrayList<Activity>();
     ArrayList<Activity> listIActivity = new ArrayList<>();
     ArrayList<Activity> listFAActivity = new ArrayList<>();
 
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
-    ArrayList<String> creatorNameRaw = new ArrayList<String>();
+
+    String userID;
+    String currentUser;
+    String userEmail;
+
     String startDate;
     String startTime;
 
@@ -65,6 +65,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private FloatingActionButton homeButton;
     private BottomAppBar bottomAppBar;
     private Button historyButton;
+    private FloatingActionButton refresh;
 
     //RecyclerView stuffs
     private static final String TAG = "ActivityPageMain";
@@ -76,6 +77,11 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private ArrayList<String> fMS2 = new ArrayList<>();
     private ArrayList<String> mNames = new ArrayList<String>();
     private ArrayList<String> id1 = new ArrayList<>();
+
+    //History
+    private ArrayList<String> historyNames = new ArrayList<>();
+    private ArrayList<String> historyCreators = new ArrayList<>();
+    private ArrayList<String> historyIDs = new ArrayList<String>();
 
     //for 2nd box
     private ArrayList<String> mNames2 = new ArrayList<>();
@@ -99,41 +105,23 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page);
-        listMSActivity.add(activitySS);
-        listMSActivity.add(activityCU);
-        listIActivity.add(activityEP);
-        listFAActivity.add(activityOS);
-        listFAActivity.add(activityCP);
+
         db = FirebaseFirestore.getInstance();
-        getCreatorName();
-
-
-
-
-
-        setUpBottomAppBar();
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                initImageBitmaps();
-            }
-        }, 5000);
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                initImageBitmaps2();
-            }
-        }, 5000);
-        //initImageBitmaps();
-        //initImageBitmaps2();
-        initImageBitmaps3();
 
         Bundle extras = getIntent().getExtras();
-        if(extras !=null) {
+        if (extras != null) {
             previousActivity = extras.getString("prevActivity");
+            currentUser = extras.getString("currentUser");
+            userID = extras.getString("currentUID");
+            userEmail = extras.getString("userEmail");
         }
 
-        historyButton = (Button) findViewById(R.id.history);
+        setUpBottomAppBar();
+        setUpContent();
+    }
+
+    private void setUpContent() {
+        historyButton = findViewById(R.id.history);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,17 +129,37 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             }
         });
 
+        refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initAllViews();
+            }
+        });
 
+        initAllViews();
     }
 
-    private void getCreatorName() {
-        userDatabaseManager.getCurrentUsername(creatorNameRaw);
+    private void initAllViews() {
+        initImageBitmaps();
+        initImageBitmaps2();
+        initImageBitmaps3();
     }
 
-    private void initImageBitmaps(){
+    private void initImageBitmaps() {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-        String creatorName = creatorNameRaw.get(0);
-        SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        id1.clear();
+        mNames.clear();
+        mImageUrls.clear();
+        fMS1.clear();
+        fMS2.clear();
+
+        historyNames.clear();
+        historyIDs.clear();
+        historyCreators.clear();
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
 
         String startDateTimeString = startDate + " " + startTime;
@@ -167,30 +175,44 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     String status;
                     int i = 0;
-                    for (QueryDocumentSnapshot document:task.getResult()){
-                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
-                        Log.d(TAG, "onComplete: creatorName is " + creatorName);
-                        if(doch.containsKey(creatorName)){
-                            if(doch.get(creatorName) != null && doch.get(creatorName) == true){
-                            id1.add(document.getId());
-                            mNames.add(document.getString("title"));
-                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
+                        Log.d(TAG, "onComplete: creatorName is " + currentUser);
+                        if (doch.containsKey(currentUser)) {
+                            if (doch.get(currentUser) != null && doch.get(currentUser) == true) {
 
-                            Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
-                            Timestamp endTS = new Timestamp(document.getDate("endDateTime"));
-                            if (currentTS.compareTo(actTS) < 0)
-                                status = "Upcoming";
-                            else if (currentTS.compareTo(endTS) < 0)
-                                status = "Ongoing";
-                            else
-                                status = "Past";
-                            fMS1.add("Status: " + status);
-                            fMS2.add("Created by: " + document.getString("creatorName"));
-                            initRecyclerView();}}
+                                Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
+                                Timestamp endTS = new Timestamp(document.getDate("endDateTime"));
+                                if (currentTS.compareTo(actTS) < 0) {
+                                    status = "Upcoming";
+                                    id1.add(document.getId());
+                                    mNames.add(document.getString("title"));
+                                    mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                    fMS1.add("Status: " + status);
+                                    fMS2.add("Created by: " + document.getString("creatorName"));
+                                    initRecyclerView();
+                                }
+                                else if (currentTS.compareTo(endTS) < 0) {
+                                    status = "Ongoing";
+                                    id1.add(document.getId());
+                                    mNames.add(document.getString("title"));
+                                    mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                    fMS1.add("Status: " + status);
+                                    fMS2.add("Created by: " + document.getString("creatorName"));
+                                    initRecyclerView();
+                                }
+                                else {
+                                    status = "Past";
+                                    historyIDs.add(document.getId());
+                                    historyNames.add(document.getString("title"));
+                                    historyCreators.add("Created by: " + document.getString("creatorName"));
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -216,7 +238,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             }
         });*/
 
-                //End of working
+        //End of working
 
 
                 /*for (int j = 0; j < id1.size(); j++){
@@ -236,9 +258,6 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                         }
                     });
                 }*/
-
-
-
 
 
         //Trying to read database into mNames
@@ -266,8 +285,8 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
 
     }
 
-    private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: the last of titles are:" + mNames.get(mNames.size()-1));
+    private void initRecyclerView() {
+        Log.d(TAG, "initRecyclerView: the last of titles are:" + mNames.get(mNames.size() - 1));
         if (mNames.size() != id1.size())
             return;
         Log.d(TAG, "1initRecyclerView: init recyclerview.");
@@ -277,91 +296,62 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    public void initImageBitmaps2(){
+    public void initImageBitmaps2() {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-        String creatorName = creatorNameRaw.get(0);
         id2.clear();
         mNames2.clear();
         mImageUrls2.clear();
         fI1.clear();
         mImageUrls22.clear();
         mImageUrls23.clear();
-        /*SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
-
-        String startDateTimeString = startDate + " " + startTime;
-        Date current = new Date();
-        try {
-            current = dateFormatter.parse(startDateTimeString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Timestamp currentTS = new Timestamp(current);*/
 
 
         db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
 
-                    String status;
-                    int i = 0;
-                    for (QueryDocumentSnapshot document:task.getResult()){
-                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
-                        Log.d(TAG, "onComplete: creatorName is " + creatorName);
-                        if(doch.containsKey(creatorName)){
-                            if(doch.get(creatorName) == null){
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
+                        Log.d(TAG, "onComplete: creatorName is " + currentUser);
+                        if (doch.containsKey(currentUser)) {
+                            if (doch.get(currentUser) == null) {
                                 id2.add(document.getId());
                                 mNames2.add(document.getString("title"));
                                 mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
                                 fI1.add("Created by: " + document.getString("creatorName"));
                                 mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
                                 mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
-                                initRecyclerView2();}}
+                                initRecyclerView2();
+                            }
+                        }
                     }
                 }
             }
         });
-
-        //Original
-        /*Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-
-        for (int i =0;i<listIActivity.size();i++){
-            mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-            mNames2.add(listIActivity.get(i).getname());
-            fI1.add("Created by: " + listIActivity.get(i).getCreator());
-            mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
-            mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
-
-        }
-        initRecyclerView2();*/
-
     }
 
-    private void initRecyclerView2(){
+    private void initRecyclerView2() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void initImageBitmaps3(){
+    private void initImageBitmaps3() {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
-        for (int i =0;i<listFAActivity.size();i++){
+        for (int i = 0; i < listFAActivity.size(); i++) {
             mImageUrls3.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
             mNames3.add(listFAActivity.get(i).getname());
             fFA1.add("Created by: " + listFAActivity.get(i).getCreator());
-
-
-
         }
         initRecyclerView3();
 
     }
 
-    private void initRecyclerView3(){
+    private void initRecyclerView3() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView3 = findViewById(R.id.recyclerview3);
         RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this, this);
@@ -380,28 +370,32 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                if (title.contentEquals("Friends")){
+                if (title.contentEquals("Friends")) {
                     Intent intent = new Intent(ActivityPageMain.this, FindFriend.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
-                }
-                else if (title.contentEquals("Activities")){
+                } else if (title.contentEquals("Activities")) {
                     Toast.makeText(ActivityPageMain.this, "Activity Page", Toast.LENGTH_LONG).show();
-                }
-                else if (title.contentEquals("Settings")){
+                } else if (title.contentEquals("Settings")) {
                     Intent intent = new Intent(ActivityPageMain.this, Logout.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
 
                 return false;
-            }});
+            }
+        });
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (previousActivity != null && previousActivity.contentEquals("HOME")){
+                if (previousActivity != null && previousActivity.contentEquals("HOME")) {
                     finish();
-                }
-                else {
+                } else {
                     Intent intent = new Intent(ActivityPageMain.this, MapsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -412,31 +406,30 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
 
     public void openHistory() {
         Intent intent = new Intent(this, History.class);
+        intent.putExtra("IDs", historyIDs);
+        intent.putExtra("Names", historyNames);
+        intent.putExtra("Creators", historyCreators);
         startActivity(intent);
     }
 
     //From actvity page to activity info page, to pass in document id
-    @Override
-    public void onNoteClick(int position) {
-        //Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
+
+    public void showOwnSessionInfo(int position) {
         Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", id1.get(position));
         startActivity(intent);
     }
 
-
-    @Override
-    public void onNoteClick2(int position) {
+    public void showInviteInfo(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
         intent.putExtra("docname", id2.get(position));
+        System.out.println(id2.get(position));
         startActivity(intent);
     }
 
-    @Override
-    public void onNoteClick3(int position) {
+    public void showFriendActivityInfo(int position) {
         Intent intent = new Intent(this, FriendsActivityPage.class);
         startActivity(intent);
-
     }
-
 }
+
