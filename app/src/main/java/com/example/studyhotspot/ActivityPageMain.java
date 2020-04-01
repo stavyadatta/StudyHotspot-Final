@@ -1,11 +1,21 @@
 package com.example.studyhotspot;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,16 +25,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.api.LogDescriptor;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+import org.w3c.dom.Text;
 
-public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener {
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TimeZone;
+
+public class ActivityPageMain extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener, RecyclerViewAdapter2.OnNoteListener2, RecyclerViewAdapter3.OnNoteListener3 {
     Activity activitySS = new Activity("Study @ Starbucks", "001", "Ongoing", "1100","1200", "Chris Johnson");
     Activity activityCU = new Activity("Catch Up", "002", "Upcoming", "1100", "1200", "Lia Palosanu");
     Activity activityEP = new Activity("Exam Prep", "003", "Upcoming", "1100", "1200", "Mike Lee");
@@ -33,6 +55,11 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     ArrayList<Activity> listMSActivity = new ArrayList<Activity>();
     ArrayList<Activity> listIActivity = new ArrayList<>();
     ArrayList<Activity> listFAActivity = new ArrayList<>();
+
+    private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
+    ArrayList<String> creatorNameRaw = new ArrayList<String>();
+    String startDate;
+    String startTime;
 
 
     private FloatingActionButton homeButton;
@@ -56,6 +83,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private ArrayList<String> fI1 = new ArrayList<>();
     private ArrayList<String> mImageUrls22 = new ArrayList<>();
     private ArrayList<String> mImageUrls23 = new ArrayList<>();
+    private ArrayList<String> id2 = new ArrayList<>();
 
     //for 3rd box
     private ArrayList<String> mNames3 = new ArrayList<>();
@@ -77,14 +105,27 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
         listFAActivity.add(activityOS);
         listFAActivity.add(activityCP);
         db = FirebaseFirestore.getInstance();
+        getCreatorName();
 
 
 
 
 
         setUpBottomAppBar();
-        initImageBitmaps();
-        initImageBitmaps2();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                initImageBitmaps();
+            }
+        }, 3000);
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                initImageBitmaps2();
+            }
+        }, 3000);
+        //initImageBitmaps();
+        //initImageBitmaps2();
         initImageBitmaps3();
 
         Bundle extras = getIntent().getExtras();
@@ -103,9 +144,60 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
 
     }
 
+    private void getCreatorName() {
+        userDatabaseManager.getCurrentUsername(creatorNameRaw);
+    }
+
     private void initImageBitmaps(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-        db.collection("sessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        String creatorName = creatorNameRaw.get(0);
+        SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+        String startDateTimeString = startDate + " " + startTime;
+        Date current = new Date();
+        try {
+            current = dateFormatter.parse(startDateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp currentTS = new Timestamp(current);
+
+
+        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+
+                    String status;
+                    int i = 0;
+                    for (QueryDocumentSnapshot document:task.getResult()){
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
+                        Log.v(TAG, "onComplete: creatorName is " + doch);
+                        if (doch == null){
+                            Log.d(TAG, "onComplete: This is executed");
+                            return;}
+                        if(doch.containsKey(creatorName)){
+                            if(doch.get(creatorName) != null && doch.get(creatorName) == true ){
+                            id1.add(document.getId());
+                            mNames.add(document.getString("title"));
+                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+
+                            Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
+                            if (currentTS.compareTo(actTS) < 0)
+                                status = "Upcoming";
+                            else
+                                status = "Ongoing";
+                            fMS1.add("Status: " + status);
+                            fMS2.add("Created by: " + document.getString("creatorName"));
+                            initRecyclerView();}}
+                    }
+                }
+            }
+        });
+
+        //Working
+        /*db.collection("sessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -122,7 +214,56 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
                     }
                 }
             }
-        });
+        });*/
+
+                //End of working
+
+
+                /*for (int j = 0; j < id1.size(); j++){
+                    DocumentReference docRef = db.collection("sessions").document(id1.get(j));
+                    //final int finalJ = j;
+                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            //documentName = id1.get(finalJ);
+                            Log.d(TAG, "onSuccess: " + documentSnapshot.getString("title"));
+                            mNames.add(documentSnapshot.getString("title"));
+                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                            fMS1.add("Status: Testing");
+                            fMS2.add("Created by: Testing");
+                            initRecyclerView();
+
+                        }
+                    });
+                }*/
+
+
+
+
+
+        //Trying to read database into mNames
+        /*DocumentReference docRef = db.collection("sessions").document("5nacJiy7Ch1sstSdZIyV");
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mNames.add(documentSnapshot.getString("title"));
+                mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                fMS1.add("Status: Testing");
+                fMS2.add("Created by: Testing");
+                initRecyclerView();
+            }
+        });*/
+
+
+        /*docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Session s = documentSnapshot.toObject(Session.class);
+                mNames.add(s.getTitle());
+            }
+        });*/
+        //mNames.add("Testing");
+
     }
 
     private void initRecyclerView(){
@@ -138,6 +279,46 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
 
     private void initImageBitmaps2(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        String creatorName = creatorNameRaw.get(0);
+        /*SimpleDateFormat dateFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+        String startDateTimeString = startDate + " " + startTime;
+        Date current = new Date();
+        try {
+            current = dateFormatter.parse(startDateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp currentTS = new Timestamp(current);*/
+
+
+        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+
+                    String status;
+                    int i = 0;
+                    for (QueryDocumentSnapshot document:task.getResult()){
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>)document.getData().get("participantStatus");
+                        Log.d(TAG, "onComplete: creatorName is " + creatorName);
+                        if(doch.containsKey(creatorName)){
+                            if(doch.get(creatorName) == null){
+                                id2.add(document.getId());
+                                mNames2.add(document.getString("title"));
+                                mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                fI1.add("Created by: " + document.getString("creatorName"));
+                                mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
+                                mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
+                                initRecyclerView2();}}
+                    }
+                }
+            }
+        });
+
+        //Original
+        /*Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
         for (int i =0;i<listIActivity.size();i++){
             mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
@@ -147,14 +328,14 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
             mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
 
         }
-        initRecyclerView2();
+        initRecyclerView2();*/
 
     }
 
     private void initRecyclerView2(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -177,7 +358,7 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     private void initRecyclerView3(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView3 = findViewById(R.id.recyclerview3);
-        RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this);
+        RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this, this);
         recyclerView3.setAdapter(adapter3);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -231,10 +412,24 @@ public class ActivityPageMain extends AppCompatActivity implements RecyclerViewA
     //From actvity page to activity info page, to pass in document id
     @Override
     public void onNoteClick(int position) {
-        Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
+        //Log.v(TAG, "OnNoteClicked:" + id1.get(1)); //id is still retrievable
         Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", id1.get(position));
         startActivity(intent);
     }
 
+
+    @Override
+    public void onNoteClick2(int position) {
+        Intent intent = new Intent(this, InvitationPage.class);
+        intent.putExtra("docname", id2.get(position));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onNoteClick3(int position) {
+        Intent intent = new Intent(this, FriendsActivityPage.class);
+        startActivity(intent);
+
+    }
 }

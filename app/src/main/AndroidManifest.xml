@@ -23,8 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".FriendsActivityPage"
+            android:label="@string/title_activity_friends_page"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".Logout"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewRequest"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -33,6 +37,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SessionAddParticipants"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InvitationPage"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FindFriend"

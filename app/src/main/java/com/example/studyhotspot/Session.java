@@ -58,6 +58,7 @@ public class Session implements Serializable{
         return participantStatus;
     }
 
+
     public void updateParticipantStatus(String participantName, Boolean response){
         participantStatus.put(participantName, response);
         //write to DB
