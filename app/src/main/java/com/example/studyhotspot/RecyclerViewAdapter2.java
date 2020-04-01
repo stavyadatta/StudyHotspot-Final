@@ -151,7 +151,7 @@ public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapt
                                     documentRef.update("participantStatus", doch).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            activityPageMain.initImageBitmaps2();
+                                            ///activityPageMain.initImageBitmaps2();
                                             Log.d(TAG, "onSuccess: Sucess here");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {

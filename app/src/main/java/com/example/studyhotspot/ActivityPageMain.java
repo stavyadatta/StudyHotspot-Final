@@ -92,9 +92,12 @@ public class ActivityPageMain extends AppCompatActivity {
     private ArrayList<String> id2 = new ArrayList<>();
 
     //for 3rd box
-    private ArrayList<String> mNames3 = new ArrayList<>();
-    private ArrayList<String> mImageUrls3 = new ArrayList<>();
-    private ArrayList<String> fFA1 = new ArrayList<>();
+    private ArrayList<String> friendNames = new ArrayList<>();
+    private ArrayList<String> friendImageUrls2 = new ArrayList<>();
+    private ArrayList<String> friendStatus = new ArrayList<>();
+    private ArrayList<String> friendImages = new ArrayList<>();
+    private ArrayList<String> friendIDs = new ArrayList<>();
+    private ArrayList<String> friendCreators = new ArrayList<>();
 
     private String previousActivity = null;
 
@@ -133,17 +136,11 @@ public class ActivityPageMain extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initAllViews();
+                initImageBitmaps();
             }
         });
 
-        initAllViews();
-    }
-
-    private void initAllViews() {
         initImageBitmaps();
-        initImageBitmaps2();
-        initImageBitmaps3();
     }
 
     private void initImageBitmaps() {
@@ -158,6 +155,20 @@ public class ActivityPageMain extends AppCompatActivity {
         historyNames.clear();
         historyIDs.clear();
         historyCreators.clear();
+
+        id2.clear();
+        mNames2.clear();
+        mImageUrls2.clear();
+        fI1.clear();
+        mImageUrls22.clear();
+        mImageUrls23.clear();
+
+        friendNames.clear();
+        friendImageUrls2.clear();
+        friendStatus.clear();
+        friendImages.clear();
+        friendIDs.clear();
+        friendCreators.clear();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         dateFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
@@ -178,15 +189,17 @@ public class ActivityPageMain extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     String status;
-                    int i = 0;
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
-                        Log.d(TAG, "onComplete: creatorName is " + currentUser);
-                        if (doch.containsKey(currentUser)) {
-                            if (doch.get(currentUser) != null && doch.get(currentUser) == true) {
 
-                                Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
-                                Timestamp endTS = new Timestamp(document.getDate("endDateTime"));
+                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
+                        Boolean isPublic = (Boolean) document.getData().get("privateORpublic");
+
+                        Timestamp actTS = new Timestamp(document.getDate("startDateTime"));
+                        Timestamp endTS = new Timestamp(document.getDate("endDateTime"));
+
+                        if (doch.containsKey(currentUser)) {
+
+                            if (doch.get(currentUser) != null && doch.get(currentUser) == true) {
                                 if (currentTS.compareTo(actTS) < 0) {
                                     status = "Upcoming";
                                     id1.add(document.getId());
@@ -196,7 +209,7 @@ public class ActivityPageMain extends AppCompatActivity {
                                     fMS2.add("Created by: " + document.getString("creatorName"));
                                     initRecyclerView();
                                 }
-                                else if (currentTS.compareTo(endTS) < 0) {
+                                else if ((currentTS.compareTo(endTS) < 0 && currentTS.compareTo(actTS) > 0)) {
                                     status = "Ongoing";
                                     id1.add(document.getId());
                                     mNames.add(document.getString("title"));
@@ -205,11 +218,45 @@ public class ActivityPageMain extends AppCompatActivity {
                                     fMS2.add("Created by: " + document.getString("creatorName"));
                                     initRecyclerView();
                                 }
-                                else {
-                                    status = "Past";
+                                else if (currentTS.compareTo(endTS) > 0){
                                     historyIDs.add(document.getId());
                                     historyNames.add(document.getString("title"));
                                     historyCreators.add("Created by: " + document.getString("creatorName"));
+                                }
+                            }
+
+                            else if (doch.get(currentUser) == null) {
+                                if (currentTS.compareTo(endTS) < 0) {
+                                    id2.add(document.getId());
+                                    mNames2.add(document.getString("title"));
+                                    mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                    fI1.add("Created by: " + document.getString("creatorName"));
+                                    mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
+                                    mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
+                                    initRecyclerView2();
+                                }
+                            }
+                        }
+
+                        else{
+                            if (isPublic){
+                                if (currentTS.compareTo(actTS) < 0) {
+                                    status = "Upcoming";
+                                    friendIDs.add(document.getId());
+                                    friendNames.add(document.getString("title"));
+                                    friendImages.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                    friendStatus.add("Status: " + status);
+                                    friendCreators.add("Created by: " + document.getString("creatorName"));
+                                    initRecyclerView3();
+                                }
+                                else if (currentTS.compareTo(endTS) < 0) {
+                                    status = "Ongoing";
+                                    friendIDs.add(document.getId());
+                                    friendNames.add(document.getString("title"));
+                                    friendImages.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
+                                    friendStatus.add("Status: " + status);
+                                    friendCreators.add("Created by: " + document.getString("creatorName"));
+                                    initRecyclerView3();
                                 }
                             }
                         }
@@ -217,72 +264,6 @@ public class ActivityPageMain extends AppCompatActivity {
                 }
             }
         });
-
-        //Working
-        /*db.collection("sessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    int i = 0;
-                    for (QueryDocumentSnapshot document:task.getResult()){
-                        id1.add(document.getId());
-                        mNames.add(document.getString("title"));
-                        mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-                        fMS1.add("Status: Testing");
-                        fMS2.add("Created by: Testing");
-                        Log.v(TAG, "this is adding id of document" + id1.get(i++));
-                        Log.d(TAG, "onComplete: " + id1.size());
-                        initRecyclerView();
-                    }
-                }
-            }
-        });*/
-
-        //End of working
-
-
-                /*for (int j = 0; j < id1.size(); j++){
-                    DocumentReference docRef = db.collection("sessions").document(id1.get(j));
-                    //final int finalJ = j;
-                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            //documentName = id1.get(finalJ);
-                            Log.d(TAG, "onSuccess: " + documentSnapshot.getString("title"));
-                            mNames.add(documentSnapshot.getString("title"));
-                            mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-                            fMS1.add("Status: Testing");
-                            fMS2.add("Created by: Testing");
-                            initRecyclerView();
-
-                        }
-                    });
-                }*/
-
-
-        //Trying to read database into mNames
-        /*DocumentReference docRef = db.collection("sessions").document("5nacJiy7Ch1sstSdZIyV");
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mNames.add(documentSnapshot.getString("title"));
-                mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-                fMS1.add("Status: Testing");
-                fMS2.add("Created by: Testing");
-                initRecyclerView();
-            }
-        });*/
-
-
-        /*docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Session s = documentSnapshot.toObject(Session.class);
-                mNames.add(s.getTitle());
-            }
-        });*/
-        //mNames.add("Testing");
-
     }
 
     private void initRecyclerView() {
@@ -291,44 +272,9 @@ public class ActivityPageMain extends AppCompatActivity {
             return;
         Log.d(TAG, "1initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.recyclerview1);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, fMS1, fMS2, this, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, fMS1, fMS2, this, this, false);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    public void initImageBitmaps2() {
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-        id2.clear();
-        mNames2.clear();
-        mImageUrls2.clear();
-        fI1.clear();
-        mImageUrls22.clear();
-        mImageUrls23.clear();
-
-
-        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
-                        Log.d(TAG, "onComplete: creatorName is " + currentUser);
-                        if (doch.containsKey(currentUser)) {
-                            if (doch.get(currentUser) == null) {
-                                id2.add(document.getId());
-                                mNames2.add(document.getString("title"));
-                                mImageUrls2.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-                                fI1.add("Created by: " + document.getString("creatorName"));
-                                mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
-                                mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
-                                initRecyclerView2();
-                            }
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void initRecyclerView2() {
@@ -339,23 +285,11 @@ public class ActivityPageMain extends AppCompatActivity {
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void initImageBitmaps3() {
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-
-        for (int i = 0; i < listFAActivity.size(); i++) {
-            mImageUrls3.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
-            mNames3.add(listFAActivity.get(i).getname());
-            fFA1.add("Created by: " + listFAActivity.get(i).getCreator());
-        }
-        initRecyclerView3();
-
-    }
-
     private void initRecyclerView3() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView3 = findViewById(R.id.recyclerview3);
-        RecyclerViewAdapter3 adapter3 = new RecyclerViewAdapter3(mNames3, mImageUrls3, fFA1, this, this);
-        recyclerView3.setAdapter(adapter3);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(friendNames, friendImages, friendStatus, friendCreators, this, this, true);
+        recyclerView3.setAdapter(adapter);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -414,9 +348,15 @@ public class ActivityPageMain extends AppCompatActivity {
 
     //From actvity page to activity info page, to pass in document id
 
-    public void showOwnSessionInfo(int position) {
+    public void showSessionInfo(int position, Boolean friend) {
         Intent intent = new Intent(this, SessionDetails.class);
-        intent.putExtra("docname", id1.get(position));
+        if (!friend) {
+            intent.putExtra("docname", id1.get(position));
+        }
+        else{
+            intent.putExtra("docname", friendIDs.get(position));
+        }
+
         startActivity(intent);
     }
 

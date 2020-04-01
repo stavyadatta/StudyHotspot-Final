@@ -30,15 +30,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context mContext;
     private ActivityPageMain activityPageMain;
     private History history;
+    private Boolean friend;
 
     public RecyclerViewAdapter(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mMS2,
-                               Context mContext, ActivityPageMain activityPageMain) {
+                               Context mContext, ActivityPageMain activityPageMain, Boolean friend) {
         this.mImageNames = mImageNames;
         this.mImages = mImages;
         this.mContext = mContext;
         this.mMS1 = mMS1;
         this.mMS2 = mMS2;
         this.activityPageMain = activityPageMain;
+        this.friend = friend;
     }
 
     public RecyclerViewAdapter(ArrayList<String> mImageNames, ArrayList<String> mImages, ArrayList<String> mMS1, ArrayList<String> mMS2,
@@ -78,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 if (activityPageMain != null) {
-                    activityPageMain.showOwnSessionInfo(position);
+                    activityPageMain.showSessionInfo(position, friend);
                 }
                 else{
                     history.showPastSessionInfo(position);
