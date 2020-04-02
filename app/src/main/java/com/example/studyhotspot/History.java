@@ -34,11 +34,15 @@ public class History extends AppCompatActivity {
 
     private String previousActivity = null;
 
+    private BottomAppBar bottomAppBar;
+    private FloatingActionButton homeButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        setUpBottomAppBar();
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
@@ -82,5 +86,41 @@ public class History extends AppCompatActivity {
         intent.putExtra("docname", historyIDs.get(position));
         intent.putExtra("Status", "past");
         startActivity(intent);
+    }
+
+    private void setUpBottomAppBar() {
+        //find id
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+        homeButton = findViewById(R.id.homeButton);
+
+        //click event over Bottom bar menu item
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String title = item.getTitle().toString();
+                if (title.contentEquals("Friends")) {
+                    Intent intent = new Intent(History.this, FindFriend.class);
+                    startActivity(intent);
+                } else if (title.contentEquals("Activities")) {
+                    Intent intent = new Intent(History.this, ActivityPageMain.class);
+                    startActivity(intent);
+                } else if (title.contentEquals("Settings")) {
+                    Intent intent = new Intent(History.this, Logout.class);
+                    startActivity(intent);
+                }
+
+                return false;
+            }
+        });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(History.this, MapsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 }
