@@ -25,11 +25,9 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -246,6 +244,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 if (saveSession() == true){
                     Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);
+                    Log.d("mo problem", "no probem");
                     intent.putExtra("currentUser", currentUser);
                     intent.putExtra("currentUID", userID);
                     intent.putExtra("userEmail", userEmail);
