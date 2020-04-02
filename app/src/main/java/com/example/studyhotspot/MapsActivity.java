@@ -219,7 +219,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                     return false;
                 } catch (Exception e){
-                    Toast.makeText(MapsActivity.this, "TRY AGAIN", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, "PLEASE TRY AGAIN", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }});
