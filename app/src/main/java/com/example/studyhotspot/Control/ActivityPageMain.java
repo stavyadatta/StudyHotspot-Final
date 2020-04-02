@@ -360,7 +360,7 @@ public class ActivityPageMain extends AppCompatActivity {
         });
     }
 
-    public void openHistory() {
+    private void openHistory() {
         Intent intent = new Intent(this, History.class);
         intent.putExtra("IDs", historyIDs);
         intent.putExtra("Names", historyNames);

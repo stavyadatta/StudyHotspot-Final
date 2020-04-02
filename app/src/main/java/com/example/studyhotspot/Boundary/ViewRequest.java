@@ -82,6 +82,9 @@ public class ViewRequest extends AppCompatActivity implements RecyclerViewReques
     }
 
 
+    /**
+     * initRecyclerView() displays the friend request(s) that the user has received
+     */
     public void initRecyclerView(){
         Log.d("initRecyclerView", "initRecyclerView");
         awaitingFriendList = new ArrayList<String>();

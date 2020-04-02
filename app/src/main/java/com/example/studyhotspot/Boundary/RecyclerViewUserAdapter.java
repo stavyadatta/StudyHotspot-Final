@@ -39,6 +39,7 @@ public class RecyclerViewUserAdapter extends RecyclerView.Adapter<RecyclerViewUs
     private Context mContext;
     int status;
 
+    // no javadoc because this is a constructor
     public RecyclerViewUserAdapter(ArrayList<String> mfNames, ArrayList<String> meMails, ArrayList<Integer> rsList,
                                    UserDatabaseManager userDatabaseManager, FindFriend findFriend, Context mContext) {
         this.mfNames = mfNames;

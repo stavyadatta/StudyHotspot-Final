@@ -76,7 +76,7 @@ public class FindFriend extends AppCompatActivity {
         initRecyclerView();
     }
 
-    public void setUpRequestBtn() {
+    private void setUpRequestBtn() {
         mViewRequestBtn = findViewById(R.id.viewRequestBtn);
         mViewRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +161,13 @@ public class FindFriend extends AppCompatActivity {
         }
     }
 
+    /**
+     * FindFriend's addFriend() occurs whenever an user attempts to add another user as friend.
+     * This guards against scenarios where one user sent request to another user that has just sent him a request earlier.
+     * By doing this, it helps enforce the rule that the user can only send friend request if no request has been sent from either party.
+     * @param userID UID of current user
+     * @param targetEmail email address of the user that the current user wishes to add
+     */
     public void addFriend(String userID, String targetEmail){
         resetLists();
         userDatabaseManager.getUserAwaitingFriends(awaitingFriendList,awaitingFriendName);

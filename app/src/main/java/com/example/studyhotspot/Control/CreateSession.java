@@ -97,6 +97,12 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         setUpDetailsPage();
     }
 
+    /**
+     * onTimeset() displays the timing that the user has selected as the session start/end time
+     * @param view A android widget
+     * @param hourOfDay
+     * @param minute
+     */
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         String h = String.format("%02d", hourOfDay);
         String m = String.format("%02d", minute);
@@ -259,7 +265,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public void setUpDetailsPage(){
+    private void setUpDetailsPage(){
         locationName = findViewById(R.id.locationPlaceHolder);
         locationName.setText(location);
 

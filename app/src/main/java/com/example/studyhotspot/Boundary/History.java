@@ -88,6 +88,10 @@ public class History extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    /**
+     * showPastSessionInfo() allows user to view the details of a selected session that has passed
+     * @param position
+     */
     public void showPastSessionInfo(int position) {
         Intent intent = new Intent(this, SessionDetails.class);
         intent.putExtra("docname", historyIDs.get(position));
