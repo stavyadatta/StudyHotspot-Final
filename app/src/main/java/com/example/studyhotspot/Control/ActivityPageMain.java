@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Control;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,52 +9,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.studyhotspot.Boundary.InvitationPage;
+import com.example.studyhotspot.R;
+import com.example.studyhotspot.Boundary.History;
+import com.example.studyhotspot.Boundary.SessionDetails;
+import com.example.studyhotspot.Boundary.Logout;
+import com.example.studyhotspot.Boundary.RecyclerViewAdapter;
+import com.example.studyhotspot.Boundary.RecyclerViewAdapter2;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.api.LogDescriptor;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Text;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 public class ActivityPageMain extends AppCompatActivity {
-    ArrayList<Activity> listMSActivity = new ArrayList<Activity>();
-    ArrayList<Activity> listIActivity = new ArrayList<>();
-    ArrayList<Activity> listFAActivity = new ArrayList<>();
-
-
 
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
 

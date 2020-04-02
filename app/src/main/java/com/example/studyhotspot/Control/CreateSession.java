@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Control;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -22,6 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.studyhotspot.Boundary.Logout;
+import com.example.studyhotspot.Boundary.TimePickerFragment;
+import com.example.studyhotspot.R;
+import com.example.studyhotspot.Boundary.SessionAddParticipants;
+import com.example.studyhotspot.Entity.Session;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
@@ -244,7 +249,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 if (saveSession() == true){
                     Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);
-                    Log.d("mo problem", "no probem");
+                    Log.d("no problem", "no probem");
                     intent.putExtra("currentUser", currentUser);
                     intent.putExtra("currentUID", userID);
                     intent.putExtra("userEmail", userEmail);

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity">
+    tools:context=".Control.MapsActivity">
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip1"
@@ -92,7 +92,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
-        tools:context=".MapsActivity" />
+        tools:context=".Control.MapsActivity" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"

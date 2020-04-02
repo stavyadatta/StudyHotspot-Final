@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Boundary;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,18 +13,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyhotspot.R;
+import com.example.studyhotspot.Control.ActivityPageMain;
+import com.example.studyhotspot.Control.FindFriend;
+import com.example.studyhotspot.Control.MapsActivity;
+import com.example.studyhotspot.Control.UserDatabaseManager;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-
-import javax.annotation.Nullable;
 
 public class ViewRequest extends AppCompatActivity implements RecyclerViewRequestAdapter.OnItemClickListener{
 

@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Boundary;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

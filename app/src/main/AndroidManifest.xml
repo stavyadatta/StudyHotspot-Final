@@ -25,40 +25,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewParticipants"
+        <activity android:name=".Boundary.ViewParticipants"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".Logout"
+            android:name=".Boundary.Logout"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ViewRequest"
+            android:name=".Boundary.ViewRequest"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SessionDetails"
+            android:name=".Boundary.SessionDetails"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SessionAddParticipants"
+            android:name=".Boundary.SessionAddParticipants"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".InvitationPage"
+            android:name=".Boundary.InvitationPage"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".FindFriend"
+            android:name=".Control.FindFriend"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".History"
+            android:name=".Boundary.History"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".CreateSession"
+            android:name=".Control.CreateSession"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
 
@@ -67,23 +67,18 @@
             android:required="false" />
 
         <activity
-            android:name=".ActivityPageMain"
+            android:name=".Control.ActivityPageMain"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".LocationInformationActivity"
+            android:name=".Boundary.LocationInformationActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".RatingActivity"
-            android:label="@string/title_activity_rating"
+            android:name=".Control.MapsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".MapsActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Login"
+        <activity android:name=".Boundary.Login"
             android:screenOrientation="portrait"/> <!-- <activity android:name=".Register"></activity> -->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -100,7 +95,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Register" android:screenOrientation="portrait">
+        <activity android:name=".Boundary.Register" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

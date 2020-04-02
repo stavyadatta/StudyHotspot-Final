@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Control;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.studyhotspot.Entity.Session;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

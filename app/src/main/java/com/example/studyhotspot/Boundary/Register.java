@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Boundary;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.studyhotspot.Control.MapsActivity;
+import com.example.studyhotspot.R;
+import com.example.studyhotspot.Entity.Location;
+import com.example.studyhotspot.Entity.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,7 +59,7 @@ public class Register extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(),MapsActivity.class));
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             finish();
         }
 
@@ -114,6 +118,10 @@ public class Register extends AppCompatActivity {
                             y = user1.getAwaitingfriends();
                             y = user1.getAwaitingfriendsname();
 
+                            Location location1 = new Location(null, null);
+                            String z1 = location1.getLocName();
+                            ArrayList<Double> z2 = location1.getCoordinates();
+
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -141,7 +149,7 @@ public class Register extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Login.class));
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
 

@@ -1,20 +1,21 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Boundary;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyhotspot.R;
+import com.example.studyhotspot.Control.ActivityPageMain;
+import com.example.studyhotspot.Control.FindFriend;
+import com.example.studyhotspot.Control.MapsActivity;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

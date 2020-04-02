@@ -1,23 +1,18 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Boundary;
 
-import android.content.ClipData;
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyhotspot.R;
 import com.google.android.material.chip.Chip;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 

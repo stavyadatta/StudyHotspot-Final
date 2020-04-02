@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Control;
 
 import org.json.JSONObject;
 

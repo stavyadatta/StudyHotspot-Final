@@ -1,4 +1,4 @@
-package com.example.studyhotspot;
+package com.example.studyhotspot.Boundary;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,6 +14,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.studyhotspot.R;
+import com.example.studyhotspot.Control.CreateSession;
+import com.example.studyhotspot.Control.ActivityPageMain;
+import com.example.studyhotspot.Control.URLReader;
+import com.example.studyhotspot.Control.FindFriend;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
