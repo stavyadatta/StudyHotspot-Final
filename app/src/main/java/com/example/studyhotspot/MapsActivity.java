@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -225,35 +224,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     startActivity(intent);
                 }
 
-
-                try {
-                    currentUser = currentUserRaw.get(0);
-                    if (title.contentEquals("Friends")) {
-                        Intent intent = new Intent(MapsActivity.this, FindFriend.class);
-                        intent.putExtra("prevActivity", "HOME");
-                        intent.putExtra("currentUser", currentUser);
-                        intent.putExtra("currentUID", userID);
-                        intent.putExtra("userEmail", userEmail);
-                        startActivity(intent);
-                    } else if (title.contentEquals("Activities")) {
-                        Intent intent = new Intent(MapsActivity.this, ActivityPageMain.class);
-                        intent.putExtra("prevActivity", "HOME");
-                        intent.putExtra("currentUser", currentUser);
-                        intent.putExtra("currentUID", userID);
-                        intent.putExtra("userEmail", userEmail);
-                        startActivity(intent);
-                    } else if (title.contentEquals("Settings")) {
-                        Intent intent = new Intent(MapsActivity.this, Logout.class);
-                        intent.putExtra("prevActivity", "HOME");
-                        intent.putExtra("currentUser", currentUser);
-                        intent.putExtra("currentUID", userID);
-                        intent.putExtra("userEmail", userEmail);
-                        startActivity(intent);
-                    }
-                    return false;
-                } catch (Exception e){
-                    Toast.makeText(MapsActivity.this, "PLEASE TRY AGAIN", Toast.LENGTH_SHORT).show();
-                }
                 return false;
             }});
 
