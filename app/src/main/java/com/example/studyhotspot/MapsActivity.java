@@ -426,6 +426,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             HotspotData = URLReader.URL2JSON(dataURL);
 
+
         } catch (Exception e) {
             System.out.println("ERROR IN GETTING JSON");
             e.printStackTrace();
