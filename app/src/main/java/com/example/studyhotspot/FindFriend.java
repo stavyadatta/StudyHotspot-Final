@@ -188,34 +188,38 @@ public class FindFriend extends AppCompatActivity {
         userDatabaseManager.getUserAddedAddingFriends(addedFriendList, addingFriendList,
                 relationshipFriendList, namelist, emaillist);
 
+        Toast.makeText(FindFriend.this, "PROCESSING...", Toast.LENGTH_SHORT).show();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-
-                if (checkIfCanAdd(targetEmail)){
+                Boolean result = checkIfCanAdd(targetEmail);
+                if (result == null){
+                    Toast.makeText(FindFriend.this, "ERROR: TRY AGAIN", Toast.LENGTH_SHORT).show();
+                    refreshRecyclerView();
+                }
+                else if (result){
                     Toast.makeText(FindFriend.this, "CAN BE ADDED", Toast.LENGTH_SHORT).show();
                     userDatabaseManager.addFriend(userID, targetEmail);
                 }
-                else{
+                else if (!result){
                     Toast.makeText(FindFriend.this, "CHECK REQUESTS", Toast.LENGTH_SHORT).show();
                     refreshRecyclerView();
                 }
             }
-        }, 1500);
+        }, 2000);
     }
 
-    private boolean checkIfCanAdd(String targetEmail){
-        if (awaitingFriendList.isEmpty()){
-            checkIfCanAdd(targetEmail);
+    private Boolean checkIfCanAdd(String targetEmail){
+        if (awaitingFriendList.isEmpty() && addedFriendList.isEmpty() && addingFriendList.isEmpty()){
+            return null;
         }
-        else {
-            if (awaitingFriendList.contains(targetEmail)) {
-                return false;
-            } else {
-                return true;
+        else{
+                if (awaitingFriendList.contains(targetEmail)) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
-        }
-        return false;
     }
 
     private void setUpBottomAppBar() {
