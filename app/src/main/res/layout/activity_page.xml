@@ -52,7 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
-        android:layout_marginBottom="60dp"
         android:background="@drawable/wallpaper"
         map:layout_anchorGravity="center">
 
@@ -261,16 +260,15 @@
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        map:backgroundTint = "@color/quantum_bluegrey700"
-        map:menu="@menu/app_bar_menu"
-        map:navigationIcon="@drawable/ic_wifilogo" />
+        map:backgroundTint = "@color/quantum_bluegrey500"
+        map:menu="@menu/app_bar_menu" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_home_black_24dp"
-        map:backgroundTint="@color/quantum_bluegrey400"
+        map:backgroundTint="@color/quantum_bluegrey300"
         map:layout_anchor = "@id/bottomAppBar"
         map:maxImageSize="35dp"
         map:tint = "@color/colorWhite"/>

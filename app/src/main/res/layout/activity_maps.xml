@@ -87,7 +87,7 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="732dp"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="0dp"
@@ -102,8 +102,7 @@
         android:layout_gravity="bottom"
         android:clickable="true"
         map:backgroundTint = "@color/quantum_bluegrey700"
-        map:menu="@menu/app_bar_menu"
-        map:navigationIcon="@drawable/ic_wifilogo" />
+        map:menu="@menu/app_bar_menu" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/homeButton"
