@@ -113,7 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getData();
 
         userID = userDatabaseManager.getCurrentUserID();
-        userDatabaseManager.getCurrentUsername(currentUserRaw);
+        userDatabaseManager.getCurrentUsername();
         userEmail = userDatabaseManager.getCurrentUserEmail();
 
         // Initialize Places.
@@ -191,7 +191,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                currentUser = currentUserRaw.get(0);
+
+                userID = userDatabaseManager.getCurrentUserID();
+                Log.d("userID", userID);
+                userEmail = userDatabaseManager.getCurrentUserEmail();
+                Log.d("userEmail", userEmail);
+                currentUser = userDatabaseManager.getCurrentUsername();
+                Log.d("currentUser", currentUser);
+
                 if (title.contentEquals("Friends")){
                     Intent intent = new Intent(MapsActivity.this, FindFriend.class);
                     intent.putExtra("prevActivity", "HOME");

@@ -1,15 +1,11 @@
 package com.example.studyhotspot;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,11 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Document;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
 
 public class UserDatabaseManager {
 
@@ -38,6 +30,7 @@ public class UserDatabaseManager {
     FirebaseAuth fAuth;
     String currentUserID;
     String currentUserEmail;
+    String currentUserName;
     DocumentReference documentReference;
 
     Activity thisActivity;
@@ -59,7 +52,7 @@ public class UserDatabaseManager {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 currentUserEmail = documentSnapshot.getString("email");
-
+                currentUserName = documentSnapshot.getString("fName");
                 System.out.println(currentUserEmail);
             }
         });
@@ -73,22 +66,8 @@ public class UserDatabaseManager {
         return currentUserEmail;
     }
 
-    public void getCurrentUsername(ArrayList<String> userName){
-        firebaseFirestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String email = document.getString("email");
-                        if(currentUserEmail.contentEquals(email)){
-                            userName.add(document.getString("fName"));
-                        }
-                    }
-                } else {
-                    Log.d("tagfail", "Error getting documents: ", task.getException());
-                }
-            }
-        });
+    public String getCurrentUsername(){
+        return currentUserName;
     }
 
     public void getUserAddedFriends(ArrayList<String> friendNameList){
