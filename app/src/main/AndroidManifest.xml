@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.studyhotspot">
+    package="com.example.studyhotspot"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="LockedOrientationActivity">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -24,31 +27,40 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ViewParticipants"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".Logout"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ViewRequest"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SessionDetails"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SessionAddParticipants"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".InvitationPage"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".FindFriend"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".History"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CreateSession"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -56,18 +68,23 @@
 
         <activity
             android:name=".ActivityPageMain"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LocationInformationActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".RatingActivity"
             android:label="@string/title_activity_rating"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MapsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Login" /> <!-- <activity android:name=".Register"></activity> -->
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Login"
+            android:screenOrientation="portrait"/> <!-- <activity android:name=".Register"></activity> -->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -83,7 +100,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Register">
+        <activity android:name=".Register" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
