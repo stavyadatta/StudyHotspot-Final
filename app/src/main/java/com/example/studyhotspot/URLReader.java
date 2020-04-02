@@ -1,11 +1,14 @@
 package com.example.studyhotspot;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class URLReader {
-    public static String readUrl(String urlString) throws Exception {
+    public static String URL2String(String urlString) throws Exception {
         BufferedReader reader = null;
         try {
             URL url = new URL(urlString);
@@ -21,5 +24,11 @@ public class URLReader {
             if (reader != null)
                 reader.close();
         }
+    }
+
+    public static JSONObject URL2JSON(String urlString) throws Exception {
+        String jsonstring = URL2String(urlString);
+        JSONObject returnObject = new JSONObject(jsonstring);
+        return returnObject;
     }
 }

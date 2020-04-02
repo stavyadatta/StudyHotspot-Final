@@ -394,8 +394,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         System.out.println(url);
 
         try {
-            String jsonstring = URLReader.readUrl(sb.toString());
-            jsonObject = new JSONObject(jsonstring);
+            jsonObject = URLReader.URL2JSON(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -422,14 +421,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             String dataGovURL = "https://data.gov.sg/api/action/package_show?id=6b3f1e1b-257d-4d49-8142-1b2271d20143";
 
-            String packageURLData = URLReader.readUrl(dataGovURL);
-
-
-            JSONObject Jobject = new JSONObject(packageURLData);
+            JSONObject Jobject = URLReader.URL2JSON(dataGovURL);
             String dataURL = Jobject.getJSONObject("result").getJSONArray("resources").getJSONObject(1).get("url").toString();
 
-            String data = URLReader.readUrl(dataURL);
-            HotspotData = new JSONObject(data);
+            HotspotData = URLReader.URL2JSON(dataURL);
 
         } catch (Exception e) {
             System.out.println("ERROR IN GETTING JSON");
