@@ -46,8 +46,7 @@
         android:layout_gravity="bottom"
         android:clickable="true"
         map:backgroundTint = "@color/quantum_bluegrey700"
-        map:menu="@menu/app_bar_menu"
-        map:navigationIcon="@drawable/ic_wifilogo" />
+        map:menu="@menu/app_bar_menu" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/uploadSession"
