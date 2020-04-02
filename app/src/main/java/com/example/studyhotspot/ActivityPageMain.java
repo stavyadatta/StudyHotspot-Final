@@ -380,6 +380,9 @@ public class ActivityPageMain extends AppCompatActivity {
         intent.putExtra("Names", historyNames);
         intent.putExtra("Creators", historyCreators);
         intent.putExtra("Status", historyStatus);
+        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUID", userID);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 
