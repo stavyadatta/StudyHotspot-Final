@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -71,6 +73,8 @@ public class ActivityPageMain extends AppCompatActivity {
 
     //RecyclerView stuffs
     private static final String TAG = "ActivityPageMain";
+    private static final int VIEW_INVITE = 1;
+    private static final int VIEW_INFO = 2;
 
     //for 1st box
 
@@ -84,6 +88,7 @@ public class ActivityPageMain extends AppCompatActivity {
     private ArrayList<String> historyNames = new ArrayList<>();
     private ArrayList<String> historyCreators = new ArrayList<>();
     private ArrayList<String> historyIDs = new ArrayList<String>();
+    private ArrayList<String> historyStatus = new ArrayList<String>();
 
     //for 2nd box
     private ArrayList<String> mNames2 = new ArrayList<>();
@@ -138,6 +143,8 @@ public class ActivityPageMain extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(ActivityPageMain.this, "REFRESHING", Toast.LENGTH_LONG).show();
+                System.out.println("REFRESHING");
                 initImageBitmaps();
             }
         });
@@ -157,6 +164,7 @@ public class ActivityPageMain extends AppCompatActivity {
         historyNames.clear();
         historyIDs.clear();
         historyCreators.clear();
+        historyStatus.clear();
 
         id2.clear();
         mNames2.clear();
@@ -166,7 +174,6 @@ public class ActivityPageMain extends AppCompatActivity {
         mImageUrls23.clear();
 
         friendNames.clear();
-        friendImageUrls2.clear();
         friendStatus.clear();
         friendImages.clear();
         friendIDs.clear();
@@ -177,12 +184,13 @@ public class ActivityPageMain extends AppCompatActivity {
 
         String startDateTimeString = startDate + " " + startTime;
         Date current = new Date();
-        try {
+/*        try {
             current = dateFormatter.parse(startDateTimeString);
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
         Timestamp currentTS = new Timestamp(current);
+        System.out.println(currentTS);
 
 
         db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -209,7 +217,6 @@ public class ActivityPageMain extends AppCompatActivity {
                                     mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
                                     fMS1.add("Status: " + status);
                                     fMS2.add("Created by: " + document.getString("creatorName"));
-                                    initRecyclerView();
                                 }
                                 else if ((currentTS.compareTo(endTS) < 0 && currentTS.compareTo(actTS) > 0)) {
                                     status = "Ongoing";
@@ -218,13 +225,13 @@ public class ActivityPageMain extends AppCompatActivity {
                                     mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
                                     fMS1.add("Status: " + status);
                                     fMS2.add("Created by: " + document.getString("creatorName"));
-                                    initRecyclerView();
                                 }
                                 else if (currentTS.compareTo(endTS) > 0){
                                     status = "Passed";
                                     historyIDs.add(document.getId());
                                     historyNames.add(document.getString("title"));
                                     historyCreators.add("Created by: " + document.getString("creatorName"));
+                                    historyStatus.add("Status: Past");
                                 }
                             }
 
@@ -236,8 +243,14 @@ public class ActivityPageMain extends AppCompatActivity {
                                     fI1.add("Created by: " + document.getString("creatorName"));
                                     mImageUrls22.add("https://png2.cleanpng.com/sh/cb26fdf957d05d2f15daec63603718fb/L0KzQYm3UsE1N5D6iZH0aYP2gLBuTfNpbZRwRd9qcnuwc73wkL1ieqUyfARuZX6whLrqi71uaaNwRadqOETkSIftUMk6bpc9RqI5OUC3SIa8UcUyQGc5S6U6MUC2SYW1kP5o/kisspng-check-mark-clip-art-green-tick-mark-5a84a86f099ff8.0090485515186433110394.png");
                                     mImageUrls23.add("https://png2.cleanpng.com/sh/a003283ac6c66b520295b049d5fa5daf/L0KzQYm3VMA0N5puiZH0aYP2gLBuTfNpbZRwRd9qcnuwc7F0kQV1baMygdV4boOwg8r0gv9tNahmitDybnewRbLqU8NnbZRqSqI9YUCxQYq8UMMzQWU2TaQ7N0S4Q4O7WcI2QF91htk=/kisspng-check-mark-computer-icons-symbol-warning-5ac33fece204a0.1950329415227453249258.png");
-                                    initRecyclerView2();
                                 }
+                            }
+
+                            else if (doch.get(currentUser) == false) {
+                                historyIDs.add(document.getId());
+                                historyNames.add(document.getString("title"));
+                                historyCreators.add("Created by: " + document.getString("creatorName"));
+                                historyStatus.add("Status: Rejected");
                             }
                         }
 
@@ -250,7 +263,6 @@ public class ActivityPageMain extends AppCompatActivity {
                                     friendImages.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
                                     friendStatus.add("Status: " + status);
                                     friendCreators.add("Created by: " + document.getString("creatorName"));
-                                    initRecyclerView3();
                                 }
                                 else if (currentTS.compareTo(endTS) < 0) {
                                     status = "Ongoing";
@@ -259,7 +271,6 @@ public class ActivityPageMain extends AppCompatActivity {
                                     friendImages.add("https://upload.wikimedia.org/wikipedia/commons/2/25/Icon-round-Question_mark.jpg");
                                     friendStatus.add("Status: " + status);
                                     friendCreators.add("Created by: " + document.getString("creatorName"));
-                                    initRecyclerView3();
                                 }
                             }
                         }
@@ -267,13 +278,33 @@ public class ActivityPageMain extends AppCompatActivity {
                 }
             }
         });
+        refreshRecyclerViews(0);
+    }
+
+    private void refreshRecyclerViews(int time){
+        if (time > 2){
+            return;
+        }
+        if (id1.isEmpty() || id2.isEmpty() || friendIDs.isEmpty()) {
+            Toast.makeText(ActivityPageMain.this, "LOADING...", Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    refreshRecyclerViews(time + 1);
+                }
+            }, 1000);
+        }
+        initRecyclerView();
+        initRecyclerView2();
+        initRecyclerView3();
     }
 
     private void initRecyclerView() {
-        Log.d(TAG, "initRecyclerView: the last of titles are:" + mNames.get(mNames.size() - 1));
+/*        Log.d(TAG, "initRecyclerView: the last of titles are:" + mNames.get(mNames.size() - 1));
         if (mNames.size() != id1.size())
-            return;
+            return;*/
         Log.d(TAG, "1initRecyclerView: init recyclerview.");
+
         RecyclerView recyclerView = findViewById(R.id.recyclerview1);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, fMS1, fMS2, this, this, false);
         recyclerView.setAdapter(adapter);
@@ -282,14 +313,16 @@ public class ActivityPageMain extends AppCompatActivity {
 
     private void initRecyclerView2() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
+
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(id2, mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void initRecyclerView3() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
+
         RecyclerView recyclerView3 = findViewById(R.id.recyclerview3);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(friendNames, friendImages, friendStatus, friendCreators, this, this, true);
         recyclerView3.setAdapter(adapter);
@@ -334,7 +367,7 @@ public class ActivityPageMain extends AppCompatActivity {
                     finish();
                 } else {
                     Intent intent = new Intent(ActivityPageMain.this, MapsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             }
@@ -346,6 +379,7 @@ public class ActivityPageMain extends AppCompatActivity {
         intent.putExtra("IDs", historyIDs);
         intent.putExtra("Names", historyNames);
         intent.putExtra("Creators", historyCreators);
+        intent.putExtra("Status", historyStatus);
         startActivity(intent);
     }
 
@@ -355,19 +389,124 @@ public class ActivityPageMain extends AppCompatActivity {
         Intent intent = new Intent(this, SessionDetails.class);
         if (!friend) {
             intent.putExtra("docname", id1.get(position));
+            intent.putExtra("position", position);
+            startActivityForResult(intent, VIEW_INFO);
         }
         else{
             intent.putExtra("docname", friendIDs.get(position));
+            intent.putExtra("Status", "friend");
+            startActivity(intent);
         }
-
-        startActivity(intent);
     }
 
     public void showInviteInfo(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
         intent.putExtra("docname", id2.get(position));
+        intent.putExtra("position", position);
         System.out.println(id2.get(position));
-        startActivity(intent);
+        startActivityForResult(intent, VIEW_INVITE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == VIEW_INVITE) {
+            if(resultCode == RESULT_OK){
+                Boolean decision = data.getBooleanExtra("Decision", true);
+                int position = data.getIntExtra("position", -1);
+
+                if (position != -1) {
+                    processInvitation(position, decision);
+                }
+                else{
+                    Toast.makeText(ActivityPageMain.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        else if (requestCode == VIEW_INFO){
+            if(resultCode == RESULT_OK){
+                int position = data.getIntExtra("position", -1);
+                System.out.println("INSIDE: "+position);
+                if (position != -1) {
+                    leaveSession(position);
+                }
+            }
+        }
+    }
+
+    public void processInvitation(int position, Boolean decision){
+        String targetID = id2.get(position);
+
+        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (targetID.contentEquals(document.getId())) {
+                            HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
+                            if (decision) {
+                                doch.replace(currentUser, null, true);
+                            }
+                            else{
+                                doch.replace(currentUser, null, false);
+                            }
+                            DocumentReference documentRef=document.getReference();
+                            documentRef.update("participantStatus", doch).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(ActivityPageMain.this, "DONE", Toast.LENGTH_LONG).show();
+                                    initImageBitmaps();
+                                    return;
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(ActivityPageMain.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                                    initImageBitmaps();
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void leaveSession(int position){
+        String targetID = id1.get(position);
+        System.out.println(targetID);
+
+        db.collection("hashsessions").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (targetID.contentEquals(document.getId())) {
+                            HashMap<String, Boolean> doch = (HashMap<String, Boolean>) document.getData().get("participantStatus");
+                            doch.replace(currentUser, true, false);
+
+                            DocumentReference documentRef=document.getReference();
+                            documentRef.update("participantStatus", doch).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(ActivityPageMain.this, "LEFT", Toast.LENGTH_LONG).show();
+                                    initImageBitmaps();
+                                    return;
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(ActivityPageMain.this, "REQUEST FAILED", Toast.LENGTH_LONG).show();
+                                    initImageBitmaps();
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
     }
 }
 

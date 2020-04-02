@@ -54,9 +54,13 @@ public class InvitationPage extends AppCompatActivity {
     Button view_participants;
     ImageView back;
 
+    Button accept;
+    Button decline;
+
     String userID;
     String currentUser;
     String userEmail;
+    int position;
 
     public String title;
     private String des;
@@ -94,6 +98,7 @@ public class InvitationPage extends AppCompatActivity {
             currentUser = getIntent().getStringExtra("currentUser");
             userID = getIntent().getStringExtra("currentUID");
             userEmail = getIntent().getStringExtra("userEmail");
+            position = getIntent().getIntExtra("position", -1);
         }
         else {
             Toast.makeText(InvitationPage.this, "ERROR", Toast.LENGTH_LONG).show();
@@ -105,7 +110,7 @@ public class InvitationPage extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                setUpContent();
+                setUpContent(0);
             }
         }, 1500);
     }
@@ -141,7 +146,15 @@ public class InvitationPage extends AppCompatActivity {
         });
     }
 
-    private void setUpContent(){
+    private void setUpContent(int time){
+        if (time > 5){
+            Toast.makeText(InvitationPage.this, "PLEASE TRY AGAIN", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        accept = findViewById(R.id.accept);
+        decline = findViewById(R.id.decline);
+
         titleView = findViewById(R.id.title);
         creatorName = findViewById(R.id.creator_name);
         location = findViewById(R.id.location_name);
@@ -178,7 +191,14 @@ public class InvitationPage extends AppCompatActivity {
 
         }catch(Exception e){
             Toast.makeText(InvitationPage.this, "LOADING", Toast.LENGTH_LONG).show();
-            setUpContent();
+            e.printStackTrace();
+            Toast.makeText(InvitationPage.this, "LOADING", Toast.LENGTH_LONG).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    setUpContent(time+1);
+                }
+            }, 500);
         }
 
         location.setOnClickListener(new View.OnClickListener() {
@@ -230,5 +250,31 @@ public class InvitationPage extends AppCompatActivity {
                 finish();
             }
         });
+
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(InvitationPage.this, "ACCEPTING...", Toast.LENGTH_LONG).show();
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("Decision",true);
+                returnIntent.putExtra("position",position);
+                setResult(RESULT_OK,returnIntent);
+                finish();
+            }
+        });
+
+        decline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(InvitationPage.this, "REJECTING...", Toast.LENGTH_LONG).show();
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("Decision",false);
+                returnIntent.putExtra("position",position);
+                setResult(RESULT_OK,returnIntent);
+                finish();
+            }
+        });
+
+
     }
 }

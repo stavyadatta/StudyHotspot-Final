@@ -207,8 +207,6 @@ public class LocationInformationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ratingBar.setRating(4);
-
         //WEATHER STARTS HERE
 
         String jsonstring = null;
