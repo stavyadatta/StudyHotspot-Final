@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -191,32 +192,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-                currentUser = currentUserRaw.get(0);
-                if (title.contentEquals("Friends")){
-                    Intent intent = new Intent(MapsActivity.this, FindFriend.class);
-                    intent.putExtra("prevActivity", "HOME");
-                    intent.putExtra("currentUser", currentUser);
-                    intent.putExtra("currentUID", userID);
-                    intent.putExtra("userEmail", userEmail);
-                    startActivity(intent);
-                }
-                else if (title.contentEquals("Activities")){
-                    Intent intent = new Intent(MapsActivity.this, ActivityPageMain.class);
-                    intent.putExtra("prevActivity", "HOME");
-                    intent.putExtra("currentUser", currentUser);
-                    intent.putExtra("currentUID", userID);
-                    intent.putExtra("userEmail", userEmail);
-                    startActivity(intent);
-                }
-                else if (title.contentEquals("Settings")){
-                    Intent intent = new Intent(MapsActivity.this, Logout.class);
-                    intent.putExtra("prevActivity", "HOME");
-                    intent.putExtra("currentUser", currentUser);
-                    intent.putExtra("currentUID", userID);
-                    intent.putExtra("userEmail", userEmail);
-                    startActivity(intent);
-                }
 
+                try {
+                    currentUser = currentUserRaw.get(0);
+                    if (title.contentEquals("Friends")) {
+                        Intent intent = new Intent(MapsActivity.this, FindFriend.class);
+                        intent.putExtra("prevActivity", "HOME");
+                        intent.putExtra("currentUser", currentUser);
+                        intent.putExtra("currentUID", userID);
+                        intent.putExtra("userEmail", userEmail);
+                        startActivity(intent);
+                    } else if (title.contentEquals("Activities")) {
+                        Intent intent = new Intent(MapsActivity.this, ActivityPageMain.class);
+                        intent.putExtra("prevActivity", "HOME");
+                        intent.putExtra("currentUser", currentUser);
+                        intent.putExtra("currentUID", userID);
+                        intent.putExtra("userEmail", userEmail);
+                        startActivity(intent);
+                    } else if (title.contentEquals("Settings")) {
+                        Intent intent = new Intent(MapsActivity.this, Logout.class);
+                        intent.putExtra("prevActivity", "HOME");
+                        intent.putExtra("currentUser", currentUser);
+                        intent.putExtra("currentUID", userID);
+                        intent.putExtra("userEmail", userEmail);
+                        startActivity(intent);
+                    }
+                    return false;
+                } catch (Exception e){
+                    Toast.makeText(MapsActivity.this, "TRY AGAIN", Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }});
 
@@ -254,16 +258,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

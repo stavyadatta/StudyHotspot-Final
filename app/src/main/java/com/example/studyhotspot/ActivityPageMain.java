@@ -285,7 +285,7 @@ public class ActivityPageMain extends AppCompatActivity {
         if (time > 2){
             return;
         }
-        if (id1.isEmpty() || id2.isEmpty() || friendIDs.isEmpty()) {
+        if (id1.isEmpty() || historyIDs.isEmpty() || id2.isEmpty() || friendIDs.isEmpty()) {
             Toast.makeText(ActivityPageMain.this, "LOADING...", Toast.LENGTH_SHORT).show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
