@@ -227,8 +227,7 @@ public class SessionDetails extends AppCompatActivity {
                 JSONObject jsonObject = null;
 
                 try {
-                    String jsonstring = URLReader.readUrl(sb.toString());
-                    jsonObject = new JSONObject(jsonstring);
+                    jsonObject = URLReader.URL2JSON(sb.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

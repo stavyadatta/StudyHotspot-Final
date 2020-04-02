@@ -29,16 +29,23 @@ public class History extends AppCompatActivity {
     private ArrayList<String> historyIDs = new ArrayList<String>();
     private ArrayList<String> images = new ArrayList<String>();
     private ArrayList<String> historyStatus = new ArrayList<String>();
+    private String currentUser;
+    private String userID;
+    private String userEmail;
 
     private static final String TAG = "HistoryPage";
 
     private String previousActivity = null;
+
+    private BottomAppBar bottomAppBar;
+    private FloatingActionButton homeButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        setUpBottomAppBar();
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
@@ -47,6 +54,9 @@ public class History extends AppCompatActivity {
             historyNames = extras.getStringArrayList("Names");
             historyCreators = extras.getStringArrayList("Creators");
             historyStatus = extras.getStringArrayList("Status");
+            currentUser = extras.getString("currentUser");
+            userID = extras.getString("currentUID");
+            userEmail = extras.getString("userEmail");
         }
 
         backButton = findViewById(R.id.back_button);
@@ -82,5 +92,50 @@ public class History extends AppCompatActivity {
         intent.putExtra("docname", historyIDs.get(position));
         intent.putExtra("Status", historyStatus.get(position));
         startActivity(intent);
+    }
+
+    private void setUpBottomAppBar() {
+        //find id
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+        homeButton = findViewById(R.id.homeButton);
+
+        //click event over Bottom bar menu item
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                String title = item.getTitle().toString();
+                if (title.contentEquals("Friends")) {
+                    Intent intent = new Intent(History.this, FindFriend.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
+                    startActivity(intent);
+                } else if (title.contentEquals("Activities")) {
+                    Intent intent = new Intent(History.this, ActivityPageMain.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
+                    startActivity(intent);
+                } else if (title.contentEquals("Settings")) {
+                    Intent intent = new Intent(History.this, Logout.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
+                    startActivity(intent);
+                }
+
+                return false;
+            }
+        });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(History.this, MapsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 }

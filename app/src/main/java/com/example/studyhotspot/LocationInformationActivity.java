@@ -140,8 +140,7 @@ public class LocationInformationActivity extends AppCompatActivity {
 
         JSONObject result = null;
         try {
-            String jsonstring = URLReader.readUrl(sb.toString());
-            jsonObject = new JSONObject(jsonstring);
+            jsonObject = URLReader.URL2JSON(sb.toString());
             result = jsonObject.getJSONObject("result");
             address.setText(result.getString("formatted_address"));
         } catch (Exception e) {
@@ -209,12 +208,12 @@ public class LocationInformationActivity extends AppCompatActivity {
 
         //WEATHER STARTS HERE
 
-        String jsonstring = null;
+        JSONObject jsonObject = null;
         JSONArray weatherJSON = null;
 
         try {
-            jsonstring = URLReader.readUrl("https://api.openweathermap.org/data/2.5/forecast?id=1880251&APPID=8b209724831a07af211a052c5e87e404");
-            weatherJSON = new JSONObject(jsonstring).getJSONArray("list");
+            jsonObject = URLReader.URL2JSON("https://api.openweathermap.org/data/2.5/forecast?id=1880251&APPID=8b209724831a07af211a052c5e87e404");
+            weatherJSON = jsonObject.getJSONArray("list");
             System.out.println(weatherJSON);
         } catch (Exception e) {
             e.printStackTrace();

@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -214,8 +215,7 @@ public class InvitationPage extends AppCompatActivity {
                 JSONObject jsonObject = null;
 
                 try {
-                    String jsonstring = URLReader.readUrl(sb.toString());
-                    jsonObject = new JSONObject(jsonstring);
+                    jsonObject = URLReader.URL2JSON(sb.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
