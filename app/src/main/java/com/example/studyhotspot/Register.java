@@ -105,6 +105,15 @@ public class Register extends AppCompatActivity {
 
                             db = FirebaseFirestore.getInstance();
 
+                            User user1 = new User(null, null, null, null, null, null, null);
+                            String x = user1.getfName();
+                            x = user1.getEmail();
+                            x = user1.getPhone();
+                            ArrayList<String> y = user1.getAddedfriends();
+                            y = user1.getAddingfriends();
+                            y = user1.getAwaitingfriends();
+                            y = user1.getAwaitingfriendsname();
+
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -137,4 +146,6 @@ public class Register extends AppCompatActivity {
         });
 
     }
+
+
 }
