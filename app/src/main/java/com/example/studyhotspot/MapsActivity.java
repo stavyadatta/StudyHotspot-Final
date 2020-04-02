@@ -192,7 +192,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMenuItemClick(MenuItem item) {
 
                 String title = item.getTitle().toString();
-<<<<<<< HEAD
 
                 userID = userDatabaseManager.getCurrentUserID();
                 Log.d("userID", userID);
@@ -225,8 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     intent.putExtra("userEmail", userEmail);
                     startActivity(intent);
                 }
-=======
->>>>>>> 826c3270524ed9d14c15d4a802c7f84338e7a53f
+
 
                 try {
                     currentUser = currentUserRaw.get(0);
