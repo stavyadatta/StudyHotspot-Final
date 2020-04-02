@@ -400,7 +400,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        currentUser = currentUserRaw.get(0);
+        currentUser = userDatabaseManager.getCurrentUsername();
         intent.putExtra("currentUser", currentUser);
         intent.putExtra("currentUID", userID);
         intent.putExtra("userEmail", userEmail);
