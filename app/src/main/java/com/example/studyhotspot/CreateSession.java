@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -105,16 +107,44 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
     }
 
     // Check if error in content
-    private boolean hasValidationErrors(String title) {
+    private boolean noValidationErrors(String title) {
+        SimpleDateFormat dateTimeFormatter =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+        String startDateTimeString = startDate + " " + startTime;
+        String endDateTimeString = endDate + " " + endTime;
+
+        Date startDateTimeFormatted = new Date();
+        Date endDateTimeFormatted = new Date();
+
+        try {
+            startDateTimeFormatted = dateTimeFormatter.parse(startDateTimeString);
+            endDateTimeFormatted = dateTimeFormatter.parse(endDateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         if (title.isEmpty()) {
             editTitle.setError("Title required.");
             editTitle.requestFocus();
-            return true;
+            return false;
         }
-        return false;
+        if (startDateTimeFormatted.compareTo(new Date()) < 0){
+            Toast.makeText(this, "Please choose valid start date & time.", Toast.LENGTH_SHORT).show();
+            mStartDate.requestFocus();
+            mStartTime.requestFocus();
+            return false;
+        }
+        if (endDateTimeFormatted.compareTo(startDateTimeFormatted) <= 0){
+            Toast.makeText(this, "Please choose valid end date & time", Toast.LENGTH_SHORT).show();
+            mEndDate.requestFocus();
+            mEndTime.requestFocus();
+            return false;
+        }
+        return true;
     }
 
-    private void saveSession() {
+    private boolean saveSession() {
         String title = editTitle.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
 
@@ -135,7 +165,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
         Date startDateFormatted = new Date();
         Date endDateFormatted = new Date();
-        
+
         try {
             startDateFormatted = dateFormatter.parse(startDateTimeString);
             endDateFormatted = dateFormatter.parse(endDateTimeString);
@@ -145,7 +175,7 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
 
         System.out.println("DEBUG 4");
 
-        
+
         Timestamp startDateTimeTimestamp = new Timestamp(startDateFormatted);
         Timestamp endDateTimeTimestamp = new Timestamp(endDateFormatted);
 
@@ -158,18 +188,23 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         System.out.println(isPublic);
 
 
-        if (!hasValidationErrors(title)) {
+        if (noValidationErrors(title)) {
             Session newSession = new Session(
                     title, description, currentUser, location, startDateTimeTimestamp, endDateTimeTimestamp, participantStatus, isPublic
             );
             userDatabaseManager.addSession(newSession);
+            return(true);
         }
+        return(false);
     }
+
 
     @Override
     public void onClick(View v) {
         //
     }
+
+
 
     private void setUpBottomAppBar() {
         //find id
@@ -209,12 +244,13 @@ public class CreateSession extends AppCompatActivity implements View.OnClickList
         sessionUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveSession();
-                Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);
-                intent.putExtra("currentUser", currentUser);
-                intent.putExtra("currentUID", userID);
-                intent.putExtra("userEmail", userEmail);
-                startActivity(intent);
+                if (saveSession() == true){
+                    Intent intent = new Intent(CreateSession.this, ActivityPageMain.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("currentUID", userID);
+                    intent.putExtra("userEmail", userEmail);
+                    startActivity(intent);
+                };
             }
         });
     }
