@@ -315,7 +315,7 @@ public class ActivityPageMain extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
 
         RecyclerView recyclerView2 = findViewById(R.id.recyclerview2);
-        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(id2, mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
+        RecyclerViewAdapter2 adapter2 = new RecyclerViewAdapter2(mNames2, mImageUrls2, fI1, mImageUrls22, mImageUrls23, this, this);
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
     }

@@ -34,23 +34,6 @@
             android:textColor="#FFF"
             android:textSize="21sp" />
 
-<!--        <RatingBar
-            android:id="@+id/favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="27dp"
-            android:layout_marginEnd="83dp"
-            android:layout_marginBottom="26dp"
-            android:layout_toEndOf="@+id/location_name"
-            android:clickable="true"
-            android:numStars="1"
-            android:progressTint="@color/quantum_yellow500"
-            android:stepSize="1" />-->
-
     </RelativeLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar
