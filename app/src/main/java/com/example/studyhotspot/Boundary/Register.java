@@ -31,6 +31,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Register requires user to input the following information.
+ * <p>1. Full Name</p>
+ * <p>2. Email Address</p>
+ * <p>3. Password</p>
+ * <p>4. Phone number</p>
+ *<p>These information are then sent to the FirebaseAuth database, which will handle the account creation logic.</p>
+ *<p>Note that FirebaseAuth API is responsible for ensuring that the email address is unique by rejecting duplicates.</p>
+ *
+ */
 public class Register extends AppCompatActivity {
     public static final String TAG = "TAG";
     EditText mFullName,mEmail,mPassword,mPhone;

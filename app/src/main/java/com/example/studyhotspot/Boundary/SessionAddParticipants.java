@@ -17,6 +17,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * SessionAddParticipants retrieves a list of the user's existing friends, whom he can invite to a
+ * group session. It uses RecyclerViewAddParticipantAdapter to display these users and allows the user
+ * to decide whom to invite to the session.
+ */
 public class SessionAddParticipants extends AppCompatActivity implements RecyclerViewAddParticipantAdapter.OnItemClickListener{
 
     private static final String TAG = "SESSIONADDParticipants";

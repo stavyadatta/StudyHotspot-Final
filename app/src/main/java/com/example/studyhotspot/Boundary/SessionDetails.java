@@ -37,6 +37,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * SessionDetails allows the user to view the relevant information whenever he selects on a session.
+ * It displays the following information:
+ * <p>1. Session Title</p>
+ * <p>2. Creator Name</p>
+ * <p>3. Description</p>
+ * <p>4. Start Date & Time</p>
+ * <p>5. End Date & Time</p>
+ * Furthermore, it will allow user to view the participant status.
+ * Additionally, it will create a link for the user to click on, if they need help navigating to the displayed location.
+ */
 public class SessionDetails extends AppCompatActivity {
 
     CollapsingToolbarLayout sessionTitle;

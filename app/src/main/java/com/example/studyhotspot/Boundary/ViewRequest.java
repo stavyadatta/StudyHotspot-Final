@@ -23,6 +23,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * ViewRequest retrieves a list of users who have sent the current user friend requests, and their
+ * names. ViewRequest then displays these information to the current user using RecyclerViewRequestAdapter.
+ */
 public class ViewRequest extends AppCompatActivity implements RecyclerViewRequestAdapter.OnItemClickListener{
 
     ArrayList<String> awaitingFriendList = new ArrayList<String>();
