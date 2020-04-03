@@ -6,6 +6,15 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Each Session object comes with a title, a description, creator name, location, and start & end date time.
+ * Additionally, the Session object stores the number of users invited to the session.
+ * Each invitee's participation status is stored in participantStatus as one of following:
+ * <p>1. true: invited and accepted</p>
+ * <p>2. invited but declined</p>
+ * <p>3. null: invited but yet to respond</p>
+ *
+ */
 public class Session implements Serializable{
 
     private String title;

@@ -26,6 +26,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * FindFriend will retrieve the user's social network information, and uses RecyclerViewUserAdapter to display
+ * the users belonging to this network accordingly.
+ *
+ * <p>FindFriend will also interact with UserDatabaseManager to run checks whenever user attempts to add a friend.</p>
+ * <p>If the user attempts to send a request to another user, who has already sent him a request between the
+ * time he loaded the FindFriend page and clicked on the add button, FindFriend will prompt the user to refresh the page.</p>
+ */
 public class FindFriend extends AppCompatActivity {
     ArrayList<String> namelist;
     ArrayList<String> emaillist;
