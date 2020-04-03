@@ -1,11 +1,5 @@
 package com.example.studyhotspot.Control;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,13 +9,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.studyhotspot.Boundary.InvitationPage;
-import com.example.studyhotspot.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.studyhotspot.Boundary.History;
-import com.example.studyhotspot.Boundary.SessionDetails;
+import com.example.studyhotspot.Boundary.InvitationPage;
 import com.example.studyhotspot.Boundary.Logout;
 import com.example.studyhotspot.Boundary.RecyclerViewAdapter;
 import com.example.studyhotspot.Boundary.RecyclerViewAdapter2;
+import com.example.studyhotspot.Boundary.SessionDetails;
+import com.example.studyhotspot.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -149,8 +149,13 @@ public class ActivityPageMain extends AppCompatActivity {
             public void onClick(View v) {
                 refresh.setClickable(false);
                 Toast.makeText(ActivityPageMain.this, "REFRESHING", Toast.LENGTH_LONG).show();
-                System.out.println("REFRESHING");
                 initImageBitmaps();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        refresh.setClickable(true);
+                    }
+                }, 2000);
             }
         });
 
@@ -302,13 +307,9 @@ public class ActivityPageMain extends AppCompatActivity {
         initRecyclerView();
         initRecyclerView2();
         initRecyclerView3();
-        refresh.setClickable(true);
     }
 
     private void initRecyclerView() {
-/*        Log.d(TAG, "initRecyclerView: the last of titles are:" + mNames.get(mNames.size() - 1));
-        if (mNames.size() != id1.size())
-            return;*/
         Log.d(TAG, "1initRecyclerView: init recyclerview.");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview1);

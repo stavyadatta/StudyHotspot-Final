@@ -15,17 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studyhotspot.Control.UserDatabaseManager;
 import com.example.studyhotspot.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -81,6 +71,9 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.accept.setImageResource(R.drawable.check_2);
         holder.reject.setImageResource(R.drawable.cross_4);
 
+        holder.accept.setEnabled(true);
+        holder.reject.setEnabled(true);
+
         holder.requestLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -92,6 +85,8 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.accept.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                holder.accept.setEnabled(false);
+                holder.reject.setEnabled(false);
                 FirebaseAuth fAuth = FirebaseAuth.getInstance();
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d("statusNumber", "status: " + status);
@@ -108,6 +103,8 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.reject.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                holder.reject.setEnabled(false);
+                holder.accept.setEnabled(false);
                 FirebaseAuth fAuth = FirebaseAuth.getInstance();
                 String userID = fAuth.getCurrentUser().getUid();
                 Log.d("statusNumber", "status: "+status);
