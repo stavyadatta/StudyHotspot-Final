@@ -45,7 +45,7 @@ import java.util.TimeZone;
  * <p>1. List of sessions that user is currently participating / going to participate in, which are further divided into</p>
  * <ul>
  * <li>1a. List of upcoming sessions</li>
- * <li>1b. List of upcoming sessions</li>
+ * <li>1b. List of ongoing sessions</li>
  * </ul>
  * <p>Note that for sessions which have already passed, they will not be shown here, as they will be displayed in session history.</p>
  * <p>2. List of sessions that the user is invited to.</p>
@@ -387,7 +387,8 @@ public class ActivityPageMain extends AppCompatActivity {
     //From actvity page to activity info page, to pass in document id
 
     /**
-     * showSessionInfo shows the 
+     * showSessionInfo() brings user to view details of the session that he selects.
+     * Triggering Action: User tapping on the "?" icon of the session listing.
      * @param position
      * @param friend
      */
@@ -405,6 +406,11 @@ public class ActivityPageMain extends AppCompatActivity {
         }
     }
 
+    /**
+     * showInviteInfo() brings user to view details of the session that he is invited to.
+     * Triggering Action: User tapping on the "?" icon of the invitation listing.
+     * @param position
+     */
     public void showInviteInfo(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
         intent.putExtra("docname", id2.get(position));
@@ -440,6 +446,12 @@ public class ActivityPageMain extends AppCompatActivity {
         }
     }
 
+    /**
+     * processInvitation() processes a user's decision on a session invitation, i.e. accept / decline.
+     * Triggering Action: User tapping on the "tick" / "cross" icon of the invitation listing.
+     * @param position
+     * @param decision
+     */
     public void processInvitation(int position, Boolean decision){
         String targetID = id2.get(position);
 
@@ -479,6 +491,10 @@ public class ActivityPageMain extends AppCompatActivity {
         });
     }
 
+    /**
+     * leaveSession() allows a user to leave a session that he is currently participating / going to participate in.
+     * @param position
+     */
     public void leaveSession(int position){
         String targetID = id1.get(position);
         System.out.println(targetID);
