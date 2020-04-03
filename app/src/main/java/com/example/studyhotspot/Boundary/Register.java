@@ -31,6 +31,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Register will be opened when its a new user wanting to register his details, he will be asked to
+ * write his full name, email, password and phone number. Once registered the details will be sent to
+ * database and the user will be directed to MapsActivity
+ */
+
 public class Register extends AppCompatActivity {
     public static final String TAG = "TAG";
     EditText mFullName,mEmail,mPassword,mPhone;

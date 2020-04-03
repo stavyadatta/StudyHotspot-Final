@@ -20,6 +20,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Login page is the 1st screen that the user will interact with where the user if registered
+ * can login and be redirected to maps activity or if new user can be redirected to registration
+ * activity
+ */
+
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
     Button mLoginBtn;

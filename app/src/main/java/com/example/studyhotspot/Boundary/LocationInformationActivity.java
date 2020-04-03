@@ -26,6 +26,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * LocationInformationActivity gets the information about the location selected on the map using
+ * the google api with the weather of the location using weather global api.Information such as
+ * address, phoneNUmber, openStatus, hours, price and weather has been displayed
+ */
+
 public class LocationInformationActivity extends AppCompatActivity {
 
 

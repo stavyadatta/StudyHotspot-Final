@@ -32,6 +32,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Invitation retrieves all the information of the invitation sent by the friend to the user, this
+ * information includes title, creator's name, description of the session start date, end date,
+ * start time, end time. the user can accept or decline the request and the datatabase will be updated
+ * accordingly
+ */
+
 public class InvitationPage extends AppCompatActivity {
 
     TextView titleView;
