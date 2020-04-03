@@ -39,7 +39,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
-
+/**
+ * ActivityPageMain will retrieve the sessions information from the database, and use RecyclerViewAdapter to display
+ * the sessions belonging to the 3 categories of session - My Sessions, Invitations and Friends' Activities
+ * <p> This is also where most of the Glide is used, as the images are sourced online using the given
+ * url
+ * </p>
+ *<p> RecyclerViews work by initialising first the required arrays of information using initBitmaps. Afterwards, it
+ * calls initRecyclerviews to create the adapters for the views
+ * </p>
+ */
 public class ActivityPageMain extends AppCompatActivity {
 
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
@@ -371,7 +380,14 @@ public class ActivityPageMain extends AppCompatActivity {
         intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
-
+    /**
+     * ActivityPageMain's showSessionInfo() controls the logic when the user wants to show the info of the session
+     * Friend information is needed depending on whether the user wants to see "My Sessions" or "Friends Activities"
+     * By using intent, it allows the page to change from the ActivityPageMain to the SessionDetails.
+     * Relevant information such as document name is passed to the next page.
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     * @param friend refers to whether the user is clicking on "My Sessions" or "Friends Activities"
+     */
     //From actvity page to activity info page, to pass in document id
 
     public void showSessionInfo(int position, Boolean friend) {
@@ -387,6 +403,12 @@ public class ActivityPageMain extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    /**
+     * ActivityPageMain's showInviteInfo controls the logic when the user wants to show the info of an invite session
+     * By using intent, it allows the page to change from the ActivityPageMain to the InvitationPage.
+     * Relevant information such as document name is passed to the next page.
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     */
 
     public void showInviteInfo(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
@@ -422,6 +444,13 @@ public class ActivityPageMain extends AppCompatActivity {
             }
         }
     }
+    /**
+     * ActivityPageMain's processInvitation() controls the logic when the user chooses to accept or decline the invitation
+     * It reads information from the database using addOnCompleteListener.
+     * True if user accepts the invitation. False if the user rejects the invitation.
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     * @param decision refers to whether the user is clicking on the tick or the cross
+     */
 
     public void processInvitation(int position, Boolean decision){
         String targetID = id2.get(position);
@@ -461,6 +490,13 @@ public class ActivityPageMain extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * ActivityPageMain's leaveSession() controls the logic when the user chooses to leave the session
+     * It reads information from the database using addOnCompleteListener, and then updates the database from
+     * true to false
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     */
 
     public void leaveSession(int position){
         String targetID = id1.get(position);
