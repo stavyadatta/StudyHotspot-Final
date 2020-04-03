@@ -121,7 +121,7 @@ public class FindFriend extends AppCompatActivity {
     }
 
     private void refreshRecyclerView(){
-        if (namelist.isEmpty()){
+        if (namelist.isEmpty() || awaitingFriendList.isEmpty()){
             Toast.makeText(FindFriend.this, "LOADING...", Toast.LENGTH_SHORT).show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
