@@ -40,6 +40,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+/**
+ * ActivityPageMain retrieves all the sessions in the database and applies the relevant filter logic to obtain the following 3 lists:
+ * <p>1. List of sessions that user is currently participating / going to participate in, which are further divided into</p>
+ * <ul>
+ * <li>1a. List of upcoming sessions</li>
+ * <li>1b. List of upcoming sessions</li>
+ * </ul>
+ * <p>Note that for sessions which have already passed, they will not be shown here, as they will be displayed in session history.</p>
+ * <p>2. List of sessions that the user is invited to.</p>
+ * <p>3. List of upcoming / ongoing sessions that the user's friends is participating in. This allows
+ * an user to 'follow' his friends and see what they are doing.</p>
+ */
 public class ActivityPageMain extends AppCompatActivity {
 
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
@@ -374,6 +386,11 @@ public class ActivityPageMain extends AppCompatActivity {
 
     //From actvity page to activity info page, to pass in document id
 
+    /**
+     * showSessionInfo shows the 
+     * @param position
+     * @param friend
+     */
     public void showSessionInfo(int position, Boolean friend) {
         Intent intent = new Intent(this, SessionDetails.class);
         if (!friend) {
