@@ -147,6 +147,7 @@ public class ActivityPageMain extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                refresh.setClickable(false);
                 Toast.makeText(ActivityPageMain.this, "REFRESHING", Toast.LENGTH_LONG).show();
                 System.out.println("REFRESHING");
                 initImageBitmaps();
@@ -301,6 +302,7 @@ public class ActivityPageMain extends AppCompatActivity {
         initRecyclerView();
         initRecyclerView2();
         initRecyclerView3();
+        refresh.setClickable(true);
     }
 
     private void initRecyclerView() {

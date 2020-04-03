@@ -100,6 +100,7 @@ public class FindFriend extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                refresh.setClickable(false);
                 initRecyclerView();
             }
         });
@@ -115,18 +116,18 @@ public class FindFriend extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                refreshRecyclerView();
+                refreshRecyclerView(0);
             }
         }, 1000);
     }
 
-    private void refreshRecyclerView(){
-        if (namelist.isEmpty() || awaitingFriendList.isEmpty()){
+    private void refreshRecyclerView(int times){
+        if (times < 2 && (namelist.isEmpty() || awaitingFriendList.isEmpty())){
             Toast.makeText(FindFriend.this, "LOADING...", Toast.LENGTH_SHORT).show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    refreshRecyclerView();
+                    refreshRecyclerView(times+1);
                 }
             }, 1000);
         }
@@ -137,6 +138,7 @@ public class FindFriend extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(FindFriend.this));
         refreshRequestCount();
+        refresh.setClickable(true);
     }
 
     private void refreshRequestCount(){
@@ -189,7 +191,7 @@ public class FindFriend extends AppCompatActivity {
                 Boolean result = checkIfCanAdd(targetEmail);
                 if (result == null){
                     Toast.makeText(FindFriend.this, "ERROR: TRY AGAIN", Toast.LENGTH_SHORT).show();
-                    refreshRecyclerView();
+                    refreshRecyclerView(0);
                 }
                 else if (result){
                     Toast.makeText(FindFriend.this, "CAN BE ADDED", Toast.LENGTH_SHORT).show();
@@ -197,7 +199,7 @@ public class FindFriend extends AppCompatActivity {
                 }
                 else if (!result){
                     Toast.makeText(FindFriend.this, "CHECK REQUESTS", Toast.LENGTH_SHORT).show();
-                    refreshRecyclerView();
+                    refreshRecyclerView(0);
                 }
             }
         }, 2000);

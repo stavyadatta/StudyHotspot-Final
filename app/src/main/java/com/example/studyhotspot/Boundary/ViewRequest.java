@@ -80,6 +80,7 @@ public class ViewRequest extends AppCompatActivity implements RecyclerViewReques
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                refresh.setClickable(false);
                 initRecyclerView();
             }
         });
@@ -109,6 +110,7 @@ public class ViewRequest extends AppCompatActivity implements RecyclerViewReques
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        refresh.setClickable(true);
     }
 
     private void setUpBottomAppBar() {
