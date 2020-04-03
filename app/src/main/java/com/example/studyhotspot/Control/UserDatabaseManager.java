@@ -122,27 +122,44 @@ public class UserDatabaseManager {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    String currentEmail;
+
+                    for (int i = 0; i < addedFriendList.size(); i++) {
+                        relationshipFriendList.add(2);
+
+                        currentEmail = addedFriendList.get(i);
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String email = document.getString("email");
+                            if (currentEmail.contentEquals(email)) {
+                                addedFriend.add(email);
+                                namelist.add(document.getString("fName"));
+                                emaillist.add(email);
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < addingFriendList.size(); i++){
+                        relationshipFriendList.add(1);
+
+                        currentEmail = addingFriendList.get(i);
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String email = document.getString("email");
+                            if (currentEmail.contentEquals(email)) {
+                                addingFriend.add(email);
+                                namelist.add(document.getString("fName"));
+                                emaillist.add(email);
+                            }
+                        }
+                    }
+
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         String email = document.getString("email");
-                        if (email.contentEquals(currentUserEmail)){
-                            continue;
-                        }
-                        else if(awaitingFriendList.contains(email)){
-                            continue;
-                        }
-                        else if(addedFriendList.contains(email)){
-                            addedFriend.add(email);
-                            relationshipFriendList.add(2);
-                        }
-                        else if (addingFriendList.contains(email)){
-                            addingFriend.add(email);
-                            relationshipFriendList.add(1);
-                        }
-                        else{
+                        if (!addedFriend.contains(email) && !addingFriend.contains(email) &&
+                                !currentUserEmail.contentEquals(email) && !awaitingFriendList.contains(email)) {
+                            namelist.add(document.getString("fName"));
+                            emaillist.add(email);
                             relationshipFriendList.add(0);
                         }
-                        namelist.add(document.getString("fName"));
-                        emaillist.add(email);
                     }
                 } else {
                     Log.d("tagfail", "Error getting documents: ", task.getException());

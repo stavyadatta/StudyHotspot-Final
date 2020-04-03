@@ -34,7 +34,7 @@ public class ViewRequest extends AppCompatActivity implements RecyclerViewReques
 
 
     String userID;
-    private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
+    public UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
 
     private BottomAppBar bottomAppBar;
     private FloatingActionButton homeButton;
