@@ -40,6 +40,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+/**
+ * ActivityPageMain retrieves all the sessions in the database and applies the relevant filter logic to obtain the following 3 lists:
+ * <p>1. List of sessions that user is currently participating / going to participate in, which are further divided into</p>
+ * <ul>
+ * <li>1a. List of upcoming sessions</li>
+ * <li>1b. List of ongoing sessions</li>
+ * </ul>
+ * <p>Note that for sessions which have already passed, they will not be shown here, as they will be displayed in session history.</p>
+ * <p>2. List of sessions that the user is invited to.</p>
+ * <p>3. List of upcoming / ongoing sessions that the user's friends is participating in. This allows
+ * an user to 'follow' his friends and see what they are doing.</p>
+ * <p> This is also where most of the Glide is used, as the images are sourced online using the given
+ * url
+ * </p>
+ * <p> RecyclerViews work by initialising first the required arrays of information using initBitmaps. Afterwards, it
+ * calls initRecyclerviews to create the adapters for the views
+ * </p>
+ */
 public class ActivityPageMain extends AppCompatActivity {
 
     private UserDatabaseManager userDatabaseManager = new UserDatabaseManager(this);
@@ -371,9 +389,21 @@ public class ActivityPageMain extends AppCompatActivity {
         intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
-
+    /**
+     * ActivityPageMain's showSessionInfo() controls the logic when the user wants to show the info of the session
+     * Friend information is needed depending on whether the user wants to see "My Sessions" or "Friends Activities"
+     * By using intent, it allows the page to change from the ActivityPageMain to the SessionDetails.
+     * Relevant information such as document name is passed to the next page.
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     * @param friend refers to whether the user is clicking on "My Sessions" or "Friends Activities"
+     */
     //From actvity page to activity info page, to pass in document id
 
+    /**
+     * showSessionInfo shows the 
+     * @param position
+     * @param friend
+     */
     public void showSessionInfo(int position, Boolean friend) {
         Intent intent = new Intent(this, SessionDetails.class);
         if (!friend) {
@@ -387,6 +417,12 @@ public class ActivityPageMain extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    /**
+     * ActivityPageMain's showInviteInfo controls the logic when the user wants to show the info of an invite session
+     * By using intent, it allows the page to change from the ActivityPageMain to the InvitationPage.
+     * Relevant information such as document name is passed to the next page.
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     */
 
     public void showInviteInfo(int position) {
         Intent intent = new Intent(this, InvitationPage.class);
@@ -422,6 +458,13 @@ public class ActivityPageMain extends AppCompatActivity {
             }
         }
     }
+    /**
+     * ActivityPageMain's processInvitation() controls the logic when the user chooses to accept or decline the invitation
+     * It reads information from the database using addOnCompleteListener.
+     * True if user accepts the invitation. False if the user rejects the invitation.
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     * @param decision refers to whether the user is clicking on the tick or the cross
+     */
 
     public void processInvitation(int position, Boolean decision){
         String targetID = id2.get(position);
@@ -461,6 +504,13 @@ public class ActivityPageMain extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * ActivityPageMain's leaveSession() controls the logic when the user chooses to leave the session
+     * It reads information from the database using addOnCompleteListener, and then updates the database from
+     * true to false
+     * @param position refers to the ViewHolder being clicked on in the RecyclerView
+     */
 
     public void leaveSession(int position){
         String targetID = id1.get(position);

@@ -21,9 +21,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Login page is the 1st screen that the user will interact with where the user if registered
- * can login and be redirected to maps activity or if new user can be redirected to registration
- * activity
+ * Login page is where user authenticates by inputting the following information:
+ * <ul>
+ *     <li>1. Email Address</li>
+ *     <li>2. Password</li>
+ * </ul>
+ * <p>These information are then sent to the FirebaseAuth database, which will handle the authentication logic.</p>
+ * <p>Upon successfully authentication, user will be directed to MapsActivity, which is our home page.</p>
+ * <p> </p>
+ * <p>Alternatively, if the user is unregistered, he can navigate to the register page and sign up for an account.</p>
+
  */
 
 public class Login extends AppCompatActivity {
