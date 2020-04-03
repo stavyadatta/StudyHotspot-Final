@@ -41,6 +41,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+/**
+ * CreateSession is responsible for the following logic checks when the user attempts to create a new session.
+ * <ul>
+ *     <li>1. Title cannot be empty.</li>
+ *     <li>2. Start Date & Time must be in the future.</li>
+ *     <li>3. End Date & Time must be later than Start Date & Time</li>
+ * </ul>
+ * <p>Failure to comply with these logic checks will block the session from being added into our Firebase, displays
+ * the relevant error message and redirects user attention to the relevant fields.</p>
+ */
 public class CreateSession extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener{
 
     EditText editTitle;

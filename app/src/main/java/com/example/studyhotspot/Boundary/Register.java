@@ -32,13 +32,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Register requires user to input the following information.
- * <p>1. Full Name</p>
- * <p>2. Email Address</p>
- * <p>3. Password</p>
- * <p>4. Phone number</p>
- *<p>These information are then sent to the FirebaseAuth database, which will handle the account creation logic.</p>
- *<p>Note that FirebaseAuth API is responsible for ensuring that the email address is unique by rejecting duplicates.</p>
+ *  Register page is the 1st screen that the user will interact with, where the user:
+ *  <p>If unregistered, he can register by inputting the following information:</p>
+ *  <ul>
+ *  <li>1. Full Name</li>
+ *  <li>2. Email Address</li>
+ *  <li>3. Password</li>
+ *  <li>4. Phone number</li>
+ *  </ul>
+ *  <p>These information are then sent to the FirebaseAuth database, which will handle the account creation logic.</p>
+ *  <p>Note that FirebaseAuth API is responsible for ensuring that the email address is unique by rejecting duplicates.</p>
+ *  <p></p>
+ *  <p>If registered, he can navigate to the login page, sign in, and then be redirected to maps activity.</p>
  *
  */
 public class Register extends AppCompatActivity {

@@ -85,6 +85,7 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        refresh.setClickable(true);
 
     }
 
@@ -108,6 +109,7 @@ public class SessionAddParticipants extends AppCompatActivity implements Recycle
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                refresh.setClickable(false);
                 initRecyclerView();
             }
         });

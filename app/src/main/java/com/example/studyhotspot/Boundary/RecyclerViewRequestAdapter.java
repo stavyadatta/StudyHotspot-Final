@@ -55,6 +55,7 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RecyclerVie
         this.viewRequest = viewRequest;
         this.mContext = mContext;
         this.mOnItemClickListener = onItemClickListener;
+        this.userDatabaseManager = viewRequest.userDatabaseManager;
     }
 
     @NonNull

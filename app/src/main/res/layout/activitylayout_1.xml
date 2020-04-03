@@ -17,7 +17,7 @@
         android:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:text="Study Session Name"
@@ -28,16 +28,15 @@
         />
 
     <TextView
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:layout_below="@+id/sessionName"
         android:layout_marginLeft="15dp"
-        android:id="@+id/status"
-        android:layout_alignTop="@+id/sessionName"
-        android:layout_marginTop="35dp"
-        android:textSize="12dp"
+        android:layout_marginTop="8dp"
+        android:text="Status"
 
-        />
+        android:textSize="12dp" />
 
     <TextView
         android:layout_width="wrap_content"
