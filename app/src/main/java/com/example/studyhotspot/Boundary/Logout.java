@@ -26,7 +26,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import javax.annotation.Nullable;
 
-public class Logout extends AppCompatActivity {
+/**
+ * Logout page will be accessed when the user clicks on the setting option where the user's information
+ * will be shown. The user will be presented with logout button which once he clicks will be sent to
+ * login class to login again
+ */
+
+public class  Logout extends AppCompatActivity {
     TextView fullName,email,phone;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;

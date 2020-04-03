@@ -39,13 +39,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
 /**
- * ActivityPageMain will retrieve the sessions information from the database, and use RecyclerViewAdapter to display
- * the sessions belonging to the 3 categories of session - My Sessions, Invitations and Friends' Activities
+ * ActivityPageMain retrieves all the sessions in the database and applies the relevant filter logic to obtain the following 3 lists:
+ * <p>1. List of sessions that user is currently participating / going to participate in, which are further divided into</p>
+ * <ul>
+ * <li>1a. List of upcoming sessions</li>
+ * <li>1b. List of ongoing sessions</li>
+ * </ul>
+ * <p>Note that for sessions which have already passed, they will not be shown here, as they will be displayed in session history.</p>
+ * <p>2. List of sessions that the user is invited to.</p>
+ * <p>3. List of upcoming / ongoing sessions that the user's friends is participating in. This allows
+ * an user to 'follow' his friends and see what they are doing.</p>
  * <p> This is also where most of the Glide is used, as the images are sourced online using the given
  * url
  * </p>
- *<p> RecyclerViews work by initialising first the required arrays of information using initBitmaps. Afterwards, it
+ * <p> RecyclerViews work by initialising first the required arrays of information using initBitmaps. Afterwards, it
  * calls initRecyclerviews to create the adapters for the views
  * </p>
  */

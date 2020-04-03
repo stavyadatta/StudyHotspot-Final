@@ -21,6 +21,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * History retrieves a list of sessions that the user has participated in the past, and the information relevant
+ * to these sessions. After that, History uses a RecyclerViewAdapter to display these sessions to the user.
+ */
 public class History extends AppCompatActivity {
 
     private ImageView backButton;
