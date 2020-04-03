@@ -25,6 +25,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * The UserDatabaseManager allows the user to retrieve his updated social network information from
+ * firestore. When the user attempts to add friends, it will update the firestore accordingly.
+ */
 public class UserDatabaseManager {
 
     FirebaseFirestore firebaseFirestore;
@@ -265,6 +269,210 @@ public class UserDatabaseManager {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Update DB", "targetDoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+    }
+
+    public void acceptRequest(String userID, String targetEmail, String targetname){
+        Log.d("AcceptFriends", "Entered");
+        Log.d("AcceptFriends", "TargetEmail: "+targetEmail);
+        boolean status;
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        String targetUID = document.getId();
+
+                        DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                        Task<DocumentSnapshot> t =  userDoc.get();
+                        t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot docsnap) {
+                                String userEmail = docsnap.getString("email");
+                                String name = docsnap.getString("fName");
+                                Log.d("AcceptFriends","UserEmail:" + userEmail);
+
+                                acceptRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail, targetname);
+                            }
+                        });
+                        t.addOnFailureListener(new OnFailureListener() {
+                            public void onFailure(Exception e) {
+                                Log.d("get user email","failed");
+                            }
+                        });
+
+
+                    }
+                } else {
+                    Log.d("Accepting Request", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void acceptRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
+
+        userDoc.update("addedfriends", FieldValue.arrayUnion(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc addedfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriends", FieldValue.arrayRemove(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriendsname", FieldValue.arrayRemove(userName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        targetDoc.update("addedfriends", FieldValue.arrayUnion(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addedfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        targetDoc.update("addingfriends", FieldValue.arrayRemove(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+    }
+
+    public void rejectRequest(String userID, String targetEmail, String targetname){
+        Log.d("RejectFriends", "Entered");
+        Log.d("RejectFriends", "TargetEmail: "+targetEmail);
+        boolean status;
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("users").whereEqualTo("email", targetEmail).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        //Log.d("AddingFriends", document.getId() + " => " + document.getData());
+                        String targetUID = document.getId();
+
+                        DocumentReference userDoc = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference targetDoc = firebaseFirestore.collection("users").document(targetUID);
+
+                        Task<DocumentSnapshot> t =  userDoc.get();
+                        t.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot docsnap) {
+                                String userEmail = docsnap.getString("email");
+                                Log.d("RejectFriends","UserEmail:" + userEmail);
+                                rejectRequestUpdateDB(userDoc, targetDoc, targetEmail, userEmail, targetname);
+                            }
+                        });
+                        t.addOnFailureListener(new OnFailureListener() {
+                            public void onFailure(Exception e) {
+                                Log.d("get user email","failed");
+                            }
+                        });
+
+                    }
+                } else {
+                    Log.d("Rejecting Request", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void rejectRequestUpdateDB(DocumentReference userDoc, DocumentReference targetDoc, String targetEmail, String userEmail, String userName){
+
+        userDoc.update("awaitingfriends", FieldValue.arrayRemove(targetEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+
+        targetDoc.update("addingfriends", FieldValue.arrayRemove(userEmail))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "targetDoc addingfriends successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Update DB", "Error updating document", e);
+                    }
+                });
+
+        userDoc.update("awaitingfriendsname", FieldValue.arrayRemove(userName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Update DB", "Userdoc awaitingfriends successfully updated!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -14,6 +14,12 @@ import com.example.studyhotspot.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * For all sessions that a user is invited to / participated in will be able to see the participant(s)
+ * and their status. Note that if it is an individual session (i.e. the creator has not invited anyone),
+ * there will be only 1 participant -- the creator himself.
+ */
+
 public class ViewParticipants extends AppCompatActivity {
 
     private TextView title;

@@ -2,6 +2,15 @@ package com.example.studyhotspot.Entity;
 
 import java.util.ArrayList;
 
+/**
+ * Each user object encapsulates his     fullname, email address, and phone number. These data are collected upon
+ * registration. Note that it has been enforced during registration that the email address must be <b>unique</b>.
+ *
+ * <p>Additionally, we are also keeping track his network status through the following lists:</p>
+ *<p>1. addedfriends: a list of emails belonging to user's current friends</p>
+ * <p>2. addingfriends: a list of emails belonging to the users to which the current user has sent friend requests to</p>
+ * <p>3 .awaitingfriends: a list of emails belonging to the users who have sent friend requests to the user</p>
+ */
 public class User {
 
     private String fName;

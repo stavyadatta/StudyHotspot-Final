@@ -20,6 +20,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
+/**
+ * RecyclerViewUserAdapter displays the user's relationship to all other users.
+ * <p>For users unrelated to current user, they will show up with a "+" sign, so the user can add them.</p>
+ * <p>For users that are already friends with the current user, they will show up with a "tick" mark.</p>
+ * <p>For users whom the user has sent request to, but yet to get back, they will show up with a "clock" sign.</p>
+ * <p>For users who has sent the user friend requests, they will not be displayed here, but rather, on the ViewRequest page.</p>
+ */
 public class RecyclerViewUserAdapter extends RecyclerView.Adapter<RecyclerViewUserAdapter.ViewUserHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";

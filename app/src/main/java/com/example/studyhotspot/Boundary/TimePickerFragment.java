@@ -13,6 +13,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * TimePickerFragment is designed with Human Computer Interaction in mind.
+ * Instead of having to input the start time & end time whenever they create a session, which may introduce
+ * errors, TimePickerFragment allows the users to choose the timing from a clock.
+ */
 public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override

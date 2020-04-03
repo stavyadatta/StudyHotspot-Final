@@ -56,8 +56,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//
-//
+/**
+ * MapActivity controls the interaction between the user and the map. This includes getting the "Study Hospot" data
+ * from the data.gov website, put them under the following 3 categories:
+ * <p>1. Community</p>
+ * <p>2. Cafe</p>
+ * <p>3. Shopping</p>
+ * <p> The user can select one or more of these categories, and the locations will be displayed accordingly
+ * on the map layers</p>
+ * <p> Furthermore, if the user want to look up a specific location, MapsActivity provides a search bar
+ * for the user to query Google Maps' findplacefromtext api directly.</p>
+ */
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowLongClickListener {
 
