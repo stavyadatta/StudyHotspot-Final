@@ -21,6 +21,16 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * RecyclerViewAdapter2 is being used in the activity main page at the invitation menu where it presents
+ * the user with -
+ * <p> Information bitImage - leads to information of the session page</p>
+ * <p> Accept bitImage- accepts the invite ane updates it on the database </p>
+ * <p> Reject bitImage - rejects the invite and updates the option to the database </p>
+ * The bitImage are coming through glide.
+ * The recycler view also outputs the creator's name as well
+ */
+
 public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapter2.ViewHolder>{
 
     private static final String TAG = "RecyclerViewAdapter2";

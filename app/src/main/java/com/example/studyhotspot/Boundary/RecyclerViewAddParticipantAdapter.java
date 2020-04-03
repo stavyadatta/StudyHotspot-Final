@@ -16,6 +16,12 @@ import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 
+/**
+ * RecyclerViewAddParticipantAdapter is being used SessionAddparticipants page where it is called
+ * to show the list of friends to be added, The user will be presented with names and add option
+ * icon. Once the icon is clicked the button will change to a tick option
+ */
+
 public class RecyclerViewAddParticipantAdapter extends RecyclerView.Adapter<RecyclerViewAddParticipantAdapter.ViewUserHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";

@@ -18,6 +18,12 @@ import com.example.studyhotspot.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * RecyclerViewParticipantsAdapter is called by the ViewParticipants page to list out all the names
+ * of the participants of the session, tick mark will show that the participant is taking part for sure
+ * and the time icon will show that response is still waiting
+ */
+
 public class RecyclerViewParticipantsAdapter extends RecyclerView.Adapter<RecyclerViewParticipantsAdapter.ViewUserHolder> {
 
     private static final String TAG = "RecyclerViewAdapter";

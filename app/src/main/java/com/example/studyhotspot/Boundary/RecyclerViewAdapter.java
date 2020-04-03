@@ -18,6 +18,14 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * RecyclerViewAdaptor is being used in the activity main page where the title of the activity,
+ * creator's name and status of the activity will be presented according to the inputs from the
+ * activity main file. This adaptor is being used in current session menu and the friends activity
+ * menu. The recyclerView also presents the user with a bitmap image which if the user selects will lead
+ * them to the respective information pages
+ */
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";
